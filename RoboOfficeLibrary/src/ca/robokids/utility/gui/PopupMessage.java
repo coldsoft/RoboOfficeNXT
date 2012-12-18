@@ -10,6 +10,7 @@ import javax.swing.JOptionPane;
  * Create various kind of pop-up messages box, using JOptionPane
  * @author Coldsoft
  */
+
 public class PopupMessage {
    
    /**
