@@ -9,7 +9,7 @@ public class User {
     private int user_id;
     private String userName;
     private String password;
-    private String passwordQuestion;
+    private PasswordQuestion passwordQuestion;
     private String passwordAnswer;
     private String firstName;
     private String lastName;
@@ -17,7 +17,6 @@ public class User {
     private String SIN;
     private String phone;
     private boolean deleted;
-    private List<UserGroup> groups;
     private String email;
 
    public String getSIN() {
@@ -60,13 +59,6 @@ public class User {
       this.firstName = firstName;
    }
 
-   public List<UserGroup> getGroups() {
-      return groups;
-   }
-
-   public void setGroups(List<UserGroup> groups) {
-      this.groups = groups;
-   }
 
    public String getLastName() {
       return lastName;
@@ -92,11 +84,11 @@ public class User {
       this.passwordAnswer = passwordAnswer;
    }
 
-   public String getPasswordQuestion() {
+   public PasswordQuestion getPasswordQuestion() {
       return passwordQuestion;
    }
 
-   public void setPasswordQuestion(String passwordQuestion) {
+   public void setPasswordQuestion(PasswordQuestion passwordQuestion) {
       this.passwordQuestion = passwordQuestion;
    }
 

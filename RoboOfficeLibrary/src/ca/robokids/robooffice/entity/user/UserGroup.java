@@ -10,15 +10,6 @@ public class UserGroup {
     private int group_id;
     private String groupName;
     private boolean deleted;
-    private List<Action> actions;
-
-   public List<Action> getActions() {
-      return actions;
-   }
-
-   public void setActions(List<Action> actions) {
-      this.actions = actions;
-   }
 
    public boolean isDeleted() {
       return deleted;

@@ -2,7 +2,7 @@
 package ca.robokids.robooffice.entity.user;
 
 
-public class passwordQestion {
+public class PasswordQuestion {
 
 
     private int password_qestion_id;
