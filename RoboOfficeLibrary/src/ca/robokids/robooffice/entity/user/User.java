@@ -18,6 +18,15 @@ public class User {
     private String phone;
     private boolean deleted;
     private String email;
+    private List<UserGroup> userGroups;
+
+   public List<UserGroup> getUserGroups() {
+      return userGroups;
+   }
+
+   public void setUserGroups(List<UserGroup> userGroups) {
+      this.userGroups = userGroups;
+   }
 
    public String getSIN() {
       return SIN;

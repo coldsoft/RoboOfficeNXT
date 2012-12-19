@@ -8,8 +8,17 @@ public class Action {
     private int action_id;
 
     private String actionName;
+    private String description;
 
+   public String getDescription() {
+      return description;
+   }
+
+   public void setDescription(String description) {
+      this.description = description;
+   }
     private boolean deleted;
+    
 
    public String getActionName() {
       return actionName;

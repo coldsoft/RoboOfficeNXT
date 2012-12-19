@@ -22,34 +22,8 @@ import java.util.logging.Logger;
 public class testDB {
 
    public static void main(String arg[]) {
-      User temp = new User();
-      temp.setUserName("bqian");
-      temp.setPassword("bqian");
-      PasswordQuestion question = new PasswordQuestion();
-      question.setPassword_qestion_id(3);
-      temp.setPasswordQuestion(question);
-      temp.setPasswordAnswer("Qian");
-      temp.setFirstName("Brian");
-      temp.setLastName("Qian");
-      temp.setEmail("N/A");
-      temp.setAddress("N/A");
-      temp.setSIN("N/A");
-      temp.setPhone("N/A");
-      
-      List<Action> actions = new ArrayList();
-      Action a = new Action();
-      a.setAction_id(1);
-      actions.add(a);
-      UserGroup g = new UserGroup();
-      g.setGroup_id(1);
-      g.setGroupName("Training Teacher");
-      
+     
 
-      try {
-         UserDBM.createUserGroup(g, actions);
-      } catch (DatabaseException ex) {
-         System.out.println(ex.getMessage());
-      }
       
    }
 }
