@@ -24,6 +24,7 @@ import javax.sql.rowset.CachedRowSet;
  */
 public class UserDBM {
 
+   
    /**
     * User object needs to be completely filled, with List of UserGroup Objects
     *
@@ -89,6 +90,53 @@ public class UserDBM {
 
    }
 
+   
+   /**
+    * search user by user ID, returns the User object
+    * @param userID
+    * @return User object if there exists a user. else return null
+    * @throws DatabaseException
+    */
+   public static User getUserByID(int userID) throws DatabaseException {
+      try {
+         User temp = null;
+         String getUserByID = "SELECT * FROM user_view WHERE user_id = ? GROUP BY user_id";
+         PreparedStatement stmt;
+
+         stmt = DatabaseManager.getPreparedStatement(getUserByID);
+         stmt.setInt(1, userID);
+
+         CachedRowSet crs = DatabaseManager.executeQuery(stmt);
+
+         if (crs.next()) {
+            temp = new User();
+            temp.setUser_id(crs.getInt("user_id"));
+            temp.setUserName((crs.getString("user_name")));
+            temp.setPassword((crs.getString("password")));
+            //Set password question object in user
+            PasswordQuestion p = new PasswordQuestion();
+            p.setPassword_qestion_id(crs.getInt("question_id"));
+            p.setQuestion(crs.getString("question"));
+            temp.setPasswordQuestion(p);
+
+            temp.setPasswordAnswer(crs.getString("password_answer"));
+            temp.setFirstName(crs.getString("first_name"));
+            temp.setLastName(crs.getString("last_name"));
+            temp.setEmail(crs.getString("email"));
+            temp.setAddress(crs.getString("address"));
+            temp.setSIN(crs.getString("SIN"));
+            temp.setPhone(crs.getString("phone"));
+            temp.setDeleted(false);
+            temp.setUserGroups(getAllUserGroups(temp.getUser_id()));
+         }
+         return temp;
+
+
+      } catch (SQLException ex) {
+         throw new DatabaseException("SQL Error." + ex.getMessage());
+      }
+
+   }
    /**
     * get All undeleted users within a given usergroup, or every user in the
     * system if userGroupID < 1
@@ -181,6 +229,33 @@ public class UserDBM {
 
    }
 
+   
+
+   public static UserGroup getUserGroupByID(int groupID) throws DatabaseException {
+      try {
+         UserGroup group = null;
+         String getUserGroupByID = "SELECT * FROM group_view WHERE group_id = ? GROUP BY group_id";
+         PreparedStatement stmt;
+
+         stmt = DatabaseManager.getPreparedStatement(getUserGroupByID);
+         stmt.setInt(1, groupID);
+
+         CachedRowSet crs = DatabaseManager.executeQuery(stmt);
+
+         if (crs.next()) {
+            group = new UserGroup();
+            group.setGroup_id(crs.getInt("group_id"));
+            group.setGroupName(crs.getString("group_name"));
+            group.setActions(getAllActions(group.getGroup_id()));           
+         }
+         return group;
+
+
+      } catch (SQLException ex) {
+         throw new DatabaseException("SQL Error." + ex.getMessage());
+      }
+
+   }
    /**
     * get All usergroups of a single User, or every usergroup in the system if
     * userID < 1
@@ -278,52 +353,6 @@ public class UserDBM {
       }
    }
 
-   /**
-    *
-    * @param userID
-    * @return
-    * @throws DatabaseException
-    */
-   public static User getUserByID(int userID) throws DatabaseException {
-      try {
-         User temp = null;
-         String getUserByID = "SELECT * FROM user_view WHERE user_id = ?";
-         PreparedStatement stmt;
-
-         stmt = DatabaseManager.getPreparedStatement(getUserByID);
-         stmt.setInt(1, userID);
-
-         CachedRowSet crs = DatabaseManager.executeQuery(stmt);
-
-         if (crs.next()) {
-            temp = new User();
-            temp.setUser_id(crs.getInt("user_id"));
-            temp.setUserName((crs.getString("user_name")));
-            temp.setPassword((crs.getString("password")));
-            //Set password question object in user
-            PasswordQuestion p = new PasswordQuestion();
-            p.setPassword_qestion_id(crs.getInt("question_id"));
-            p.setQuestion(crs.getString("question"));
-            temp.setPasswordQuestion(p);
-
-            temp.setPasswordAnswer(crs.getString("password_answer"));
-            temp.setFirstName(crs.getString("first_name"));
-            temp.setLastName(crs.getString("last_name"));
-            temp.setEmail(crs.getString("email"));
-            temp.setAddress(crs.getString("address"));
-            temp.setSIN(crs.getString("SIN"));
-            temp.setPhone(crs.getString("phone"));
-            temp.setDeleted(false);
-            temp.setUserGroups(getAllUserGroups(temp.getUser_id()));
-         }
-         return temp;
-
-
-      } catch (SQLException ex) {
-         throw new DatabaseException("SQL Error." + ex.getMessage());
-      }
-
-   }
 
    private static PreparedStatement insertUser(User user) throws DatabaseException {
       String createUser = "INSERT INTO user (user_name,password,password_question_id,password_answer,first_name,last_name,email,address,SIN,phone) "

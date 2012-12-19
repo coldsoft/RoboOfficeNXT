@@ -1,6 +1,7 @@
 
 package ca.robokids.robooffice.entity.user;
 
+import ca.robokids.exception.BadFieldException;
 import java.util.List;
 
 
@@ -124,6 +125,8 @@ public class User {
    public void setUser_id(int user_id) {
       this.user_id = user_id;
    }
+   
+   
     
     
  }
