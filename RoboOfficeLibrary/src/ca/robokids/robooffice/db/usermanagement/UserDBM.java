@@ -77,8 +77,9 @@ public class UserDBM {
     */
    public static boolean deleteUser(int userID) throws DatabaseException {
       try {
-         String query = "UPDATE user SET deleted = 1 WHERE user_id = " + String.valueOf(userID);
+         String query = "UPDATE user SET deleted = 1 WHERE user_id = ?";
          PreparedStatement stmt = DatabaseManager.getPreparedStatement(query);
+         stmt.setInt(1,userID);
          int rowChanged = DatabaseManager.executeUpdate(stmt);
          if (rowChanged < 1) {
             return false;
@@ -162,7 +163,8 @@ public class UserDBM {
          CachedRowSet crs = DatabaseManager.executeQuery(stmt);
          while (crs.next()) {
             User user = getUserByID(crs.getInt("user_id"));
-            users.add(user);
+            if (!user.getUserName().equals("root"))
+               users.add(user);
          }
 
          return users;
@@ -216,8 +218,9 @@ public class UserDBM {
    }
    public static boolean deleteGroup(int userGroupID) throws DatabaseException {
       try {
-         String query = "UPDATE user_group SET deleted = 1 WHERE group_id = " + String.valueOf(userGroupID);
+         String query = "UPDATE user_group SET deleted = 1 WHERE group_id = ?";
          PreparedStatement stmt = DatabaseManager.getPreparedStatement(query);
+         stmt.setInt(1,userGroupID);
          int rowChanged = DatabaseManager.executeUpdate(stmt);
          if (rowChanged < 1) {
             return false;
@@ -284,6 +287,8 @@ public class UserDBM {
             g.setGroup_id(crs.getInt("group_id"));
             g.setGroupName(crs.getString("group_name"));
             g.setActions(getAllActions(g.getGroup_id()));
+            if (g.getGroupName().equals("superuser"))
+               continue;
             groups.add(g);
          }
          return groups;
@@ -463,6 +468,27 @@ public class UserDBM {
          stmt.setInt(1, groupID);
          stmt.setInt(2, actionID);
          return stmt;
+      } catch (SQLException ex) {
+         throw new DatabaseException("SQL Error." + ex.getMessage());
+      }
+   }
+
+   public static List<PasswordQuestion> getAllPasswordQuestion() throws DatabaseException {
+      try {
+         List<PasswordQuestion> questions = new ArrayList();
+
+         String query = "SELECT * FROM password_question";
+         
+         PreparedStatement stmt = DatabaseManager.getPreparedStatement(query);
+
+         CachedRowSet crs = DatabaseManager.executeQuery(stmt);
+         while (crs.next()) {
+            PasswordQuestion q = new PasswordQuestion();
+            q.setPassword_qestion_id(crs.getInt("question_id"));
+            q.setQuestion(crs.getString("question"));
+            questions.add(q);
+         }
+         return questions;
       } catch (SQLException ex) {
          throw new DatabaseException("SQL Error." + ex.getMessage());
       }

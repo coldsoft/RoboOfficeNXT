@@ -43,6 +43,14 @@ public class Action {
    public void setDeleted(boolean deleted) {
       this.deleted = deleted;
    }
+   
+   public String toString()
+   {
+      return this.getDescription();
+   }
     
-    
+   public boolean equals(Object a )
+   {
+      return ((Action)a).getAction_id()==this.getAction_id();
+   }
  }

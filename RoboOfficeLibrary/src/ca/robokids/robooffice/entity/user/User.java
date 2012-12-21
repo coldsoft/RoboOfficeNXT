@@ -127,6 +127,13 @@ public class User {
    }
    
    
-    
+    public String toString()
+    {
+       return this.getFirstName()+ " " + this.getLastName();
+    }
+    public boolean equals(Object user)
+    {
+       return ((User)user).getUser_id()==this.getUser_id();
+    }
     
  }

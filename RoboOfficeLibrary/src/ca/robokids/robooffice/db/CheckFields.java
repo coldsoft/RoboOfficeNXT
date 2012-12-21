@@ -41,7 +41,7 @@ public class CheckFields {
          throw new BadFieldException("Email format incorrect.");
       List<UserGroup> groups = user.getUserGroups();
       if (groups == null || groups.size()<1)
-         throw new BadFieldException("User must belong to at least 1 user group.");
+         throw new BadFieldException("User must belong to a user group.");
    }
    
    public static void checkGroup(UserGroup group) throws BadFieldException 
@@ -50,7 +50,7 @@ public class CheckFields {
                  "Usergroup name is empty","Usergroup name must be less than 30 characters");
       List<Action> actions = group.getActions();
       if (actions == null || actions.size() < 1)
-         throw new BadFieldException("User group must contain at least 1 privilege.");
+         throw new BadFieldException("User group must have a privilege.");
    }
    
    

@@ -23,6 +23,15 @@ public class PasswordQuestion {
    public void setQuestion(String question) {
       this.question = question;
    }
+   public String toString()
+   {
+      return this.getQuestion();
+      
+   }
     
+  public boolean equals(Object p)
+  {
+     return ((PasswordQuestion)p).getPassword_qestion_id()==this.getPassword_qestion_id();
+  }
     
  }

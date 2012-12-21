@@ -42,6 +42,14 @@ public class UserGroup {
    public void setGroup_id(int group_id) {
       this.group_id = group_id;
    }
-    
+   
+   public String toString()
+   {
+      return this.getGroupName();
+   }
+   public boolean equals(Object u)
+   {
+      return ((UserGroup)u).getGroup_id() == this.getGroup_id();
+   }
     
  }

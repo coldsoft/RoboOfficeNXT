@@ -10,6 +10,7 @@ import ca.robokids.exception.DoesNotExistException;
 import ca.robokids.robooffice.db.CheckFields;
 import ca.robokids.robooffice.db.usermanagement.UserDBM;
 import ca.robokids.robooffice.entity.user.Action;
+import ca.robokids.robooffice.entity.user.PasswordQuestion;
 import ca.robokids.robooffice.entity.user.User;
 import ca.robokids.robooffice.entity.user.UserGroup;
 import java.util.List;
@@ -36,7 +37,7 @@ public class UserManager {
    {
       User temp = UserDBM.getUserByID(user.getUser_id());
       if (temp == null)
-         throw new DoesNotExistException("Error: User not found in database; user ID no match.");
+         throw new DoesNotExistException("Error: User not found in database; user ID " + user.getUser_id()+ " no match.");
       
       UserDBM.deleteUser(user.getUser_id());
    }
@@ -52,7 +53,7 @@ public class UserManager {
    {
       UserGroup temp = UserDBM.getUserGroupByID(group.getGroup_id());
       if (temp == null)
-         throw new DoesNotExistException("Error: Usergroup not found in database; group ID no match.");
+         throw new DoesNotExistException("Error: Usergroup not found in database; group ID " + group.getGroup_id()+ " no match.");
       
       UserDBM.deleteGroup(group.getGroup_id());
    }
@@ -92,6 +93,10 @@ public class UserManager {
       return UserDBM.getAllActions(groupID);
    }
    
+   public static List<PasswordQuestion> loadAllQuestion() throws DatabaseException
+   {
+      return UserDBM.getAllPasswordQuestion();
+   }
    
    
    
