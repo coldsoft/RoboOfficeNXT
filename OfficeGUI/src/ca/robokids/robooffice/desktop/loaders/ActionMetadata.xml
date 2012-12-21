@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+This xml keeps mapping between four things: 
+*action ID for action events from Menu or buttons, needs to correspond to action table in db
+*tab class for each invocation
+*tab name after a tab is invoked
+*image icon to display for shortcut buttons
+-->
+<roboOffice>
+    <action id = "myInbox" menuItem = "My Inbox">
+        <tabName>My Inbox</tabName>
+        <tabClass>user.InboxTab</tabClass>       
+    </action>
+    
+    <action id = "myAccount" menuItem = "My Account">
+        <tabName>Account</tabName>
+        <tabClass>user.UserAccountTab</tabClass>       
+    </action>
+    
+    <action id = "logOut" menuItem = "Log Out">
+        <image>logout.gif</image>
+        <tabName></tabName>
+        <tabClass></tabClass>       
+    </action>
+    
+    <action id = "exit" menuItem = "Exit">
+        <tabName></tabName>
+        <tabClass></tabClass>       
+    </action>
+        
+    <action id = "changePassword" menuItem = "Change Password">
+        <tabName>Change Password</tabName>
+        <tabClass>user.ChangePasswordTab</tabClass>       
+    </action>
+    
+    <action id = "viewAllStudents" menuItem = "View All Students">
+        <tabName>Students Master List</tabName>
+        <tabClass>students.ViewAllStudentsTab</tabClass>       
+    </action>
+    
+    <action id = "searchStudent" menuItem = "Search Student">
+        <tabName>Students Master List</tabName>
+        <tabClass>students.SearchStudentTab</tabClass>       
+    </action>
+    
+    <action id = "reportAbsent" menuItem = "Report Call-in Absent">
+        <tabName>Report Student Absent</tabName>
+        <tabClass>students.ReportStudentAbsentTab</tabClass>
+    </action>
+    
+    <action id = "weeklySchedule" menuItem = "Weekly Schedule">
+        <tabName>Weekly Schedule</tabName>
+        <tabClass>students.WeeklyScheduleTab</tabClass>       
+    </action>
+    
+    <action id = "attendance" menuItem = "Attendance">
+        <tabName></tabName>
+        <tabClass></tabClass>       
+    </action>
+    
+    <action id = "quickPrintAttendance" menuItem = "Quick Print Today">
+        <tabName>Print Attendance Today</tabName>
+        <tabClass></tabClass>       
+    </action>
+    
+    <action id = "printAttendance" menuItem = "Print...">
+        <tabName>Print Attendance</tabName>
+        <tabClass>ReportLostItemTab</tabClass>       
+    </action>
+    
+    <action id = "recordAttendance" menuItem = "Record...">
+        <tabName>Record Attendance</tabName>
+        <tabClass>ListOverduesTab</tabClass>       
+    </action>
+    
+    <action id = "enterProgressReport" menuItem = "Enter Progress Report">
+        <tabName>Record Progress Report</tabName>
+        <tabClass>ProgressReportTab</tabClass>       
+    </action>
+    
+    <action id = "newStudent" menuItem = "New Student Registration">
+        <tabName>New Student</tabName>
+        <tabClass>AddResourceTab</tabClass>       
+    </action>
+    
+    <action id = "printAssessmentSheet" menuItem = "Print Assessment Sheet">
+        <tabName>Print Assessment</tabName>
+        <tabClass>SubscriptionTab</tabClass>       
+    </action>
+    
+    <action id = "studentStatistic" menuItem = "Students Statistic">
+        <tabName>Student Statistic</tabName>
+        <tabClass>NewItemPurchaseRequestTab</tabClass>       
+    </action>
+    
+    <action id = "newPayment" menuItem = "New Payment">
+        <tabName>New Payment</tabName>
+        <tabClass>ViewAllPurchaseRequestsTab</tabClass>       
+    </action>
+    
+    <action id = "viewOverdueStudents" menuItem = "Fee Overdue Students">
+        <tabName>Overdue Fee</tabName>
+        <tabClass>NewPatronTab</tabClass>       
+    </action>
+    
+    <action id = "accountReceivable" menuItem = "Account Receivable">
+        <tabName>Account Receivable</tabName>
+        <tabClass>SearchPatronTab</tabClass>       
+    </action>
+    
+    <action id = "addStaff" menuItem = "Add Staff...">
+        <tabName>Add Staff</tabName>
+        <tabClass>humanresources.AddStaffTab</tabClass>       
+    </action>
+    
+    <action id = "payroll" menuItem = "Payroll">
+        <image>searchPatronButton.png</image>
+        <tabName>Patron Search</tabName>
+        <tabClass>SearchPatronTab</tabClass>       
+    </action>
+    
+    <action id = "courseSettings" menuItem = "Courses...">
+        <tabName>All Patrons</tabName>
+        <tabClass>BrowsePatronsTab</tabClass>       
+    </action>
+    <action id = "membershipSettings" menuItem = "Memberships...">
+        <tabName></tabName>
+        <tabClass></tabClass>       
+    </action>
+    <action id = "projectSettings" menuItem = "Projects...">
+        <tabName></tabName>
+        <tabClass></tabClass>       
+    </action>
+    <action id = "feeSettings" menuItem = "Fees...">
+        <tabName>New Payment</tabName>
+        <tabClass>NewPaymentTab</tabClass>       
+    </action>
+    
+    <action id = "holidaySettings" menuItem = "Holiday Setting">
+        <tabName>Payment History</tabName>
+        <tabClass>PaymentHistoryTab</tabClass>       
+    </action>
+    
+    <action id = "classroomSettings" menuItem = "Classroom Setting">
+        <tabName>All Fines</tabName>
+        <tabClass>FineListTab</tabClass>       
+    </action>
+    
+    <action id = "financeSettings" menuItem = "Finance Settings">
+        <tabName>Add Librarian</tabName>
+        <tabClass>AddLibrarianTab</tabClass>       
+    </action>
+    
+    <action id = "userAccountSettings" menuItem = "User Account Settings">
+        <tabName>User Accounts</tabName>
+        <tabClass>user.UserSettingTab</tabClass>       
+    </action>
+    
+    <action id = "databaseBackup" menuItem = "Database Backup...">
+        <tabName>Settings</tabName>
+        <tabClass>SettingsTab</tabClass>       
+    </action>
+    
+    <action id = "systemLogs" menuItem = "System Logs">
+        <tabName>Help</tabName>
+        <tabClass>HelpContentsTab</tabClass>       
+    </action>
+    
+    <action id = "systemSettings" menuItem = "System Settings">
+        <tabName>Welcome to ChocoLMS!</tabName>
+        <tabClass>WelcomePageTab</tabClass>       
+    </action>
+    
+    <action id = "memoManagement" menuItem = "Memos/Tasks Management">
+        <tabName>Report Issue</tabName>
+        <tabClass>ReportIssueTab</tabClass>       
+    </action>
+    
+    
+    
+    <action id = "reportIssue" menuItem = "Report Issue...">
+        <tabName>About ChocoLMS</tabName>
+        <tabClass>AboutTab</tabClass>       
+    </action>
+</roboOffice>

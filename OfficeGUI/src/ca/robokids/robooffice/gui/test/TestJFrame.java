@@ -5,6 +5,7 @@
 
 package ca.robokids.robooffice.gui.test;
 
+import ca.robokids.robooffice.desktop.util.PopupMessage;
 import de.javasoft.swing.JYTabbedPane;
 import java.awt.Component;
 import javax.swing.JPanel;
@@ -25,7 +26,7 @@ public class TestJFrame extends javax.swing.JFrame {
                 tabPaneComponentRemoved(evt);
             }
         });
-        
+        list.setEnabled(false);
     }
 
     /** This method is called from within the constructor to
@@ -39,6 +40,8 @@ public class TestJFrame extends javax.swing.JFrame {
 
         tabPane = new de.javasoft.swing.JYTabbedPane();
         jPanel1 = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        list = new de.javasoft.swing.JYCheckBoxList();
         btnAdd = new javax.swing.JButton();
         btnRemove = new javax.swing.JButton();
         txtTabname = new javax.swing.JTextField();
@@ -57,15 +60,28 @@ public class TestJFrame extends javax.swing.JFrame {
             }
         });
 
+        list.setModel(new javax.swing.AbstractListModel() {
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            public int getSize() { return strings.length; }
+            public Object getElementAt(int i) { return strings[i]; }
+        });
+        jScrollPane1.setViewportView(list);
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 672, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(319, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(194, 194, 194))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 335, Short.MAX_VALUE)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(69, 69, 69)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(67, Short.MAX_VALUE))
         );
 
         tabPane.addTab("tab1", jPanel1);
@@ -98,7 +114,7 @@ public class TestJFrame extends javax.swing.JFrame {
                         .addContainerGap()
                         .addComponent(lblMsg, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
-            .addComponent(tabPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(tabPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 677, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -130,6 +146,7 @@ public class TestJFrame extends javax.swing.JFrame {
          s += ((JPanel)c).getName();
       }
       lblMsg.setText(s);
+              System.out.println(PopupMessage.createConfirmPopUp(null, null));
    }//GEN-LAST:event_btnAddActionPerformed
 
    private void tabPaneComponentRemoved(java.awt.event.ContainerEvent evt) {//GEN-FIRST:event_tabPaneComponentRemoved
@@ -187,7 +204,9 @@ public class TestJFrame extends javax.swing.JFrame {
     private javax.swing.JButton btnAdd;
     private javax.swing.JButton btnRemove;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblMsg;
+    private de.javasoft.swing.JYCheckBoxList list;
     private de.javasoft.swing.JYTabbedPane tabPane;
     private javax.swing.JTextField txtTabname;
     // End of variables declaration//GEN-END:variables

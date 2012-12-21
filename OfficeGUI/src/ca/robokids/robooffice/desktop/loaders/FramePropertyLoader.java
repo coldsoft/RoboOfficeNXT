@@ -5,6 +5,7 @@
 package ca.robokids.robooffice.desktop.loaders;
 
 import java.util.ResourceBundle;
+import javax.swing.ImageIcon;
 
 /**
  *
@@ -91,6 +92,33 @@ public class FramePropertyLoader {
         return "Nimbus";
 
 
+    }
+    
+    
+    public static Integer getMinimumTabSize()
+    {
+        if (bundle != null)
+            return Integer.parseInt(bundle.getString("minimumTabSize"));
+        return 60;
+    }
+    /**
+     * 
+     * @return
+     */
+    public static String getImageDIR()
+    {
+        
+        return getBundle().getString("imageDirectory");
+    }
+    /**
+     * 
+     * @param imageID
+     * @return
+     */
+    public static ImageIcon getImageIcon(String imageID)
+    {
+        String url = getBundle().getString("imageDirectory") + getBundle().getString(imageID);
+        return new ImageIcon(getBundle().getClass().getResource(url));
     }
    
 }

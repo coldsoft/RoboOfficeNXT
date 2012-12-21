@@ -34,6 +34,7 @@ public class FontsLoader {
             return new Font(getBundle().getString("menuFont"),Font.PLAIN,Integer.parseInt(getBundle().getString("menuFontSize")));
         return new Font("Comic Sans MS",Font.PLAIN,8);
     }
+
     /**
      *
      * @return
