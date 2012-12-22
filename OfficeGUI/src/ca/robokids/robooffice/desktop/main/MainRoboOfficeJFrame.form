@@ -47,6 +47,9 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="logOutMenuItem">
               <Properties>
+                <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
+                  <KeyStroke key="Ctrl+Q"/>
+                </Property>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                   <Connection code="FontsLoader.getMenuItemFont()" type="code"/>
                 </Property>
@@ -55,6 +58,9 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="exitMenuItem">
               <Properties>
+                <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
+                  <KeyStroke key="Alt+F4"/>
+                </Property>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                   <Connection code="FontsLoader.getMenuItemFont()" type="code"/>
                 </Property>
@@ -199,6 +205,9 @@
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="newPaymentMenuItem">
               <Properties>
+                <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
+                  <KeyStroke key="Ctrl+N"/>
+                </Property>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                   <Connection code="FontsLoader.getMenuItemFont()" type="code"/>
                 </Property>
@@ -217,6 +226,9 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="ARMenuItem">
               <Properties>
+                <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
+                  <KeyStroke key="Ctrl+R"/>
+                </Property>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                   <Connection code="FontsLoader.getMenuItemFont()" type="code"/>
                 </Property>
@@ -241,6 +253,9 @@
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="payrollMenuItem">
               <Properties>
+                <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
+                  <KeyStroke key="Ctrl+P"/>
+                </Property>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                   <Connection code="FontsLoader.getMenuItemFont()" type="code"/>
                 </Property>
@@ -249,6 +264,9 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="addUserMenuItem">
               <Properties>
+                <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
+                  <KeyStroke key="Ctrl+A"/>
+                </Property>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                   <Connection code="FontsLoader.getMenuItemFont()" type="code"/>
                 </Property>
@@ -461,8 +479,8 @@
     </Container>
     <Container class="de.javasoft.swing.JYTabbedPane" name="tabbedPane">
       <Properties>
-        <Property name="tabStyle" type="de.javasoft.swing.JYTabbedPane$TabStyle" editor="org.netbeans.modules.form.editors.EnumEditor">
-          <Value id="SELECTED_TAB_ONLY"/>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection code="FontsLoader.getTabFont()" type="code"/>
         </Property>
       </Properties>
 

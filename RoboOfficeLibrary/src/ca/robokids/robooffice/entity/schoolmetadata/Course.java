@@ -1,57 +1,30 @@
 
 package ca.robokids.robooffice.entity.schoolmetadata;
 
+import java.util.List;
 
-public class Course {
 
-    private int course_id;
-    private Classroom classroom;
-    private String code;
-    private String name;
-    private String description;
-    private int duration;
-    private float rate;
-    private boolean deleted;
-    private ProgressReportType progressReportType;
+public class Course extends Activity{
 
-   public Classroom getClassroom() {
-      return classroom;
+    
+    private int duration;  
+    private int report_type_id;
+    private List<Timeslot> timeslots;
+
+   public List<Timeslot> getTimeslots() {
+      return timeslots;
    }
 
-   public void setClassroom(Classroom classroom) {
-      this.classroom = classroom;
+   public void setTimeslots(List<Timeslot> timeslots) {
+      this.timeslots = timeslots;
    }
 
-   public String getCode() {
-      return code;
+   public int getReport_type_id() {
+      return report_type_id;
    }
 
-   public void setCode(String code) {
-      this.code = code;
-   }
-
-   public int getCourse_id() {
-      return course_id;
-   }
-
-   public void setCourse_id(int course_id) {
-      this.course_id = course_id;
-   }
-
-   public boolean isDeleted() {
-      return deleted;
-   }
-
-   public void setDeleted(boolean deleted) {
-      this.deleted = deleted;
-   }
-
-   public String getDescription() {
-      return description;
-   }
-
-   public void setDescription(String description) {
-      this.description = description;
+   public void setReport_type_id(int report_type_id) {
+      this.report_type_id = report_type_id;
    }
 
    public int getDuration() {
@@ -62,29 +35,7 @@ public class Course {
       this.duration = duration;
    }
 
-   public String getName() {
-      return name;
-   }
-
-   public void setName(String name) {
-      this.name = name;
-   }
-
-   public ProgressReportType getProgressReportType() {
-      return progressReportType;
-   }
-
-   public void setProgressReportType(ProgressReportType progressReportType) {
-      this.progressReportType = progressReportType;
-   }
-
-   public float getRate() {
-      return rate;
-   }
-
-   public void setRate(float rate) {
-      this.rate = rate;
-   }
+   
     
     
  }

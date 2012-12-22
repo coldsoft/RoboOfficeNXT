@@ -1,6 +1,8 @@
 
 package ca.robokids.robooffice.entity.schoolmetadata;
 
+import java.util.List;
+
 
 public class ProgressReportType {
 
@@ -23,7 +25,15 @@ public class ProgressReportType {
     private String criteria10;
     private String criteria11;
     private String criteria12;
-    private ReportCardCommentTemplate reportCardCommentTemplate;
+    private List<ReportCardCommentTemplate> reportCardCommentTemplate;
+
+   public List<ReportCardCommentTemplate> getReportCardCommentTemplate() {
+      return reportCardCommentTemplate;
+   }
+
+   public void setReportCardCommentTemplate(List<ReportCardCommentTemplate> reportCardCommentTemplate) {
+      this.reportCardCommentTemplate = reportCardCommentTemplate;
+   }
 
    public String getCriteria1() {
       return criteria1;
@@ -129,13 +139,7 @@ public class ProgressReportType {
       this.maxScore = maxScore;
    }
 
-   public ReportCardCommentTemplate getReportCardCommentTemplate() {
-      return reportCardCommentTemplate;
-   }
 
-   public void setReportCardCommentTemplate(ReportCardCommentTemplate reportCardCommentTemplate) {
-      this.reportCardCommentTemplate = reportCardCommentTemplate;
-   }
 
    public int getReport_type_id() {
       return report_type_id;

@@ -60,7 +60,7 @@ This xml keeps mapping between four things:
     </action>
     
     <action id = "quickPrintAttendance" menuItem = "Quick Print Today">
-        <tabName>Print Attendance Today</tabName>
+        <tabName>Quick-Print Attendance</tabName>
         <tabClass></tabClass>       
     </action>
     
@@ -100,7 +100,7 @@ This xml keeps mapping between four things:
     </action>
     
     <action id = "viewOverdueStudents" menuItem = "Fee Overdue Students">
-        <tabName>Overdue Fee</tabName>
+        <tabName>Overdue Fees</tabName>
         <tabClass>NewPatronTab</tabClass>       
     </action>
     
@@ -115,40 +115,45 @@ This xml keeps mapping between four things:
     </action>
     
     <action id = "payroll" menuItem = "Payroll">
-        <image>searchPatronButton.png</image>
-        <tabName>Patron Search</tabName>
+        <tabName>Payroll</tabName>
         <tabClass>SearchPatronTab</tabClass>       
     </action>
     
     <action id = "courseSettings" menuItem = "Courses...">
-        <tabName>All Patrons</tabName>
+        <tabName>Courses setting</tabName>
         <tabClass>BrowsePatronsTab</tabClass>       
     </action>
+    
+    <action id = "progressReportSetting" menuItem = "Progress Report...">
+        <tabName>Progress Report setting</tabName>
+        <tabClass></tabClass>       
+    </action>
+    
     <action id = "membershipSettings" menuItem = "Memberships...">
-        <tabName></tabName>
+        <tabName>Membership Setting</tabName>
         <tabClass></tabClass>       
     </action>
     <action id = "projectSettings" menuItem = "Projects...">
-        <tabName></tabName>
+        <tabName>Project Setting</tabName>
         <tabClass></tabClass>       
     </action>
     <action id = "feeSettings" menuItem = "Fees...">
-        <tabName>New Payment</tabName>
+        <tabName>Fee Setting</tabName>
         <tabClass>NewPaymentTab</tabClass>       
     </action>
     
     <action id = "holidaySettings" menuItem = "Holiday Setting">
-        <tabName>Payment History</tabName>
+        <tabName>Holiday Setting</tabName>
         <tabClass>PaymentHistoryTab</tabClass>       
     </action>
     
     <action id = "classroomSettings" menuItem = "Classroom Setting">
-        <tabName>All Fines</tabName>
-        <tabClass>FineListTab</tabClass>       
+        <tabName>Classroom Setting</tabName>
+        <tabClass>school.ClassroomTab</tabClass>       
     </action>
     
     <action id = "financeSettings" menuItem = "Finance Settings">
-        <tabName>Add Librarian</tabName>
+        <tabName>Finance Setting</tabName>
         <tabClass>AddLibrarianTab</tabClass>       
     </action>
     
@@ -158,29 +163,29 @@ This xml keeps mapping between four things:
     </action>
     
     <action id = "databaseBackup" menuItem = "Database Backup...">
-        <tabName>Settings</tabName>
+        <tabName>Database Backup/Restore</tabName>
         <tabClass>SettingsTab</tabClass>       
     </action>
     
     <action id = "systemLogs" menuItem = "System Logs">
-        <tabName>Help</tabName>
+        <tabName>System Logs</tabName>
         <tabClass>HelpContentsTab</tabClass>       
     </action>
     
     <action id = "systemSettings" menuItem = "System Settings">
-        <tabName>Welcome to ChocoLMS!</tabName>
+        <tabName>System Settings</tabName>
         <tabClass>WelcomePageTab</tabClass>       
     </action>
     
     <action id = "memoManagement" menuItem = "Memos/Tasks Management">
-        <tabName>Report Issue</tabName>
+        <tabName>Memo/Tasks Management</tabName>
         <tabClass>ReportIssueTab</tabClass>       
     </action>
     
     
     
     <action id = "reportIssue" menuItem = "Report Issue...">
-        <tabName>About ChocoLMS</tabName>
+        <tabName>Report Issue</tabName>
         <tabClass>AboutTab</tabClass>       
     </action>
 </roboOffice>

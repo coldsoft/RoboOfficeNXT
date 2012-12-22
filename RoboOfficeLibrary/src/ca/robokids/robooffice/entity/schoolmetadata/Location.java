@@ -8,14 +8,15 @@ public class Location {
 
     private String name;
 
-    private String addresss;
+    private String address;
 
-   public String getAddresss() {
-      return addresss;
+    
+   public String getAddress() {
+      return address;
    }
 
-   public void setAddresss(String addresss) {
-      this.addresss = addresss;
+   public void setAddress(String addresss) {
+      this.address = addresss;
    }
 
    public int getLocation_id() {
@@ -33,6 +34,10 @@ public class Location {
    public void setName(String name) {
       this.name = name;
    }
-    
+   
+   public String toString()
+   {
+      return getName() + " at " + getAddress();
+   }
     
  }

@@ -6,6 +6,7 @@ package ca.robokids.robooffice.desktop.main;
 
 import ca.robokids.exception.DatabaseException;
 import ca.robokids.exception.RoboOfficeException;
+import ca.robokids.exception.userexception.BadPasswordException;
 import ca.robokids.exception.userexception.BadUsernameException;
 import ca.robokids.robooffice.desktop.loaders.FontsLoader;
 import ca.robokids.robooffice.desktop.util.PopupMessage;
@@ -282,14 +283,16 @@ private class LoginThread implements Runnable
           public void run()
     {
         User user = new User();
-        try
-        {
+         try {
             user = UserActivity.login(username, password);
-        } catch (RoboOfficeException e)
-        {
-            l.errorMsg(e.getMessage());
+         } catch (DatabaseException ex) {
+            PopupMessage.createErrorPopUp(ex.getMessage(), null);
             return;
-        }
+         } catch (BadUsernameException | BadPasswordException ex) {
+            l.errorMsg(ex.getMessage());
+            return;
+         }
+        
         MainRoboOfficeJFrame.getInstance().login(user);
     }
        

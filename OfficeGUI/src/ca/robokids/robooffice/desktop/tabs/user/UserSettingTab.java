@@ -34,7 +34,7 @@ public class UserSettingTab extends javax.swing.JPanel implements Tab{
     * Creates new form UserSettingTab
     */
    List<UserGroup> groups = null;
-   UserInfoPanel userInfo = new UserInfoPanel();;
+   UserInfoPanel userInfo = new UserInfoPanel(this);
    DefaultListModel<User> userModel = new DefaultListModel();
    JYCheckBoxList.CheckBoxSelectionModel checkboxGroupModel;
    DefaultListModel<UserGroup> groupModel = new DefaultListModel();
@@ -436,19 +436,22 @@ public class UserSettingTab extends javax.swing.JPanel implements Tab{
 
    private void btnSaveGroupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveGroupActionPerformed
       this.txtGroupName.setEnabled(false);
-
+      currentGroup.setGroupName(txtGroupName.getText().trim());
       List<Action> oldAction = currentGroup.getActions();
       currentGroup.setActions(saveAction(currentGroup));
       try {
          UserManager.modifyUserGroup(currentGroup);
-         lblErrorMsgActions.setText(currentGroup.toString() + " Updated.");
-      } catch (BadFieldException ex) {
-         currentGroup.setActions(oldAction);
+         
+      } catch (BadFieldException ex) {        
          lblErrorMsgActions.setText(ex.getMessage());
+         refresh();
+         return;
       } catch (DatabaseException ex) {
-         currentGroup.setActions(oldAction);
          PopupMessage.createErrorPopUp(ex.getMessage(), null);
-      }
+         refresh();
+         return;
+     }
+      lblErrorMsgActions.setText(currentGroup.toString() + " Updated.");
       this.txtGroupName.setEnabled(true);
    }//GEN-LAST:event_btnSaveGroupActionPerformed
 
@@ -493,13 +496,17 @@ public class UserSettingTab extends javax.swing.JPanel implements Tab{
       if (index > -1)
       {
          User toBeDeleted = userModel.getElementAt(index);
+         if (toBeDeleted.equals(UserActivity.loginUser))
+         {
+            PopupMessage.createErrorPopUp("You cannot delete yourself.", "Sorry");
+            return;
+         }
          if (PopupMessage.createDelete(toBeDeleted.toString()))
          {
             try {
                UserManager.deleteUser(toBeDeleted);
-            } catch (DatabaseException ex) {
-               PopupMessage.createErrorPopUp(ex.getMessage(), null);
-            } catch (DoesNotExistException ex) {
+               PopupMessage.createInfo("User Deleted.", null);
+            } catch (    DatabaseException | DoesNotExistException ex) {
                PopupMessage.createErrorPopUp(ex.getMessage(), null);
             }
          }

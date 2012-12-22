@@ -6,7 +6,7 @@ package ca.robokids.robooffice.entity.schoolmetadata;
  * 
  * @poseidon-object-id [I4979bea0m13ba8059043mm6465]
  */
-public class Skills {
+public class Skill {
     private int skills_id;
     private String name;
 

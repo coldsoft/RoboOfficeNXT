@@ -5,6 +5,7 @@
 package ca.robokids.robooffice.db;
 
 import ca.robokids.exception.BadFieldException;
+import ca.robokids.robooffice.entity.schoolmetadata.Classroom;
 import ca.robokids.robooffice.entity.user.Action;
 import ca.robokids.robooffice.entity.user.User;
 import ca.robokids.robooffice.entity.user.UserGroup;
@@ -53,8 +54,24 @@ public class CheckFields {
          throw new BadFieldException("User group must have a privilege.");
    }
    
+   public static void checkClassroom(Classroom cr) throws BadFieldException {
+      checkLength(1,45,cr.getName(),
+                 "Classroom name is empty","name must be less than 45 characters.");
+      checkLength(1,50,cr.getCapacity(),
+                  "Capacity is 0.","Capacity is too large(>50).");
+      
+         
+   }
    
-   
+   private static void checkLength(int min, int max, int field, String minMsg, String maxMsg) throws BadFieldException
+   {
+      if (field < min ) {
+         throw new BadFieldException(minMsg);
+      }
+      if (field > max) {
+         throw new BadFieldException(maxMsg);
+      }
+   }
    private static void checkLength(int min, int max, String field, String minMsg, String maxMsg) throws BadFieldException
    {
       if (field == null || field.length() < min ) {
@@ -64,5 +81,7 @@ public class CheckFields {
          throw new BadFieldException(maxMsg);
       }
    }
+
+   
    
 }

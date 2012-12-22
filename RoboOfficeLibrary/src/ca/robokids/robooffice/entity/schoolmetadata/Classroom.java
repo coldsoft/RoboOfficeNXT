@@ -55,6 +55,9 @@ public class Classroom {
    public void setName(String name) {
       this.name = name;
    }
-
+   public String toString()
+   {
+      return this.getName();
+   }
     
  }

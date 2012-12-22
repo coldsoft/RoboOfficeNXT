@@ -16,6 +16,8 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.*;
 
 /**
@@ -123,7 +125,7 @@ public class MainRoboOfficeJFrame extends javax.swing.JFrame {
         toolBar.setFloatable(false);
         toolBar.setRollover(true);
 
-        tabbedPane.setTabStyle(de.javasoft.swing.JYTabbedPane.TabStyle.SELECTED_TAB_ONLY);
+        tabbedPane.setFont(FontsLoader.getTabFont());
 
         accountMenu.setText("My Account");
         accountMenu.setFont(FontsLoader.getMenuFont());
@@ -142,10 +144,12 @@ public class MainRoboOfficeJFrame extends javax.swing.JFrame {
         accountMenu.add(changePasswordMenuItem);
         accountMenu.add(jSeparator1);
 
+        logOutMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Q, java.awt.event.InputEvent.CTRL_MASK));
         logOutMenuItem.setFont(FontsLoader.getMenuItemFont());
         logOutMenuItem.setText("Log Out");
         accountMenu.add(logOutMenuItem);
 
+        exitMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F4, java.awt.event.InputEvent.ALT_MASK));
         exitMenuItem.setFont(FontsLoader.getMenuItemFont());
         exitMenuItem.setText("Exit");
         accountMenu.add(exitMenuItem);
@@ -220,6 +224,7 @@ public class MainRoboOfficeJFrame extends javax.swing.JFrame {
         financeMenu.setText("Finance");
         financeMenu.setFont(FontsLoader.getMenuFont());
 
+        newPaymentMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N, java.awt.event.InputEvent.CTRL_MASK));
         newPaymentMenuItem.setFont(FontsLoader.getMenuItemFont());
         newPaymentMenuItem.setText("New Payment");
         financeMenu.add(newPaymentMenuItem);
@@ -229,6 +234,7 @@ public class MainRoboOfficeJFrame extends javax.swing.JFrame {
         financeMenu.add(overdueStudentMenuItem);
         financeMenu.add(jSeparator6);
 
+        ARMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_R, java.awt.event.InputEvent.CTRL_MASK));
         ARMenuItem.setFont(FontsLoader.getMenuItemFont());
         ARMenuItem.setText("Account Receivable");
         financeMenu.add(ARMenuItem);
@@ -242,10 +248,12 @@ public class MainRoboOfficeJFrame extends javax.swing.JFrame {
         hrMenu.setText("Human resources");
         hrMenu.setFont(FontsLoader.getMenuFont());
 
+        payrollMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_P, java.awt.event.InputEvent.CTRL_MASK));
         payrollMenuItem.setFont(FontsLoader.getMenuItemFont());
         payrollMenuItem.setText("Payroll");
         hrMenu.add(payrollMenuItem);
 
+        addUserMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_A, java.awt.event.InputEvent.CTRL_MASK));
         addUserMenuItem.setFont(FontsLoader.getMenuItemFont());
         addUserMenuItem.setText("Add Staff...");
         hrMenu.add(addUserMenuItem);
@@ -454,14 +462,13 @@ public class MainRoboOfficeJFrame extends javax.swing.JFrame {
             if (component instanceof JMenuItem) {
                
                JMenuItem item = (JMenuItem) component;
-               System.out.println(item.getText());
                item.setName(ActionMappingLoader.getActionIDByMenuItemText(item.getText()));
                item.addActionListener(actionListener);
             }
             //or search sub menu for more menu items
             if (component instanceof JMenu) {
                JMenu submenu = (JMenu) component;
-               System.out.println("in submenu" + submenu.getText());
+               submenu.setName(ActionMappingLoader.getActionIDByMenuItemText(submenu.getText()));
                for (int k = 0; k < submenu.getMenuComponentCount(); k++) {
                   JComponent submenuitem = submenu.getItem(k);
                   if (component instanceof JMenuItem) {
@@ -549,16 +556,23 @@ public class MainRoboOfficeJFrame extends javax.swing.JFrame {
    }
 
    public void login(User user) {
+      if (user == null)
+         return;
       this.active = true;
-      setMenuActive(user.getFirstName() + " " + user.getLastName());
+      setMenuActive(user);
+      try {
+         setMenuPrivilege();
+      } catch (DatabaseException ex) {
+         PopupMessage.createErrorPopUp(ex.getMessage(), null);
+      }
       //EnableButtons(true);
       tabbedPane.removeAll();
 
    }
 
-   private void setMenuActive(String userID) {
+   private void setMenuActive(User user) {
       enableMenu(true);
-      accountMenu.setText(userID);
+      accountMenu.setText(user.getFirstName()+" "+user.getLastName());
       tabbedPane.setCloseButtonStrategy(JYTabbedPane.CloseButtonStrategy.ALL_TABS);
    }
 
@@ -637,4 +651,40 @@ public class MainRoboOfficeJFrame extends javax.swing.JFrame {
     private javax.swing.JMenuItem viewAllStudentMenuItem;
     private javax.swing.JMenuItem weeklyScheduleMenuItem;
     // End of variables declaration//GEN-END:variables
+
+   public void setUserMenu(User temp) {
+      setMenuActive(temp);
+   }
+
+   private void setMenuPrivilege() throws DatabaseException {
+      //For every menu in menu bar
+      for (int i = 0; i < mainMenuBar.getMenuCount(); i++) {
+         JMenu menu = (JMenu) mainMenuBar.getMenu(i);
+         boolean disabled = false;
+         //for every menu item or submenu within each menu
+         for (int j = 0; j < menu.getMenuComponentCount(); j++) {
+            JComponent component = menu.getItem(j);
+            if (component instanceof JMenuItem) {              
+               JMenuItem item = (JMenuItem) component;
+               item.setEnabled(UserActivity.hasPrivilege(item.getName()));
+               disabled |= item.isEnabled();
+            }
+            //or search sub menu for more menu items
+            if (component instanceof JMenu) {
+               JMenu submenu = (JMenu) component;
+               
+               for (int k = 0; k < submenu.getMenuComponentCount(); k++) {
+                  JComponent submenuitem = submenu.getItem(k);
+                  if (component instanceof JMenuItem) {
+                     JMenuItem item = (JMenuItem) submenuitem;
+                     item.setEnabled(UserActivity.hasPrivilege(item.getName()));
+                  }
+
+               }
+            }
+         }
+         
+        menu.setEnabled(disabled);
+      }
+   }
 }

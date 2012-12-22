@@ -47,8 +47,13 @@ public class TabManager implements ActionListener {
    }
 
    private static void createTab(String action) {
-      String tabName = ActionMappingLoader.getTabName(action);
+      
 
+      if (noTabs(action))
+      {
+         return;
+      }
+      String tabName = ActionMappingLoader.getTabName(action);
       if (exists(tabName)) {
          switchTo(tabName);
          return;
@@ -96,6 +101,19 @@ public class TabManager implements ActionListener {
       //tabTable.put(tabName,index);
       Tab currentTab = (Tab) panel;
       currentTab.setFocus();
+   }
+
+   private static boolean noTabs(String action) {
+      if (action.equals("logOut")){
+          MainRoboOfficeJFrame.getInstance().logout();
+          return true;
+      }else if (action.equals("exit"))
+      {
+         MainRoboOfficeJFrame.getInstance().exit();
+         return true;
+      }
+        return false;
+      
    }
 
    @Override

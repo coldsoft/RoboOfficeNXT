@@ -75,7 +75,7 @@ public class DatabaseManager {
                throw new DatabaseException("Statement Close Error.");
             }
          }
-         closeConnection();
+         //closeConnection();
       }
    }
 
@@ -95,7 +95,7 @@ public class DatabaseManager {
                throw new DatabaseException("Statement Close Error.");
             }
          }
-         closeConnection();
+         //closeConnection();
       }
 
 
@@ -120,14 +120,8 @@ public class DatabaseManager {
                throw new DatabaseException("Resultset Close Error.");
             }
          }
-         if (stmt != null) {
-            try {
-               stmt.close();
-            } catch (SQLException sqlEx) {
-               throw new DatabaseException("Statement Close Error.");
-            }
-         }
-         closeConnection();
+         
+         //closeConnection();
       }
       return crs;
    }

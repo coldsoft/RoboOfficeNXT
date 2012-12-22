@@ -31,7 +31,7 @@ public class FontsLoader {
     {
 
         if (getBundle() != null)
-            return new Font(getBundle().getString("menuFont"),Font.PLAIN,Integer.parseInt(getBundle().getString("menuFontSize")));
+            return new Font(getBundle().getString("menuFont"),Font.BOLD,Integer.parseInt(getBundle().getString("menuFontSize")));
         return new Font("Comic Sans MS",Font.PLAIN,8);
     }
 
@@ -99,6 +99,20 @@ public class FontsLoader {
 
         if (getBundle() != null)
             return new Font(getBundle().getString("listFont"),Font.PLAIN,Integer.parseInt(getBundle().getString("listFontSize")));
+        return new Font("Comic Sans MS",Font.PLAIN,8);
+    }
+    public static Font getBigListFont()
+    {
+
+        if (getBundle() != null)
+            return new Font(getBundle().getString("BigListFont"),Font.BOLD,Integer.parseInt(getBundle().getString("BigListFontSize")));
+        return new Font("Comic Sans MS",Font.PLAIN,8);
+    }
+    public static Font getErrorLabelFont()
+    {
+
+        if (getBundle() != null)
+            return new Font(getBundle().getString("errorLabelFont"),Font.BOLD,Integer.parseInt(getBundle().getString("errorLabelFontSize")));
         return new Font("Comic Sans MS",Font.PLAIN,8);
     }
     /**

@@ -7,9 +7,12 @@ package ca.robokids.robooffice.desktop.customSwing;
 import ca.robokids.exception.BadFieldException;
 import ca.robokids.exception.DatabaseException;
 import ca.robokids.robooffice.desktop.loaders.FontsLoader;
+import ca.robokids.robooffice.desktop.main.MainRoboOfficeJFrame;
+import ca.robokids.robooffice.desktop.tabs.Tab;
 import ca.robokids.robooffice.desktop.util.PopupMessage;
 import ca.robokids.robooffice.entity.user.PasswordQuestion;
 import ca.robokids.robooffice.entity.user.User;
+import ca.robokids.robooffice.logic.usermanagement.UserActivity;
 import ca.robokids.robooffice.logic.usermanagement.UserManager;
 import java.awt.CardLayout;
 import java.util.List;
@@ -26,8 +29,10 @@ public class UserInfoPanel extends javax.swing.JPanel {
     */
    User user;
    DefaultComboBoxModel<PasswordQuestion> model = new DefaultComboBoxModel();
-   public UserInfoPanel() {
+   Tab parent;
+   public UserInfoPanel(Tab parent) {
       initComponents();
+      this.parent = parent;
       initPasswordQuestionComboBox();
       CardLayout c = (CardLayout)this.getLayout();
          c.show(this, "display");
@@ -418,6 +423,10 @@ public class UserInfoPanel extends javax.swing.JPanel {
          temp.setDeleted(user.isDeleted());
          try {
             UserManager.modifyUser(temp);
+            if (temp.equals(UserActivity.loginUser))
+            {
+               MainRoboOfficeJFrame.getInstance().setUserMenu(temp);
+            }
          } catch (BadFieldException ex) {
             lblErrorMsg.setText(ex.getMessage());
             this.btnSave.setEnabled(true);
@@ -431,9 +440,11 @@ public class UserInfoPanel extends javax.swing.JPanel {
          user = temp;
          CardLayout c = (CardLayout)this.getLayout();
          c.show(this, "display");
-         this.btnSave.setEnabled(true);
-      }
          
+      }
+      populateFields();
+      this.parent.refresh();
+      this.btnSave.setEnabled(true);
       
    }//GEN-LAST:event_btnSaveActionPerformed
 
@@ -516,11 +527,11 @@ public class UserInfoPanel extends javax.swing.JPanel {
    }
 
    private User getFields() {
-      if (txtPass1.equals(""))
+      if (txtPass1.getText().equals(""))
          return null;
-      if (txtPass2.equals(""))
+      if (txtPass2.getText().equals(""))
          return null;
-      if (!txtPass1.equals(txtPass2))
+      if (!txtPass1.getText().equals(txtPass2.getText()))
       {
          lblErrorMsg.setText("New Passwords don't match.");
          return null;

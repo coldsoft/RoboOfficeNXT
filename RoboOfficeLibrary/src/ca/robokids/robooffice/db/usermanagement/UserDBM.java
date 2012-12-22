@@ -61,7 +61,7 @@ public class UserDBM {
       DatabaseManager.executeUpdate(stmt);
 
       groups = user.getUserGroups();
-      //add mapping between usergroup and newly added user
+      //add mapping between usergroup and modified user
       for (UserGroup g : groups) {
          createUserGroupMapping(user.getUser_id(),g.getGroup_id());
       }     
@@ -153,9 +153,9 @@ public class UserDBM {
          List<User> users = new ArrayList();
          String query;
          if (userGroupID < 1) {
-            query = "SELECT DISTINCT user_id FROM roboofficenxt.user_view";
+            query = "SELECT DISTINCT user_id FROM user_view";
          } else {
-            query = "SELECT DISTINCT user_id FROM roboofficenxt.user_view WHERE GROUP_ID = " + String.valueOf(userGroupID)
+            query = "SELECT DISTINCT user_id FROM user_view WHERE GROUP_ID = " + String.valueOf(userGroupID)
                + " ORDER BY user_name ASC";
          }
 
