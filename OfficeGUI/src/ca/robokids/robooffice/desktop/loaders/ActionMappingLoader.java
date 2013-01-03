@@ -38,6 +38,7 @@ public class ActionMappingLoader
 
         Node node = action.getElementsByTagName("image").item(0).getFirstChild();
         String url = FramePropertyLoader.getImageDIR() + node.getNodeValue();
+        System.out.println(url);
         return new ImageIcon(url.getClass().getResource(url));
     }
 

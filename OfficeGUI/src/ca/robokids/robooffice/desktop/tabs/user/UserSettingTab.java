@@ -145,7 +145,7 @@ public class UserSettingTab extends javax.swing.JPanel implements Tab{
         lblErrorMsg.setForeground(new java.awt.Color(255, 51, 51));
 
         btnDeleteUser.setFont(FontsLoader.getButtonFont());
-        btnDeleteUser.setForeground(new java.awt.Color(255, 51, 51));
+        btnDeleteUser.setForeground(new java.awt.Color(255, 0, 0));
         btnDeleteUser.setText("Delete This User");
         btnDeleteUser.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

@@ -19,9 +19,9 @@ This xml keeps mapping between four things:
     </action>
     
     <action id = "logOut" menuItem = "Log Out">
-        <image>logout.gif</image>
-        <tabName></tabName>
-        <tabClass></tabClass>       
+        <image>logOut.png</image>
+        <tabName>Log Out</tabName>
+        <tabClass>  </tabClass>       
     </action>
     
     <action id = "exit" menuItem = "Exit">
@@ -35,6 +35,7 @@ This xml keeps mapping between four things:
     </action>
     
     <action id = "viewAllStudents" menuItem = "View All Students">
+       <image>masterList.png</image>
         <tabName>Students Master List</tabName>
         <tabClass>students.ViewAllStudentsTab</tabClass>       
     </action>
@@ -50,6 +51,7 @@ This xml keeps mapping between four things:
     </action>
     
     <action id = "weeklySchedule" menuItem = "Weekly Schedule">
+       <image>weeklySchedule.png</image>
         <tabName>Weekly Schedule</tabName>
         <tabClass>students.WeeklyScheduleTab</tabClass>       
     </action>
@@ -65,21 +67,25 @@ This xml keeps mapping between four things:
     </action>
     
     <action id = "printAttendance" menuItem = "Print...">
+       <image>printAttendance.png</image>
         <tabName>Print Attendance</tabName>
         <tabClass>ReportLostItemTab</tabClass>       
     </action>
     
     <action id = "recordAttendance" menuItem = "Record...">
+       <image>recordAttendance.png</image>
         <tabName>Record Attendance</tabName>
         <tabClass>ListOverduesTab</tabClass>       
     </action>
     
     <action id = "enterProgressReport" menuItem = "Enter Progress Report">
+       <image>progressReport.png</image>
         <tabName>Record Progress Report</tabName>
         <tabClass>ProgressReportTab</tabClass>       
     </action>
     
     <action id = "newStudent" menuItem = "New Student Registration">
+       <image>newStudent.png</image>
         <tabName>New Student</tabName>
         <tabClass>AddResourceTab</tabClass>       
     </action>
@@ -90,11 +96,13 @@ This xml keeps mapping between four things:
     </action>
     
     <action id = "studentStatistic" menuItem = "Students Statistic">
+       <image>studentStat.png</image>
         <tabName>Student Statistic</tabName>
         <tabClass>NewItemPurchaseRequestTab</tabClass>       
     </action>
     
     <action id = "newPayment" menuItem = "New Payment">
+       <image>newPayment.png</image>
         <tabName>New Payment</tabName>
         <tabClass>ViewAllPurchaseRequestsTab</tabClass>       
     </action>
@@ -122,6 +130,11 @@ This xml keeps mapping between four things:
     <action id = "courseSettings" menuItem = "Courses...">
         <tabName>Courses setting</tabName>
         <tabClass>BrowsePatronsTab</tabClass>       
+    </action>
+    
+    <action id = "progresReportSettings" menuItem = "ProgressReport...">
+        <tabName>Progress Report setting</tabName>
+        <tabClass>school.ProgressReportTab</tabClass>       
     </action>
     
     <action id = "progressReportSetting" menuItem = "Progress Report...">
@@ -154,7 +167,7 @@ This xml keeps mapping between four things:
     
     <action id = "financeSettings" menuItem = "Finance Settings">
         <tabName>Finance Setting</tabName>
-        <tabClass>AddLibrarianTab</tabClass>       
+        <tabClass>school.FinanceSettingsTab</tabClass>       
     </action>
     
     <action id = "userAccountSettings" menuItem = "User Account Settings">

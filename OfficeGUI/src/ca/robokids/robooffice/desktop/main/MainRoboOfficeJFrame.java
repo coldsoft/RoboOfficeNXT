@@ -12,13 +12,16 @@ import ca.robokids.robooffice.desktop.util.PopupMessage;
 import ca.robokids.robooffice.entity.user.User;
 import ca.robokids.robooffice.logic.usermanagement.UserActivity;
 import de.javasoft.swing.JYTabbedPane;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
+import javax.swing.JToolBar.Separator;
 
 /**
  *
@@ -27,7 +30,8 @@ import javax.swing.*;
 public class MainRoboOfficeJFrame extends javax.swing.JFrame {
 
    private static MainRoboOfficeJFrame self;
-   private TabManager actionListener = new TabManager();
+   private Separator buttonSpacing;
+   private ActionListener actionListener = new TabManager();
    private boolean active;
    private LoginTab loginPanel = new LoginTab();
 
@@ -36,11 +40,14 @@ public class MainRoboOfficeJFrame extends javax.swing.JFrame {
     */
    public MainRoboOfficeJFrame() {
       initComponents();
+      
       setMenuItemsActionID();
       setTabbedPaneProperty();
       initFrameProperty();
       addCloseConfirmation();
+      addButtons();
       setFrameInactive();
+      
 
       loginPanel.focusTxtUser();
 
@@ -102,7 +109,6 @@ public class MainRoboOfficeJFrame extends javax.swing.JFrame {
         courseSettingMenuItem = new javax.swing.JMenuItem();
         membershipSettingMenuItem = new javax.swing.JMenuItem();
         projectSettingMenuItem = new javax.swing.JMenuItem();
-        feeSettingMenuItem = new javax.swing.JMenuItem();
         jSeparator7 = new javax.swing.JPopupMenu.Separator();
         holidayMenuItem = new javax.swing.JMenuItem();
         classroomMenuItem = new javax.swing.JMenuItem();
@@ -278,10 +284,6 @@ public class MainRoboOfficeJFrame extends javax.swing.JFrame {
         projectSettingMenuItem.setFont(FontsLoader.getMenuItemFont());
         projectSettingMenuItem.setText("Projects...");
         schoolMenu.add(projectSettingMenuItem);
-
-        feeSettingMenuItem.setFont(FontsLoader.getMenuItemFont());
-        feeSettingMenuItem.setText("Fees...");
-        schoolMenu.add(feeSettingMenuItem);
         schoolMenu.add(jSeparator7);
 
         holidayMenuItem.setFont(FontsLoader.getMenuItemFont());
@@ -346,15 +348,15 @@ public class MainRoboOfficeJFrame extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(tabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 770, Short.MAX_VALUE)
             .addComponent(toolBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(tabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 770, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(toolBar, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(toolBar, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(tabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 333, Short.MAX_VALUE))
+                .addComponent(tabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 349, Short.MAX_VALUE))
         );
 
         pack();
@@ -520,6 +522,9 @@ public class MainRoboOfficeJFrame extends javax.swing.JFrame {
 
    private void tabbedPaneComponentResized(java.awt.event.ComponentEvent evt) {
       TabManager.resizeTab(this.getWidth());
+      Dimension dim = new Dimension(this.getSize().width-getButtonSpacing(),0);
+      buttonSpacing.setSeparatorSize(dim);
+      
    }
 
    public void exit() {
@@ -552,7 +557,7 @@ public class MainRoboOfficeJFrame extends javax.swing.JFrame {
       loginPanel.reset();
       tabbedPane.setCloseButtonStrategy(JYTabbedPane.CloseButtonStrategy.NONE);
       tabbedPane.add("Login", loginPanel);
-      //EnableButtons(false);
+      EnableButtons(false);
    }
 
    public void login(User user) {
@@ -560,8 +565,9 @@ public class MainRoboOfficeJFrame extends javax.swing.JFrame {
          return;
       this.active = true;
       setMenuActive(user);
+
       try {
-         setMenuPrivilege();
+         setPrivilege();
       } catch (DatabaseException ex) {
          PopupMessage.createErrorPopUp(ex.getMessage(), null);
       }
@@ -571,7 +577,6 @@ public class MainRoboOfficeJFrame extends javax.swing.JFrame {
    }
 
    private void setMenuActive(User user) {
-      enableMenu(true);
       accountMenu.setText(user.getFirstName()+" "+user.getLastName());
       tabbedPane.setCloseButtonStrategy(JYTabbedPane.CloseButtonStrategy.ALL_TABS);
    }
@@ -602,7 +607,6 @@ public class MainRoboOfficeJFrame extends javax.swing.JFrame {
     private javax.swing.JMenuItem databaseBackupMenuItem;
     private javax.swing.JMenuItem enterProgressMenuItem;
     private javax.swing.JMenuItem exitMenuItem;
-    private javax.swing.JMenuItem feeSettingMenuItem;
     private javax.swing.JMenu financeMenu;
     private javax.swing.JMenuItem financeSettingMenuItem;
     private javax.swing.JMenu helpMenu;
@@ -656,7 +660,7 @@ public class MainRoboOfficeJFrame extends javax.swing.JFrame {
       setMenuActive(temp);
    }
 
-   private void setMenuPrivilege() throws DatabaseException {
+   private void setPrivilege() throws DatabaseException {
       //For every menu in menu bar
       for (int i = 0; i < mainMenuBar.getMenuCount(); i++) {
          JMenu menu = (JMenu) mainMenuBar.getMenu(i);
@@ -683,8 +687,66 @@ public class MainRoboOfficeJFrame extends javax.swing.JFrame {
                }
             }
          }
-         
+        //If every menus Items in a menu is disabled, then disable the menu
         menu.setEnabled(disabled);
       }
+      //setButton privilege
+      Component[] buttons = toolBar.getComponents();
+        for (int i = 0; i < buttons.length; i++)
+        {
+           if (!(buttons[i] instanceof JButton))
+              continue;
+           String action = buttons[i].getName();
+           System.out.println(action);
+           if (action.equals("quickPrintAttendance") || action.equals("printAttendance") || action.equals("recordAttendance"))
+              action = "attendance";
+            buttons[i].setEnabled(UserActivity.hasPrivilege(action));
+        }
+   }
+
+   private void addButtons() {
+      toolBar.add(getButton("viewAllStudents",this.actionListener));
+      toolBar.add(getButton("weeklySchedule",this.actionListener));
+      toolBar.add(new Separator());
+      toolBar.add(getButton("printAttendance", this.actionListener));
+      toolBar.add(getButton("recordAttendance",this.actionListener));   
+      toolBar.add(getButton("newStudent",this.actionListener));
+      toolBar.add(new Separator());
+      toolBar.add(getButton("newPayment",this.actionListener));
+      toolBar.add(new Separator());
+      toolBar.add(getButton("enterProgressReport",this.actionListener));
+      toolBar.add(getButton("studentStatistic",this.actionListener));
+      
+      Dimension dim = new Dimension(this.getMinimumSize().width-getButtonSpacing(),0);
+      buttonSpacing = new Separator(dim);
+      toolBar.add(buttonSpacing);
+      toolBar.add(getButton("logOut",this.actionListener));
+      
+      
+   }
+   private int getButtonSpacing()
+   {
+      int BUTTON_SIZE = 72;
+      int count = 9;
+      return count*BUTTON_SIZE;
+   }
+   private JButton getButton(String actionID,ActionListener listener)
+   {
+      JButton btn = new JButton();
+        btn.setFont(FontsLoader.getShortCutButtonFont());
+        btn.setName(actionID);
+        btn.addActionListener(listener);
+        btn.setIcon(ActionMappingLoader.getImageFileName(actionID));
+        btn.setToolTipText(ActionMappingLoader.getTabName(actionID));
+        return btn;
+   }
+
+   private void EnableButtons(boolean enable) {
+       Component[] buttons = toolBar.getComponents();
+        for (int i = 0; i < buttons.length; i++)
+        {
+            buttons[i].setEnabled(enable);
+        }
+       // btnLogoff.setEnabled(enable);
    }
 }

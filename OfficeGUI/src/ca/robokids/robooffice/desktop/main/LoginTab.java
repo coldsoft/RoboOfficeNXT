@@ -112,7 +112,7 @@ public class LoginTab extends javax.swing.JPanel {
                             .addComponent(txtPassword)))
                     .addGroup(pnlLoginLayout.createSequentialGroup()
                         .addComponent(btnForgotPassword)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 57, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btnLogin)))
                 .addContainerGap())
         );
@@ -142,27 +142,25 @@ public class LoginTab extends javax.swing.JPanel {
         centre.setLayout(centreLayout);
         centreLayout.setHorizontalGroup(
             centreLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 355, Short.MAX_VALUE)
-            .addGroup(centreLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(centreLayout.createSequentialGroup()
-                    .addContainerGap()
-                    .addGroup(centreLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 335, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGroup(centreLayout.createSequentialGroup()
-                            .addGap(24, 24, 24)
-                            .addComponent(pnlLogin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+            .addGroup(centreLayout.createSequentialGroup()
+                .addGroup(centreLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(centreLayout.createSequentialGroup()
+                        .addGap(26, 26, 26)
+                        .addComponent(jLabel5)
+                        .addGap(0, 19, Short.MAX_VALUE))
+                    .addGroup(centreLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(pnlLogin, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         centreLayout.setVerticalGroup(
             centreLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 307, Short.MAX_VALUE)
-            .addGroup(centreLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(centreLayout.createSequentialGroup()
-                    .addContainerGap()
-                    .addComponent(jLabel5)
-                    .addGap(6, 6, 6)
-                    .addComponent(pnlLogin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+            .addGroup(centreLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel5)
+                .addGap(6, 6, 6)
+                .addComponent(pnlLogin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         gridBagConstraints = new java.awt.GridBagConstraints();

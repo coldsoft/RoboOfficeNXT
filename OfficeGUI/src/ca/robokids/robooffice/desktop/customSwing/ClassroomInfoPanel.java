@@ -99,7 +99,7 @@ public class ClassroomInfoPanel extends javax.swing.JPanel {
         });
 
         btnDelete.setFont(FontsLoader.getButtonFont());
-        btnDelete.setForeground(new java.awt.Color(255, 51, 51));
+        btnDelete.setForeground(new java.awt.Color(255, 0, 0));
         btnDelete.setText("Delete");
         btnDelete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
