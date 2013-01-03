@@ -257,9 +257,87 @@ public class SchoolDBM {
       return DatabaseManager.executeGetPK(stmt);
    }
 
+   public static ProgressReportType getProgressReportTypeById(int reportTypeID) throws DatabaseException
+   {
+      try {
+         String query = "SELECT * FROM progress_report_type WHERE report_type_id = ?";
+         PreparedStatement stmt;
+       
+            stmt = DatabaseManager.getPreparedStatement(query);
+         
+            stmt.setInt(1,reportTypeID);
+         CachedRowSet crs = DatabaseManager.executeQuery(stmt);
+            while(crs.next())
+            {
+               ProgressReportType t = new ProgressReportType();
+               t.setReport_type_id(reportTypeID);
+               t.setName(crs.getString("name"));
+               t.setMaxScore(crs.getInt("max_score"));
+               t.setSection1(crs.getString("section1"));
+               t.setSection2(crs.getString("section2"));
+               t.setSection3(crs.getString("section3"));
+               t.setSection4(crs.getString("section4"));
+               t.setCriteria1(crs.getString("criteria1"));
+               t.setCriteria2(crs.getString("criteria2"));
+               t.setCriteria3(crs.getString("criteria3"));
+               t.setCriteria4(crs.getString("criteria4"));
+               t.setCriteria5(crs.getString("criteria5"));
+               t.setCriteria6(crs.getString("criteria6"));
+               t.setCriteria7(crs.getString("criteria7"));
+               t.setCriteria8(crs.getString("criteria8"));
+               t.setCriteria9(crs.getString("criteria9"));
+               t.setCriteria10(crs.getString("criteria10"));
+               t.setCriteria11(crs.getString("criteria11"));
+               t.setCriteria12(crs.getString("criteria12"));               
+               t.setReportCardCommentTemplate(getReportCardCommentTemplate(reportTypeID));
+
+               return t;
+            }
+            return null;
+      } catch (SQLException ex) {
+         throw new DatabaseException(ex.getMessage());
+      }
+   }
+   public static List<ProgressReportType> getAllProgressReportType() throws DatabaseException
+   {
+      try {
+         List<ProgressReportType> reportTypes = new ArrayList();
+         String query = "SELECT * FROM progress_report_type WHERE deleted = 0";
+         PreparedStatement stmt;
+         try {
+            stmt = DatabaseManager.getPreparedStatement(query);
+         } catch (SQLException ex) {
+            throw new DatabaseException(ex.getMessage());
+         }
+         
+         CachedRowSet crs = DatabaseManager.executeQuery(stmt);
+         while(crs.next())
+         {
+            ProgressReportType t = getProgressReportTypeById(crs.getInt("report_type_id"));           
+            reportTypes.add(t);
+         }
+         return reportTypes;
+      } catch (SQLException ex) {
+         throw new DatabaseException(ex.getMessage());
+      }
+      
+   }
+   private static ReportCardCommentTemplate getReportCardCommentTemplate(int reportTypeId) throws DatabaseException
+   {
+      ReportCardCommentTemplate t = new ReportCardCommentTemplate();
+      t.setReport_type_id(reportTypeId);
+      t.setSection1Observation(getSection1ObservationStrings(reportTypeId));
+      t.setSection2Observation(getSection2ObservationStrings(reportTypeId));
+      t.setSection3Observation(getSection3ObservationStrings(reportTypeId));
+      t.setSection1Recommendation(getSection1RecommendationStrings(reportTypeId));
+      t.setSection2Recommendation(getSection2RecommendationStrings(reportTypeId));
+      t.setSection3Recommendation(getSection3RecommendationStrings(reportTypeId));
+      
+      return t;
+   }
    public static int createProgressReportType(ProgressReportType reportType) throws DatabaseException {
       //Insert report type
-      PreparedStatement stmt = insertProgressReport(reportType);
+      PreparedStatement stmt = insertProgressReportType(reportType);
       int new_id = DatabaseManager.executeGetPK(stmt);
 
       //Insert list of report card comment template for this report type
@@ -267,6 +345,38 @@ public class SchoolDBM {
 
 
       return new_id;
+
+   }
+
+   public static void modifyProgressReportType(ProgressReportType reportType) throws DatabaseException {
+      
+      PreparedStatement stmt = updateProgressReportType(reportType);
+      DatabaseManager.executeUpdate(stmt);
+      
+      //Delete old reportCardComment
+      deleteReportCardCommentTemplate(reportType.getReport_type_id());
+      
+      //insert new reportCardComment
+      createReportCardCommentTemplate(reportType.getReport_type_id(),reportType.getReportCardCommentTemplate());
+      
+
+   }
+
+   public static boolean deleteProgressReportType(int reportTypeId) throws DatabaseException {
+      try {
+         String delete = "UPDATE progress_report_type SET deleted = 1 WHERE report_type_id = ?";
+         PreparedStatement stmt = DatabaseManager.getPreparedStatement(delete);
+         stmt.setInt(1, reportTypeId);
+         int rowChanged = DatabaseManager.executeUpdate(stmt);
+         if (rowChanged < 1) {
+            return false;
+         }
+         deleteReportCardCommentTemplate(reportTypeId);
+
+         return true;
+      } catch (SQLException ex) {
+         throw new DatabaseException(ex.getMessage());
+      }
 
    }
 
@@ -392,11 +502,46 @@ public class SchoolDBM {
       }
    }
 
-   private static PreparedStatement insertProgressReport(ProgressReportType reportType) throws DatabaseException {
+   private static PreparedStatement updateProgressReportType(ProgressReportType reportType) throws DatabaseException {
+      try {
+         String update = "UPDATE progress_report_type SET max_score = ?, section1 = ?, criteria1 = ?, criteria2 = ?, "
+            + "criteria3 = ?, section2 = ?, criteria4 = ?, criteria5 = ?, criteria6 = ?, section3 = ?, criteria7 = ?, "
+            + "criteria8 = ?, criteria9 = ?, section4 = ?, criteria10 = ?, criteria11 = ?, criteria12 = ?, name = ? "
+            + "WHERE report_type_id = ?";
+         PreparedStatement stmt = DatabaseManager.getPreparedStatement(update);
+
+         stmt.setInt(1, reportType.getMaxScore());
+         stmt.setString(2, reportType.getSection1());
+         stmt.setString(3, reportType.getCriteria1());
+         stmt.setString(4, reportType.getCriteria2());
+         stmt.setString(5, reportType.getCriteria3());
+         stmt.setString(6, reportType.getSection2());
+         stmt.setString(7, reportType.getCriteria4());
+         stmt.setString(8, reportType.getCriteria5());
+         stmt.setString(9, reportType.getCriteria6());
+         stmt.setString(10, reportType.getSection3());
+         stmt.setString(11, reportType.getCriteria7());
+         stmt.setString(12, reportType.getCriteria8());
+         stmt.setString(13, reportType.getCriteria9());
+         stmt.setString(14, reportType.getSection4());
+         stmt.setString(15, reportType.getCriteria10());
+         stmt.setString(16, reportType.getCriteria11());
+         stmt.setString(17, reportType.getCriteria12());
+         stmt.setString(18, reportType.getName());
+         stmt.setInt(19, reportType.getReport_type_id());
+
+         return stmt;
+      } catch (SQLException ex) {
+         throw new DatabaseException(ex.getMessage());
+      }
+
+   }
+
+   private static PreparedStatement insertProgressReportType(ProgressReportType reportType) throws DatabaseException {
       try {
          String query = "INSERT INTO progress_report_type (max_score,section1,criteria1,criteria2,criteria3,"
-            + "section2,criteria4,criteria5,criteria6,section3,criteria7,criteria8,criteria9,section4,criteria10,criteria11,criteria12) "
-            + "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+            + "section2,criteria4,criteria5,criteria6,section3,criteria7,criteria8,criteria9,section4,criteria10,criteria11,criteria12,name) "
+            + "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
          PreparedStatement stmt = DatabaseManager.getPreparedStatement(query);
          stmt.setInt(1, reportType.getMaxScore());
@@ -416,6 +561,7 @@ public class SchoolDBM {
          stmt.setString(15, reportType.getCriteria10());
          stmt.setString(16, reportType.getCriteria11());
          stmt.setString(17, reportType.getCriteria12());
+         stmt.setString(18, reportType.getName());
          return stmt;
       } catch (SQLException ex) {
          throw new DatabaseException("SQL Error." + ex.getMessage());
@@ -641,6 +787,119 @@ public class SchoolDBM {
          stmt.setString(2, s);
 
          return stmt;
+      } catch (SQLException ex) {
+         throw new DatabaseException(ex.getMessage());
+      }
+   }
+
+   private static List<String> getSection1ObservationStrings(int reportTypeId) throws DatabaseException {
+      try {
+         List<String> sentences = new ArrayList();
+         String query = "SELECT * FROM comment_section1_observation WHERE report_type_id = ?";
+         PreparedStatement stmt = DatabaseManager.getPreparedStatement(query);
+         stmt.setInt(1, reportTypeId);
+         
+         CachedRowSet crs = DatabaseManager.executeQuery(stmt);
+         while(crs.next())
+         {
+            String s = crs.getString("section1_observation");
+            sentences.add(s);
+         }
+         return sentences;
+      } catch (SQLException ex) {
+         throw new DatabaseException(ex.getMessage());
+      }
+   }
+   private static List<String> getSection2ObservationStrings(int reportTypeId) throws DatabaseException {
+      try {
+         List<String> sentences = new ArrayList();
+         String query = "SELECT * FROM comment_section2_observation WHERE report_type_id = ?";
+         PreparedStatement stmt = DatabaseManager.getPreparedStatement(query);
+         stmt.setInt(1, reportTypeId);
+         
+         CachedRowSet crs = DatabaseManager.executeQuery(stmt);
+         while(crs.next())
+         {
+            String s = crs.getString("section2_observation");
+            sentences.add(s);
+         }
+         return sentences;
+      } catch (SQLException ex) {
+         throw new DatabaseException(ex.getMessage());
+      }
+   }
+
+   private static List<String> getSection3ObservationStrings(int reportTypeId) throws DatabaseException {
+      try {
+         List<String> sentences = new ArrayList();
+         String query = "SELECT * FROM comment_section3_observation WHERE report_type_id = ?";
+         PreparedStatement stmt = DatabaseManager.getPreparedStatement(query);
+         stmt.setInt(1, reportTypeId);
+         
+         CachedRowSet crs = DatabaseManager.executeQuery(stmt);
+         while(crs.next())
+         {
+            String s = crs.getString("section3_observation");
+            sentences.add(s);
+         }
+         return sentences;
+      } catch (SQLException ex) {
+         throw new DatabaseException(ex.getMessage());
+      }
+   }
+
+   private static List<String> getSection1RecommendationStrings(int reportTypeId) throws DatabaseException {
+      try {
+         List<String> sentences = new ArrayList();
+         String query = "SELECT * FROM comment_section1_recommendation WHERE report_type_id = ?";
+         PreparedStatement stmt = DatabaseManager.getPreparedStatement(query);
+         stmt.setInt(1, reportTypeId);
+         
+         CachedRowSet crs = DatabaseManager.executeQuery(stmt);
+         while(crs.next())
+         {
+            String s = crs.getString("section1_recommendation");
+            sentences.add(s);
+         }
+         return sentences;
+      } catch (SQLException ex) {
+         throw new DatabaseException(ex.getMessage());
+      }
+   }
+
+   private static List<String> getSection2RecommendationStrings(int reportTypeId) throws DatabaseException {
+      try {
+         List<String> sentences = new ArrayList();
+         String query = "SELECT * FROM comment_section2_recommendation WHERE report_type_id = ?";
+         PreparedStatement stmt = DatabaseManager.getPreparedStatement(query);
+         stmt.setInt(1, reportTypeId);
+         
+         CachedRowSet crs = DatabaseManager.executeQuery(stmt);
+         while(crs.next())
+         {
+            String s = crs.getString("section2_recommendation");
+            sentences.add(s);
+         }
+         return sentences;
+      } catch (SQLException ex) {
+         throw new DatabaseException(ex.getMessage());
+      }
+   }
+
+   private static List<String> getSection3RecommendationStrings(int reportTypeId) throws DatabaseException {
+      try {
+         List<String> sentences = new ArrayList();
+         String query = "SELECT * FROM comment_section3_recommendation WHERE report_type_id = ?";
+         PreparedStatement stmt = DatabaseManager.getPreparedStatement(query);
+         stmt.setInt(1, reportTypeId);
+         
+         CachedRowSet crs = DatabaseManager.executeQuery(stmt);
+         while(crs.next())
+         {
+            String s = crs.getString("section3_recommendation");
+            sentences.add(s);
+         }
+         return sentences;
       } catch (SQLException ex) {
          throw new DatabaseException(ex.getMessage());
       }

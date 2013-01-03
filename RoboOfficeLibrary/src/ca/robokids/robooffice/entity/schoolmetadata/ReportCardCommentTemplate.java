@@ -7,8 +7,6 @@ import java.util.List;
 public class ReportCardCommentTemplate {
 
 
-    private int comment_template_id;
-
     private int report_type_id;
 
     private List<String> section1Observation;
@@ -18,13 +16,6 @@ public class ReportCardCommentTemplate {
     private List<String> section2Recommendation;
     private List<String> section3Recommendation;
 
-   public int getComment_template_id() {
-      return comment_template_id;
-   }
-
-   public void setComment_template_id(int comment_template_id) {
-      this.comment_template_id = comment_template_id;
-   }
 
    public int getReport_type_id() {
       return report_type_id;

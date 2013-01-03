@@ -24,7 +24,15 @@ public class ProgressReportType {
     private String criteria11;
     private String criteria12;
     private ReportCardCommentTemplate reportCardCommentTemplate;
+    private boolean deleted;
 
+   public boolean isDeleted() {
+      return deleted;
+   }
+
+   public void setDeleted(boolean deleted) {
+      this.deleted = deleted;
+   }
     
    public String getName() {
       return name;

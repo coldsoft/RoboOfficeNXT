@@ -11,8 +11,11 @@ import ca.robokids.robooffice.db.schoolmetadata.SchoolDBM;
 import ca.robokids.robooffice.entity.schoolmetadata.Activity;
 import ca.robokids.robooffice.entity.schoolmetadata.Classroom;
 import ca.robokids.robooffice.entity.schoolmetadata.Course;
+import ca.robokids.robooffice.entity.schoolmetadata.ProgressReportType;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -61,6 +64,33 @@ public class SchoolManager {
       //list.addAll(memberships);
       
       return list;
+   }
+   
+   public static List<ProgressReportType> getAllProgressReportType() throws DatabaseException
+   {
+
+         List<ProgressReportType> reportTypes = SchoolDBM.getAllProgressReportType();
+         return reportTypes;
+
+   }
+   
+   public static void deleteProgressReportType(ProgressReportType t) throws DatabaseException
+   {
+
+         SchoolDBM.deleteProgressReportType(t.getReport_type_id());
+
+      
+   }
+   
+   public static void modifyProgressReportType(ProgressReportType t) throws DatabaseException, BadFieldException
+   {
+      CheckFields.checkProgressReportType(t);
+      SchoolDBM.modifyProgressReportType(t);
+   }
+
+   public static void createProgressReportType(ProgressReportType t) throws BadFieldException, DatabaseException {
+      CheckFields.checkProgressReportType(t);
+      SchoolDBM.createProgressReportType(t);
    }
    
 }
