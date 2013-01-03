@@ -10,6 +10,7 @@ package ca.robokids.robooffice.entity.schoolmetadata;
  */
 public class Activity {
    
+   
    private String code;
    private int id;
    private String name;
