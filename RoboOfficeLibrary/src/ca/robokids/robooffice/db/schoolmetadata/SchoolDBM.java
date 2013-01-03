@@ -7,7 +7,6 @@ package ca.robokids.robooffice.db.schoolmetadata;
 import ca.robokids.exception.DatabaseException;
 import ca.robokids.robooffice.db.DatabaseManager;
 import ca.robokids.robooffice.entity.schoolmetadata.*;
-import ca.robokids.robooffice.entity.user.UserGroup;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -17,11 +16,25 @@ import java.util.logging.Logger;
 import javax.sql.rowset.CachedRowSet;
 
 /**
- *
+ * This is the database communication class for School metadata part of the database.<p>
+ * Tables manipulating includes <i>courses, classrooms, projects, progress report templates,</i>etc.<p>
+ * 
+ * Each table in database has five functions:<p>
+ * Modify<p> Create.<p>Delete<p>Get by ID<p>Get All.<p>
+ * 
+ * This class uses the <tt>DatabaseManager</tt> class for execution of Prepared statements.
+ * 
  * @author Coldsoft
  */
 public class SchoolDBM {
 
+   private static Location location = null;
+   /**
+    * Get all courses within a classroom
+    * @param cr
+    * @return ArrayList of Courses
+    * @throws DatabaseException
+    */
    public static List<Course> getAllCourses(Classroom cr) throws DatabaseException {
       try {
          List<Course> courses = new ArrayList();
@@ -48,6 +61,13 @@ public class SchoolDBM {
       }
    }
 
+   /**
+    * Get all courses.If TimeslotID >= 1, all courses of that particular slot will be returned.<p>
+    * If TimeslotID is less than 1, all course from the database will be returned 
+    * @param timeslotID
+    * @return ArrayList of courses
+    * @throws DatabaseException
+    */
    public static List<Course> getAllCourses(Timeslot timeslotID) throws DatabaseException {
       try {
          List<Course> courses = new ArrayList();
@@ -74,6 +94,12 @@ public class SchoolDBM {
       }
    }
 
+   /**
+    * get Course by courseID.Search includes deleted courses as well.
+    * @param courseID
+    * @return Course object if found. <tt>null</tt> otherwise
+    * @throws DatabaseException
+    */
    public static Course getCourseByID(int courseID) throws DatabaseException {
       Course course = getActiveCourseByID(courseID);
       if (course == null) {
@@ -82,6 +108,12 @@ public class SchoolDBM {
       return course;
    }
 
+   /**
+    * get un-deleted courses by courseID.
+    * @param courseID
+    * @return Course object if found. <tt>null</tt> otherwise
+    * @throws DatabaseException
+    */
    public static Course getActiveCourseByID(int courseID) throws DatabaseException {
       try {
          Course temp = null;
@@ -122,6 +154,12 @@ public class SchoolDBM {
       }
    }
 
+   /**
+    * create a new course. Course object must be correctly initialized.
+    * @param course
+    * @return newly generated courseID from database.
+    * @throws DatabaseException
+    */
    public static int createCourse(Course course) throws DatabaseException {
       PreparedStatement stmt = insertCourse(course);
       int new_id = DatabaseManager.executeGetPK(stmt);
@@ -132,6 +170,12 @@ public class SchoolDBM {
       return new_id;
    }
 
+   /**
+    * Modify an existing course.<p>
+    * This Method removes existing course-timeslot mappings and replace them with new ones.
+    * @param course
+    * @throws DatabaseException
+    */
    public static void modifyCourse(Course course) throws DatabaseException {
       //Delete old timeslots for this course
       List<Timeslot> timeslots = getAllTimeslots(course.getId());
@@ -154,6 +198,12 @@ public class SchoolDBM {
       }
    }
 
+   /**
+    * Delete a course. Mark it's deleted flag as true
+    * @param courseID
+    * @return return <tt>true</tt> of deletion was successful. <tt>false</tt> if courseID not found, OR is already deleted.
+    * @throws DatabaseException
+    */
    public static boolean deleteCourse(int courseID) throws DatabaseException {
       try {
          String query = "UPDATE course SET deleted = 1 WHERE course_id = ?";
@@ -169,6 +219,11 @@ public class SchoolDBM {
       }
    }
 
+   /**
+    * get all classrooms in database
+    * @return ArrayList of Classrooms
+    * @throws DatabaseException
+    */
    public static List<Classroom> getAllClassroom() throws DatabaseException {
       List<Classroom> rooms = new ArrayList();
       String query = "SELECT * FROM classroom WHERE deleted = 0";
@@ -202,6 +257,12 @@ public class SchoolDBM {
 
    }
 
+   /**
+    * get classroom by classroom ID.
+    * @param classroomID
+    * @return Classroom object if found. <tt>null</tt> if not found.
+    * @throws DatabaseException
+    */
    public static Classroom getClassroomByID(int classroomID) throws DatabaseException {
       try {
          Classroom r = null;
@@ -227,16 +288,33 @@ public class SchoolDBM {
       }
    }
 
+   /**
+    * Create new classroom in the database.Classroom object must be correctly initialized.
+    * @param classroom
+    * @return return database generated classroomID
+    * @throws DatabaseException
+    */
    public static int createClassroom(Classroom classroom) throws DatabaseException {
       PreparedStatement stmt = insertClassroom(classroom);
       return DatabaseManager.executeGetPK(stmt);
    }
 
+   /**
+    * 
+    * @param classroom
+    * @throws DatabaseException
+    */
    public static void modifyClassroom(Classroom classroom) throws DatabaseException {
       PreparedStatement stmt = updateClassroom(classroom);
       DatabaseManager.executeUpdate(stmt);
    }
 
+   /**
+    * 
+    * @param classroomID
+    * @return
+    * @throws DatabaseException
+    */
    public static boolean deleteClassroom(int classroomID) throws DatabaseException {
       try {
          String query = "UPDATE classroom SET deleted = 1 WHERE classroom_id = ?";
@@ -252,11 +330,23 @@ public class SchoolDBM {
       }
    }
 
+   /**
+    * 
+    * @param timeslot
+    * @return
+    * @throws DatabaseException
+    */
    public static int createTimeSlot(Timeslot timeslot) throws DatabaseException {
       PreparedStatement stmt = insertTimeslot(timeslot);
       return DatabaseManager.executeGetPK(stmt);
    }
 
+   /**
+    * get Progress report Type by report_type_id
+    * @param reportTypeID
+    * @return <tt>null</tt> if not found.
+    * @throws DatabaseException
+    */
    public static ProgressReportType getProgressReportTypeById(int reportTypeID) throws DatabaseException
    {
       try {
@@ -289,7 +379,7 @@ public class SchoolDBM {
                t.setCriteria10(crs.getString("criteria10"));
                t.setCriteria11(crs.getString("criteria11"));
                t.setCriteria12(crs.getString("criteria12"));               
-               t.setReportCardCommentTemplate(getReportCardCommentTemplate(reportTypeID));
+               t.setReportCardCommentTemplate(getReportCardCommentTemplateByID(reportTypeID));
 
                return t;
             }
@@ -298,6 +388,11 @@ public class SchoolDBM {
          throw new DatabaseException(ex.getMessage());
       }
    }
+   /**
+    * get all progress report Type in system.
+    * @return
+    * @throws DatabaseException
+    */
    public static List<ProgressReportType> getAllProgressReportType() throws DatabaseException
    {
       try {
@@ -322,19 +417,14 @@ public class SchoolDBM {
       }
       
    }
-   private static ReportCardCommentTemplate getReportCardCommentTemplate(int reportTypeId) throws DatabaseException
-   {
-      ReportCardCommentTemplate t = new ReportCardCommentTemplate();
-      t.setReport_type_id(reportTypeId);
-      t.setSection1Observation(getSection1ObservationStrings(reportTypeId));
-      t.setSection2Observation(getSection2ObservationStrings(reportTypeId));
-      t.setSection3Observation(getSection3ObservationStrings(reportTypeId));
-      t.setSection1Recommendation(getSection1RecommendationStrings(reportTypeId));
-      t.setSection2Recommendation(getSection2RecommendationStrings(reportTypeId));
-      t.setSection3Recommendation(getSection3RecommendationStrings(reportTypeId));
-      
-      return t;
-   }
+   
+   /**
+    * Create a progress report Type.<p>
+    * This also creates the report card templates sentences associated with it.
+    * @param reportType
+    * @return generated database id
+    * @throws DatabaseException
+    */
    public static int createProgressReportType(ProgressReportType reportType) throws DatabaseException {
       //Insert report type
       PreparedStatement stmt = insertProgressReportType(reportType);
@@ -348,6 +438,11 @@ public class SchoolDBM {
 
    }
 
+   /**
+    * 
+    * @param reportType
+    * @throws DatabaseException
+    */
    public static void modifyProgressReportType(ProgressReportType reportType) throws DatabaseException {
       
       PreparedStatement stmt = updateProgressReportType(reportType);
@@ -362,6 +457,13 @@ public class SchoolDBM {
 
    }
 
+   /**
+    * Mark the deleted flag of Progress report Type to true.<p>
+    * Note:This methods will delete all the Report card comments sentences, since it's no longer needed.
+    * @param reportTypeId
+    * @return
+    * @throws DatabaseException
+    */
    public static boolean deleteProgressReportType(int reportTypeId) throws DatabaseException {
       try {
          String delete = "UPDATE progress_report_type SET deleted = 1 WHERE report_type_id = ?";
@@ -380,7 +482,48 @@ public class SchoolDBM {
 
    }
 
-   public static void createReportCardCommentTemplate(int reportTypeId, ReportCardCommentTemplate r) throws DatabaseException {
+   public static Location getLocation() throws DatabaseException
+   {
+      if (location == null)
+         location = getLocationInformation();
+      return location;
+   }
+   /**
+    * Get the current system's location information.
+    * Location information is set in the database as a singleton table, with only one row.
+    * @return
+    * @throws DatabaseException
+    */
+   private static Location getLocationInformation() throws DatabaseException {
+      
+      Location location = null;
+      PreparedStatement stmt = null;
+      try {
+
+         String query = "SELECT * FROM location";
+         stmt = DatabaseManager.getPreparedStatement(query);
+
+         CachedRowSet rs = DatabaseManager.executeQuery(stmt);
+         while (rs.next()) {
+            location = new Location();
+            location.setLocation_id(rs.getInt("location_id"));
+            location.setName(rs.getString("location_name"));
+            location.setAddress(rs.getString("location_address"));
+         }
+         return location;
+      } catch (SQLException ex) {
+         ex.printStackTrace();
+         throw new DatabaseException(ex.getMessage());
+      }
+
+   }
+   /**
+    * 
+    * @param reportTypeId
+    * @param r
+    * @throws DatabaseException
+    */
+   private static void createReportCardCommentTemplate(int reportTypeId, ReportCardCommentTemplate r) throws DatabaseException {
       for (String s : r.getSection1Observation()) {
          PreparedStatement stmt = insertSection1Observation(reportTypeId, s);
          DatabaseManager.executeGetPK(stmt);
@@ -413,7 +556,12 @@ public class SchoolDBM {
 
    }
 
-   public static void deleteReportCardCommentTemplate(int reportTypeId) throws DatabaseException {
+   /**
+    * 
+    * @param reportTypeId
+    * @throws DatabaseException
+    */
+   private static void deleteReportCardCommentTemplate(int reportTypeId) throws DatabaseException {
       try {
          //section1 observation
          String delete = "DELETE FROM comment_section1_observation WHERE report_type_id = " + reportTypeId;
@@ -445,29 +593,6 @@ public class SchoolDBM {
          stmt = DatabaseManager.getPreparedStatement(delete);
          DatabaseManager.executeUpdate(stmt);
       } catch (SQLException ex) {
-         throw new DatabaseException(ex.getMessage());
-      }
-
-   }
-
-   public static Location getLocation() throws DatabaseException {
-      Location location = null;
-      PreparedStatement stmt = null;
-      try {
-
-         String query = "SELECT * FROM location";
-         stmt = DatabaseManager.getPreparedStatement(query);
-
-         CachedRowSet rs = DatabaseManager.executeQuery(stmt);
-         while (rs.next()) {
-            location = new Location();
-            location.setLocation_id(rs.getInt("location_id"));
-            location.setName(rs.getString("location_name"));
-            location.setAddress(rs.getString("location_address"));
-         }
-         return location;
-      } catch (SQLException ex) {
-         ex.printStackTrace();
          throw new DatabaseException(ex.getMessage());
       }
 
@@ -694,7 +819,7 @@ public class SchoolDBM {
             temp.setClassroom(r);
             temp.setCode(crs.getString("code"));
             temp.setId(courseID);
-            temp.setDeleted(false);
+            temp.setDeleted(true);
             temp.setDescription(crs.getString("description"));
             temp.setDuration(crs.getInt("duration"));
             temp.setRate(crs.getFloat("rate"));
@@ -792,6 +917,19 @@ public class SchoolDBM {
       }
    }
 
+   private static ReportCardCommentTemplate getReportCardCommentTemplateByID(int reportTypeId) throws DatabaseException
+   {
+      ReportCardCommentTemplate t = new ReportCardCommentTemplate();
+      t.setReport_type_id(reportTypeId);
+      t.setSection1Observation(getSection1ObservationStrings(reportTypeId));
+      t.setSection2Observation(getSection2ObservationStrings(reportTypeId));
+      t.setSection3Observation(getSection3ObservationStrings(reportTypeId));
+      t.setSection1Recommendation(getSection1RecommendationStrings(reportTypeId));
+      t.setSection2Recommendation(getSection2RecommendationStrings(reportTypeId));
+      t.setSection3Recommendation(getSection3RecommendationStrings(reportTypeId));
+      
+      return t;
+   }
    private static List<String> getSection1ObservationStrings(int reportTypeId) throws DatabaseException {
       try {
          List<String> sentences = new ArrayList();
