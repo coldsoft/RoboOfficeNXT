@@ -5,7 +5,7 @@
 package ca.robokids.robooffice.desktop.customSwing;
 
 import ca.robokids.robooffice.desktop.loaders.FontsLoader;
-import ca.robokids.robooffice.desktop.tabs.school.ProgressReportTab;
+import ca.robokids.robooffice.desktop.tabs.school.ProgressReportTypeTab;
 import ca.robokids.robooffice.desktop.util.PopupMessage;
 import java.awt.CardLayout;
 import java.util.ArrayList;
@@ -23,7 +23,7 @@ public class ReportSectionPanel extends javax.swing.JPanel {
    /**
     * Creates new form ReportSectionPanel
     */
-   private ProgressReportTab parent;
+   private ProgressReportTypeTab parent;
    private DefaultListModel<String> observationModel = new DefaultListModel();
    private DefaultListModel<String> recommendationModel = new DefaultListModel();
    private List<String> observation;
@@ -32,7 +32,7 @@ public class ReportSectionPanel extends javax.swing.JPanel {
    private String section;
    private boolean editable;
    
-   public ReportSectionPanel(ProgressReportTab parent) {
+   public ReportSectionPanel(ProgressReportTypeTab parent) {
       initComponents();
       this.parent = parent;
    }
@@ -42,8 +42,15 @@ public class ReportSectionPanel extends javax.swing.JPanel {
                            List<String> criteria)
    {
       this.section = section;
-      this.observation = observation;
-      this.recommendation = recommendation;
+      if (observation != null)
+         this.observation = observation;
+      else
+         this.observation = new ArrayList();
+      if (observation != null)
+         this.recommendation = recommendation;
+      else
+         this.recommendation = new ArrayList();
+      
       this.criteria = criteria;
       
       populateFields();
@@ -156,88 +163,85 @@ public class ReportSectionPanel extends javax.swing.JPanel {
         display.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, FontsLoader.getTitleBorderFont()));
 
         jLabel4.setFont(FontsLoader.getStaticLabelFont());
-        jLabel4.setText("Strength/Weekness");
+        jLabel4.setText("Strength/Weakness");
 
         jLabel5.setFont(FontsLoader.getStaticLabelFont());
         jLabel5.setText("Recommendation");
 
         lstObservation.setFont(FontsLoader.getListFont());
         lstObservation.setModel(this.observationModel);
+        lstObservation.setEnabled(false);
         jScrollPane1.setViewportView(lstObservation);
 
         lstRecommendation.setFont(FontsLoader.getListFont());
         lstRecommendation.setModel(this.recommendationModel);
+        lstRecommendation.setEnabled(false);
         jScrollPane2.setViewportView(lstRecommendation);
 
         jLabel6.setFont(FontsLoader.getStaticLabelFont());
         jLabel6.setText("Criterias:");
 
         lblCriteria1.setFont(FontsLoader.getDynamicLabelFont());
+        lblCriteria1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblCriteria1.setText("criteira1");
 
         lblCriteria2.setFont(FontsLoader.getDynamicLabelFont());
+        lblCriteria2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblCriteria2.setText("criteria2");
 
         lblCriteria3.setFont(FontsLoader.getDynamicLabelFont());
+        lblCriteria3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblCriteria3.setText("criteria3");
 
         javax.swing.GroupLayout displayLayout = new javax.swing.GroupLayout(display);
         display.setLayout(displayLayout);
         displayLayout.setHorizontalGroup(
             displayLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 638, Short.MAX_VALUE)
-            .addGroup(displayLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(displayLayout.createSequentialGroup()
-                    .addContainerGap()
-                    .addGroup(displayLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(jLabel6)
-                        .addComponent(lblCriteria3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(lblCriteria2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(lblCriteria1, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                    .addGroup(displayLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jLabel4)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 243, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                    .addGroup(displayLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 241, Short.MAX_VALUE)
-                        .addGroup(displayLayout.createSequentialGroup()
-                            .addComponent(jLabel5)
-                            .addGap(0, 0, Short.MAX_VALUE)))
-                    .addContainerGap()))
+            .addGroup(displayLayout.createSequentialGroup()
+                .addGroup(displayLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(displayLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(displayLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(lblCriteria1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 106, Short.MAX_VALUE)
+                        .addComponent(lblCriteria2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(lblCriteria3, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(displayLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel4)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(displayLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel5)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 246, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         displayLayout.setVerticalGroup(
             displayLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 181, Short.MAX_VALUE)
-            .addGroup(displayLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(displayLayout.createSequentialGroup()
-                    .addContainerGap()
-                    .addGroup(displayLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jLabel6)
-                        .addComponent(jLabel4)
-                        .addComponent(jLabel5))
-                    .addGroup(displayLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(displayLayout.createSequentialGroup()
-                            .addGap(18, 18, 18)
-                            .addComponent(lblCriteria1, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addComponent(lblCriteria2)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addComponent(lblCriteria3)
-                            .addGap(0, 0, Short.MAX_VALUE))
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, displayLayout.createSequentialGroup()
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 139, Short.MAX_VALUE))
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, displayLayout.createSequentialGroup()
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(jScrollPane2)))
-                    .addContainerGap()))
+            .addGroup(displayLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(displayLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel4)
+                    .addComponent(jLabel6)
+                    .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(displayLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(displayLayout.createSequentialGroup()
+                        .addComponent(lblCriteria1, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lblCriteria2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lblCriteria3)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 139, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1))
+                .addContainerGap())
         );
 
         add(display, "display");
 
         jLabel7.setFont(FontsLoader.getStaticLabelFont());
-        jLabel7.setText("Strength/Weekness");
+        jLabel7.setText("Strength/Weakness");
 
         jLabel8.setFont(FontsLoader.getStaticLabelFont());
         jLabel8.setText("Recommendation");
@@ -305,63 +309,66 @@ public class ReportSectionPanel extends javax.swing.JPanel {
             .addGroup(editLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(editLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(editLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(txtSection)
-                        .addComponent(txtCriteria1)
-                        .addComponent(txtCriteria2)
-                        .addComponent(txtCriteria3, javax.swing.GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE))
+                    .addComponent(txtCriteria1)
+                    .addComponent(txtCriteria2)
+                    .addComponent(txtCriteria3, javax.swing.GroupLayout.DEFAULT_SIZE, 122, Short.MAX_VALUE)
+                    .addComponent(txtSection)
                     .addComponent(jLabel1)
                     .addComponent(jLabel2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(editLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(editLayout.createSequentialGroup()
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 243, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 245, Short.MAX_VALUE))
+                .addGroup(editLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 243, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(editLayout.createSequentialGroup()
                         .addComponent(jLabel7)
-                        .addGap(26, 26, 26)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btnAddObservation)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnDeleteObservation)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnDeleteObservation)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(editLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, editLayout.createSequentialGroup()
                         .addComponent(jLabel8)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 41, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btnAddRecommendation)
                         .addGap(6, 6, 6)
                         .addComponent(btnDeleteRecommendation)))
-                .addContainerGap(12, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
         );
         editLayout.setVerticalGroup(
             editLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, editLayout.createSequentialGroup()
-                .addGroup(editLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+            .addGroup(editLayout.createSequentialGroup()
+                .addGroup(editLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, editLayout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(editLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btnAddObservation, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(btnAddRecommendation, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(btnDeleteRecommendation, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(btnDeleteObservation, javax.swing.GroupLayout.Alignment.TRAILING))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(editLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(editLayout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(editLayout.createSequentialGroup()
-                        .addContainerGap(16, Short.MAX_VALUE)
-                        .addGroup(editLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(btnAddObservation)
-                            .addComponent(btnDeleteObservation)
-                            .addComponent(btnAddRecommendation)
-                            .addComponent(btnDeleteRecommendation)
-                            .addComponent(jLabel8)
-                            .addComponent(jLabel7)
-                            .addComponent(jLabel1))
+                        .addGroup(editLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(editLayout.createSequentialGroup()
+                                .addGap(20, 20, 20)
+                                .addComponent(jLabel1))
+                            .addGroup(editLayout.createSequentialGroup()
+                                .addGap(40, 40, 40)
+                                .addComponent(txtSection, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(editLayout.createSequentialGroup()
-                        .addGap(40, 40, 40)
-                        .addComponent(txtSection, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jLabel2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(txtCriteria1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(txtCriteria2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtCriteria3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(txtCriteria3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
 
@@ -385,7 +392,7 @@ public class ReportSectionPanel extends javax.swing.JPanel {
    }//GEN-LAST:event_btnAddRecommendationActionPerformed
 
    private void btnDeleteObservationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteObservationActionPerformed
-      int index = lstObservation.getSelectedIndex();
+      int index = lstObservation1.getSelectedIndex();
       if (index > -1)
       {
          observationModel.remove(index);
@@ -393,7 +400,7 @@ public class ReportSectionPanel extends javax.swing.JPanel {
    }//GEN-LAST:event_btnDeleteObservationActionPerformed
 
    private void btnDeleteRecommendationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteRecommendationActionPerformed
-      int index = lstRecommendation.getSelectedIndex();
+      int index = lstRecommendation1.getSelectedIndex();
       if (index > -1)
       {
          recommendationModel.remove(index);
@@ -433,7 +440,7 @@ public class ReportSectionPanel extends javax.swing.JPanel {
 
    private void populateFields() {
       //Set section name for both cards
-      TitledBorder border = (TitledBorder)this.getBorder();
+      TitledBorder border = (TitledBorder)this.display.getBorder();
       border.setTitle(section);
       txtSection.setText(section);
       

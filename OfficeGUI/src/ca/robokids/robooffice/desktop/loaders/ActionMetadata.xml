@@ -81,7 +81,7 @@ This xml keeps mapping between four things:
     <action id = "enterProgressReport" menuItem = "Enter Progress Report">
        <image>progressReport.png</image>
         <tabName>Record Progress Report</tabName>
-        <tabClass>ProgressReportTab</tabClass>       
+        <tabClass>school.ProgressReportTypeTab</tabClass>       
     </action>
     
     <action id = "newStudent" menuItem = "New Student Registration">
