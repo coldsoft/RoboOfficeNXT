@@ -64,6 +64,7 @@ public class UserActivity {
       if (loginUser == null)
          return true;
       
+      
       List<UserGroup> groups = loginUser.getUserGroups();
       for(UserGroup g : groups)
       {

@@ -6,6 +6,7 @@ package ca.robokids.robooffice.db;
 
 import ca.robokids.exception.BadFieldException;
 import ca.robokids.robooffice.entity.schoolmetadata.Classroom;
+import ca.robokids.robooffice.entity.schoolmetadata.Fee;
 import ca.robokids.robooffice.entity.user.Action;
 import ca.robokids.robooffice.entity.user.User;
 import ca.robokids.robooffice.entity.user.UserGroup;
@@ -62,6 +63,14 @@ public class CheckFields {
       
          
    }
+   public static void checkFee(Fee fee) throws BadFieldException {
+      checkLength(1,45,fee.getName(),
+         "Fee name is empty","name must be less than 45 characters");
+      checkLength(1,200,fee.getDescription(),
+         "Description is empty", "Description must be less than 200 characters");
+      if (fee.getRate() < 0.0)
+         throw new BadFieldException("Rate is negative.");
+   }
    
    private static void checkLength(int min, int max, int field, String minMsg, String maxMsg) throws BadFieldException
    {
@@ -81,6 +90,8 @@ public class CheckFields {
          throw new BadFieldException(maxMsg);
       }
    }
+
+   
 
    
    

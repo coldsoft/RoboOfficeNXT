@@ -6,16 +6,16 @@ public class Project {
 
     private int project_id;
 
-    private int course_id;
+    private int id;
     private String name;
     private boolean deleted;
 
-   public int getCourse_id() {
-      return course_id;
+   public int getId() {
+      return id;
    }
 
-   public void setCourse_id(int course_id) {
-      this.course_id = course_id;
+   public void setId(int course_id) {
+      this.id = course_id;
    }
 
    public boolean isDeleted() {
