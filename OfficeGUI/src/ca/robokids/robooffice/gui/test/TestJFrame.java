@@ -5,7 +5,9 @@
 
 package ca.robokids.robooffice.gui.test;
 
+import ca.robokids.robooffice.desktop.customSwing.TimeslotDialog;
 import ca.robokids.robooffice.desktop.util.PopupMessage;
+import ca.robokids.robooffice.entity.schoolmetadata.Timeslot;
 import de.javasoft.swing.JYTabbedPane;
 import java.awt.Component;
 import javax.swing.JPanel;
@@ -21,12 +23,7 @@ public class TestJFrame extends javax.swing.JFrame {
     public TestJFrame() {
         initComponents();
         tabPane.setCloseButtonStrategy(JYTabbedPane.CloseButtonStrategy.ALL_TABS);
-        tabPane.getContentPanel().addContainerListener(new java.awt.event.ContainerAdapter() {
-            public void componentRemoved(java.awt.event.ContainerEvent evt) {
-                tabPaneComponentRemoved(evt);
-            }
-        });
-        list.setEnabled(false);
+
     }
 
     /** This method is called from within the constructor to
@@ -38,53 +35,14 @@ public class TestJFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        tabPane = new de.javasoft.swing.JYTabbedPane();
-        jPanel1 = new javax.swing.JPanel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        list = new de.javasoft.swing.JYCheckBoxList();
         btnAdd = new javax.swing.JButton();
         btnRemove = new javax.swing.JButton();
         txtTabname = new javax.swing.JTextField();
         lblMsg = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
+        tabPane = new de.javasoft.swing.JYTabbedPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-        tabPane.addContainerListener(new java.awt.event.ContainerAdapter() {
-            public void componentRemoved(java.awt.event.ContainerEvent evt) {
-                tabPaneComponentRemoved(evt);
-            }
-        });
-        tabPane.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
-            public void propertyChange(java.beans.PropertyChangeEvent evt) {
-                tabPanePropertyChange(evt);
-            }
-        });
-
-        list.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public Object getElementAt(int i) { return strings[i]; }
-        });
-        jScrollPane1.setViewportView(list);
-
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(319, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(194, 194, 194))
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(69, 69, 69)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(67, Short.MAX_VALUE))
-        );
-
-        tabPane.addTab("tab1", jPanel1);
 
         btnAdd.setText("add");
         btnAdd.addActionListener(new java.awt.event.ActionListener() {
@@ -95,7 +53,15 @@ public class TestJFrame extends javax.swing.JFrame {
 
         btnRemove.setText("remove");
 
-        lblMsg.setText("Activity");
+        lblMsg.setFont(new java.awt.Font("DejaVu Sans Mono", 0, 11)); // NOI18N
+        lblMsg.setText("Mon 16:00");
+
+        jButton1.setText("Timeslots");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -109,12 +75,17 @@ public class TestJFrame extends javax.swing.JFrame {
                         .addGap(70, 70, 70)
                         .addComponent(btnRemove)
                         .addGap(51, 51, 51)
-                        .addComponent(txtTabname, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(txtTabname, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jButton1))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(lblMsg, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
-            .addComponent(tabPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 677, Short.MAX_VALUE)
+                .addContainerGap(41, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(tabPane, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(114, 114, 114))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -123,11 +94,13 @@ public class TestJFrame extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnAdd)
                     .addComponent(btnRemove)
-                    .addComponent(txtTabname, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtTabname, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 34, Short.MAX_VALUE)
                 .addComponent(lblMsg)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(tabPane, javax.swing.GroupLayout.DEFAULT_SIZE, 354, Short.MAX_VALUE))
+                .addGap(195, 195, 195)
+                .addComponent(tabPane, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(65, 65, 65))
         );
 
         pack();
@@ -149,22 +122,19 @@ public class TestJFrame extends javax.swing.JFrame {
               System.out.println(PopupMessage.createConfirmPopUp(null, null));
    }//GEN-LAST:event_btnAddActionPerformed
 
-   private void tabPaneComponentRemoved(java.awt.event.ContainerEvent evt) {//GEN-FIRST:event_tabPaneComponentRemoved
-      lblMsg.setText(evt.getChild().getName()+" Tab Closed");
-   }//GEN-LAST:event_tabPaneComponentRemoved
-
-   private void tabPanePropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_tabPanePropertyChange
-     if (evt.getPropertyName().equals("removeTab"))
-        lblMsg.setText("Index " + (Integer)evt.getNewValue()+" tab is removed");
-     else if (evt.getPropertyName().equals("insertTab"))
-        lblMsg.setText("Index " + (Integer)evt.getNewValue()+" tab is inserted");
-     else
-     {
-        int selected = tabPane.getSelectedIndex();
-        txtTabname.setText(String.valueOf(selected));
-     }
-     
-   }//GEN-LAST:event_tabPanePropertyChange
+   private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+      TimeslotDialog time = new TimeslotDialog(this,true);
+      time.setLocationRelativeTo(this);
+      time.setVisible(true);
+      
+      Timeslot t = time.getTimeslot();
+      System.out.println(t);
+      if (t != null){
+         lblMsg.setText(t.toString());
+         System.out.println(t);
+      }
+      
+   }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -203,10 +173,8 @@ public class TestJFrame extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAdd;
     private javax.swing.JButton btnRemove;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel lblMsg;
-    private de.javasoft.swing.JYCheckBoxList list;
     private de.javasoft.swing.JYTabbedPane tabPane;
     private javax.swing.JTextField txtTabname;
     // End of variables declaration//GEN-END:variables

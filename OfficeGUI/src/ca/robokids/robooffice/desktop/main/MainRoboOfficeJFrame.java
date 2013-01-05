@@ -127,11 +127,35 @@ public class MainRoboOfficeJFrame extends javax.swing.JFrame {
         jMenuItem6.setText("jMenuItem6");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowOpened(java.awt.event.WindowEvent evt) {
+                formWindowOpened(evt);
+            }
+        });
+        addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentResized(java.awt.event.ComponentEvent evt) {
+                formComponentResized(evt);
+            }
+        });
 
         toolBar.setFloatable(false);
         toolBar.setRollover(true);
 
         tabbedPane.setFont(FontsLoader.getTabFont());
+        tabbedPane.setTabHistoryEnabled(true);
+        tabbedPane.addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentResized(java.awt.event.ComponentEvent evt) {
+                tabbedPaneComponentResized(evt);
+            }
+        });
+        tabbedPane.addContainerListener(new java.awt.event.ContainerAdapter() {
+            public void componentAdded(java.awt.event.ContainerEvent evt) {
+                tabbedPaneComponentAdded(evt);
+            }
+            public void componentRemoved(java.awt.event.ContainerEvent evt) {
+                tabbedPaneComponentRemoved(evt);
+            }
+        });
 
         accountMenu.setText("My Account");
         accountMenu.setFont(FontsLoader.getMenuFont());
@@ -349,18 +373,38 @@ public class MainRoboOfficeJFrame extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(toolBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(tabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 770, Short.MAX_VALUE)
+            .addComponent(tabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 799, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(toolBar, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(tabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 349, Short.MAX_VALUE))
+                .addComponent(tabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 368, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+   private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+      this.setLocationRelativeTo(null);
+   }//GEN-LAST:event_formWindowOpened
+
+   private void tabbedPaneComponentAdded(java.awt.event.ContainerEvent evt) {//GEN-FIRST:event_tabbedPaneComponentAdded
+       resize();
+   }//GEN-LAST:event_tabbedPaneComponentAdded
+
+   private void tabbedPaneComponentRemoved(java.awt.event.ContainerEvent evt) {//GEN-FIRST:event_tabbedPaneComponentRemoved
+       resize();
+   }//GEN-LAST:event_tabbedPaneComponentRemoved
+
+   private void tabbedPaneComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_tabbedPaneComponentResized
+       resize();
+   }//GEN-LAST:event_tabbedPaneComponentResized
+
+   private void formComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentResized
+      resize();
+   }//GEN-LAST:event_formComponentResized
 
    /**
     * @param args the command line arguments
@@ -432,11 +476,12 @@ public class MainRoboOfficeJFrame extends javax.swing.JFrame {
       Dimension size = new Dimension(FramePropertyLoader.getFrameWidth(), FramePropertyLoader.getFrameHeight());
       this.setMinimumSize(size);
       this.setPreferredSize(size);
+      
       // Get the current screen size
       // Set frame in the middle of the screen
-      Toolkit toolkit = Toolkit.getDefaultToolkit();
-      Dimension scrnsize = toolkit.getScreenSize();
-      this.setLocation((scrnsize.width - size.width) / 2, (scrnsize.height - size.height) / 2);
+      //Toolkit toolkit = Toolkit.getDefaultToolkit();
+      //Dimension scrnsize = toolkit.getScreenSize();
+      //this.setLocation((scrnsize.width - size.width) / 2, (scrnsize.height - size.height) / 2);
 
       //set Icon Image
       try {
@@ -494,36 +539,37 @@ public class MainRoboOfficeJFrame extends javax.swing.JFrame {
       tabbedPane.setMinimumTabSize(FramePropertyLoader.getMinimumTabSize());
       tabbedPane.setPaintSelectedTabBold(true);
       tabbedPane.setFont(FontsLoader.getTabFont());
-      tabbedPane.getContentPanel().addComponentListener(new java.awt.event.ComponentAdapter() {
+      tabbedPane.getContentPanel().addComponentListener(new java.awt.event.ComponentAdapter()
+        {
 
-         public void componentResized(java.awt.event.ComponentEvent evt) {
-            tabbedPaneComponentResized(evt);
-         }
-      });
-      tabbedPane.getContentPanel().addContainerListener(new java.awt.event.ContainerAdapter() {
+            public void componentResized(java.awt.event.ComponentEvent evt)
+            {
+                tabbedPaneComponentResized(evt);
+            }
+        });
+        tabbedPane.getContentPanel().addContainerListener(new java.awt.event.ContainerAdapter()
+        {
 
-         public void componentAdded(java.awt.event.ContainerEvent evt) {
-            tabbedPaneComponentAdded(evt);
-         }
+            public void componentAdded(java.awt.event.ContainerEvent evt)
+            {
+                tabbedPaneComponentAdded(evt);
+            }
 
-         public void componentRemoved(java.awt.event.ContainerEvent evt) {
-            tabbedPaneComponentRemoved(evt);
-         }
-      });
+            public void componentRemoved(java.awt.event.ContainerEvent evt)
+            {
+                tabbedPaneComponentRemoved(evt);
+            }
+        });
+      
    }
 
-   private void tabbedPaneComponentRemoved(java.awt.event.ContainerEvent evt) {
-      tabbedPaneComponentResized(evt);
-   }
 
-   private void tabbedPaneComponentAdded(java.awt.event.ContainerEvent evt) {
-      tabbedPaneComponentResized(evt);
-   }
 
-   private void tabbedPaneComponentResized(java.awt.event.ComponentEvent evt) {
+   private void resize() {
       TabManager.resizeTab(this.getWidth());
       Dimension dim = new Dimension(this.getSize().width-getButtonSpacing(),0);
       buttonSpacing.setSeparatorSize(dim);
+      this.revalidate();
       
    }
 
@@ -573,6 +619,9 @@ public class MainRoboOfficeJFrame extends javax.swing.JFrame {
       }
       //EnableButtons(true);
       tabbedPane.removeAll();
+      this.mainMenuBar.repaint();
+      this.toolBar.repaint();
+      
 
    }
 
@@ -713,9 +762,10 @@ public class MainRoboOfficeJFrame extends javax.swing.JFrame {
       toolBar.add(getButton("newStudent",this.actionListener));
       toolBar.add(new Separator());
       toolBar.add(getButton("newPayment",this.actionListener));
+      toolBar.add(getButton("accountReceivable",this.actionListener));
       toolBar.add(new Separator());
       toolBar.add(getButton("enterProgressReport",this.actionListener));
-      toolBar.add(getButton("studentStatistic",this.actionListener));
+      
       
       Dimension dim = new Dimension(this.getMinimumSize().width-getButtonSpacing(),0);
       buttonSpacing = new Separator(dim);

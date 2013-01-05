@@ -7,6 +7,7 @@ package ca.robokids.robooffice.desktop.tabs.humanresources;
 import ca.robokids.exception.BadFieldException;
 import ca.robokids.exception.DatabaseException;
 import ca.robokids.robooffice.desktop.loaders.FontsLoader;
+import ca.robokids.robooffice.desktop.main.TabManager;
 import ca.robokids.robooffice.desktop.tabs.Tab;
 import ca.robokids.robooffice.desktop.util.PopupMessage;
 import ca.robokids.robooffice.entity.user.PasswordQuestion;
@@ -16,8 +17,6 @@ import ca.robokids.robooffice.logic.usermanagement.UserManager;
 import de.javasoft.swing.JYCheckBoxList.CheckBoxSelectionModel;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 
@@ -336,6 +335,7 @@ public class AddStaffTab extends javax.swing.JPanel implements Tab {
          try {
             UserManager.createUser(user);
             PopupMessage.createInfo("New User Created!\n"+ user + "\n", "ta-da~~");
+            TabManager.closeTab(this.getName());
          } catch (BadFieldException ex) {
             lblErrorMsg.setText(ex.getMessage());
             return;

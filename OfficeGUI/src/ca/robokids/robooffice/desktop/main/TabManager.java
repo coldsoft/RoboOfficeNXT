@@ -7,6 +7,7 @@ package ca.robokids.robooffice.desktop.main;
 import ca.robokids.robooffice.desktop.loaders.ActionMappingLoader;
 import ca.robokids.robooffice.desktop.loaders.FramePropertyLoader;
 import ca.robokids.robooffice.desktop.tabs.Tab;
+import ca.robokids.robooffice.desktop.util.PopupMessage;
 import de.javasoft.swing.JYTabbedPane;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -27,6 +28,7 @@ public class TabManager implements ActionListener {
 
    public static void setContainer(JYTabbedPane container) {
       TabManager.container = container;
+      
    }
 
    public static void resizeTab(int parentWidth) {
@@ -46,9 +48,7 @@ public class TabManager implements ActionListener {
       }
    }
 
-   private static void createTab(String action) {
-      
-
+   public static void createTab(String action) {
       if (noTabs(action))
       {
          return;
@@ -90,6 +90,12 @@ public class TabManager implements ActionListener {
       }
    }
 
+   public static void closeTab(String tabName)
+   {
+      int index = container.indexOfTab(tabName);
+      if (index > -1)
+         container.removeTabAt(index);
+   }
    private static void addTab(String tabName, JPanel panel) {
       container.addTab(tabName, panel);
       panel.setName(tabName);

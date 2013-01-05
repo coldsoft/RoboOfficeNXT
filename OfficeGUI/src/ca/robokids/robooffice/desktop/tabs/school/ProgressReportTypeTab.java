@@ -142,7 +142,7 @@ public class ProgressReportTypeTab extends javax.swing.JPanel implements Tab{
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lblMaxScore, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 137, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 149, Short.MAX_VALUE)
                 .addComponent(btnEdit)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnDelete)
@@ -201,7 +201,7 @@ public class ProgressReportTypeTab extends javax.swing.JPanel implements Tab{
                 .addContainerGap()
                 .addComponent(lblProgressReport)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtReportName, javax.swing.GroupLayout.DEFAULT_SIZE, 313, Short.MAX_VALUE)
+                .addComponent(txtReportName, javax.swing.GroupLayout.DEFAULT_SIZE, 325, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -217,14 +217,19 @@ public class ProgressReportTypeTab extends javax.swing.JPanel implements Tab{
             .addGroup(editHeaderLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(editHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(spinMaxScore, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(editHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(lblProgressReport)
-                        .addComponent(btnSave)
-                        .addComponent(btnCancel)
-                        .addComponent(jLabel4)
-                        .addComponent(txtReportName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(editHeaderLayout.createSequentialGroup()
+                        .addGap(4, 4, 4)
+                        .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(editHeaderLayout.createSequentialGroup()
+                        .addGroup(editHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(spinMaxScore, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(editHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(lblProgressReport)
+                                .addComponent(btnSave, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btnCancel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(txtReportName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
 
         header.add(editHeader, "edit");
@@ -348,6 +353,16 @@ public class ProgressReportTypeTab extends javax.swing.JPanel implements Tab{
       try {
          SchoolManager.createProgressReportType(t);
          refresh();
+         int index = 0;
+         for (int i = 0; i < reportTypeModel.size();i++)
+         {
+            if (reportTypeModel.get(i).getName().equals(name)){
+               index = i;
+               break;
+            }
+         }
+         lstReports.setSelectedIndex(index);
+         switchToEdit(true);
       } catch (BadFieldException | DatabaseException ex) {
          PopupMessage.createInfo(ex.getMessage(), null);
       }
@@ -417,7 +432,7 @@ public class ProgressReportTypeTab extends javax.swing.JPanel implements Tab{
       try {
          reportTypeModel.clear();
          
-         List<ProgressReportType> reportTypes = SchoolManager.getAllProgressReportType();
+         List<ProgressReportType> reportTypes = SchoolManager.loadAllProgressReportType();
          for (ProgressReportType t : reportTypes)
          {
             reportTypeModel.addElement(t);

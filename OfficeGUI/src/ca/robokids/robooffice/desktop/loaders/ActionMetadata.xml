@@ -81,7 +81,7 @@ This xml keeps mapping between four things:
     <action id = "enterProgressReport" menuItem = "Enter Progress Report">
        <image>progressReport.png</image>
         <tabName>Record Progress Report</tabName>
-        <tabClass>school.ProgressReportTypeTab</tabClass>       
+        <tabClass>student.ProgressReportTab</tabClass>       
     </action>
     
     <action id = "newStudent" menuItem = "New Student Registration">
@@ -96,7 +96,6 @@ This xml keeps mapping between four things:
     </action>
     
     <action id = "studentStatistic" menuItem = "Students Statistic">
-       <image>studentStat.png</image>
         <tabName>Student Statistic</tabName>
         <tabClass>NewItemPurchaseRequestTab</tabClass>       
     </action>
@@ -113,6 +112,7 @@ This xml keeps mapping between four things:
     </action>
     
     <action id = "accountReceivable" menuItem = "Account Receivable">
+       <image>accountReceivable.png</image>
         <tabName>Account Receivable</tabName>
         <tabClass>SearchPatronTab</tabClass>       
     </action>
@@ -129,17 +129,12 @@ This xml keeps mapping between four things:
     
     <action id = "courseSettings" menuItem = "Courses...">
         <tabName>Courses setting</tabName>
-        <tabClass>BrowsePatronsTab</tabClass>       
+        <tabClass>school.CourseTab</tabClass>       
     </action>
     
-    <action id = "progresReportSettings" menuItem = "ProgressReport...">
+    <action id = "progressReportSettings" menuItem = "ProgressReport...">
         <tabName>Progress Report setting</tabName>
-        <tabClass>school.ProgressReportTab</tabClass>       
-    </action>
-    
-    <action id = "progressReportSetting" menuItem = "Progress Report...">
-        <tabName>Progress Report setting</tabName>
-        <tabClass></tabClass>       
+        <tabClass>school.ProgressReportTypeTab</tabClass>       
     </action>
     
     <action id = "membershipSettings" menuItem = "Memberships...">

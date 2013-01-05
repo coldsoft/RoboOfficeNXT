@@ -6,6 +6,8 @@ package ca.robokids.robooffice.desktop.util;
 
 import ca.robokids.robooffice.desktop.loaders.FramePropertyLoader;
 import ca.robokids.robooffice.desktop.main.MainRoboOfficeJFrame;
+import java.awt.Dialog.ModalityType;
+import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 
 /**
@@ -14,7 +16,7 @@ import javax.swing.JOptionPane;
  */
 
 public class PopupMessage {
-   
+   static JDialog modalDialog;
    /**
     * Create a deletion confirm message box to the user
     * 
@@ -28,6 +30,7 @@ public class PopupMessage {
                     "Do you want to delete the following..\n\n" + deleting + "\n\nNote: Deletion is permanent!", "Permanent Delete",JOptionPane.YES_NO_OPTION,
                      JOptionPane.QUESTION_MESSAGE,FramePropertyLoader.getImageIcon("systemIcon")));
    }
+   
    
    public static String createInput(String message,String title)
    {
@@ -71,4 +74,20 @@ public class PopupMessage {
                     msg, title,
                      JOptionPane.ERROR_MESSAGE,FramePropertyLoader.getImageIcon("systemIcon"));
     }
+   
+   public static void startLoading()
+   {
+      if (modalDialog == null)
+      { 
+         modalDialog =  new JDialog(MainRoboOfficeJFrame.getInstance(), "Busy", ModalityType.DOCUMENT_MODAL);
+         modalDialog.setSize(200, 150);
+         modalDialog.setLocationRelativeTo(MainRoboOfficeJFrame.getInstance());
+      }
+      modalDialog.setVisible(true);
+      
+   }
+   public static void endLoading()
+   {
+      modalDialog.setVisible(false);
+   }
 }
