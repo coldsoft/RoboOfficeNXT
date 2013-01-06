@@ -8,7 +8,7 @@ import ca.robokids.exception.BadFieldException;
 import ca.robokids.exception.DatabaseException;
 import ca.robokids.robooffice.db.CheckFields;
 import ca.robokids.robooffice.db.finance.FinanceDBM;
-import ca.robokids.robooffice.entity.schoolmetadata.Fee;
+import ca.robokids.robooffice.entity.finance.Fee;
 import ca.robokids.robooffice.logic.usermanagement.UserActivity;
 import java.sql.Date;
 import java.util.List;

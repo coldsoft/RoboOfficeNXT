@@ -9,6 +9,7 @@ import ca.robokids.robooffice.db.DatabaseManager;
 import ca.robokids.robooffice.entity.schoolmetadata.*;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -35,13 +36,13 @@ public class SchoolDBM {
     * @return ArrayList of Courses
     * @throws DatabaseException
     */
-   public static List<Course> getAllCourses(Classroom cr) throws DatabaseException {
+   public static List<Course> getAllCoursesByClassroom(Classroom cr) throws DatabaseException {
       try {
          List<Course> courses = new ArrayList();
          String query;
 
-         if (cr.getClassroom_id() < 1) {
-            query = "SELECT DISTINCT course_id FROM course_view";
+         if (cr == null) {
+            query = "SELECT DISTINCT course_id FROM course_view ORDER BY code";
          } else {
             query = "SELECT DISTINCT course_id FROM course_view WHERE classroom_id = " + String.valueOf(cr.getClassroom_id())
                + " ORDER BY code";
@@ -61,6 +62,7 @@ public class SchoolDBM {
       }
    }
 
+   
    /**
     * Get all courses.If TimeslotID >= 1, all courses of that particular slot will be returned.<p>
     * If TimeslotID is less than 1, all course from the database will be returned 
@@ -68,16 +70,16 @@ public class SchoolDBM {
     * @return ArrayList of courses
     * @throws DatabaseException
     */
-   public static List<Course> getAllCourses(Timeslot timeslotID) throws DatabaseException {
+   public static List<Course> getAllCoursesByTimeslot(Timeslot timeslotID) throws DatabaseException {
       try {
          List<Course> courses = new ArrayList();
          String query;
 
          if (timeslotID.getTimeslot_id() < 1) {
-            query = "SELECT DISTINCT course_id FROM course_view";
+            query = "SELECT DISTINCT course_id FROM course_view ORDER BY code ASC";
          } else {
             query = "SELECT DISTINCT course_id FROM course_view WHERE slot_id = " + String.valueOf(timeslotID.getTimeslot_id())
-               + "ORDER BY code";
+               + "ORDER BY code ASC";
          }
 
 
@@ -143,7 +145,8 @@ public class SchoolDBM {
             temp.setDuration(crs.getInt("duration"));
             temp.setRate(crs.getFloat("rate"));
             temp.setName(crs.getString("name"));
-            temp.setReport_type_id(courseID);
+            temp.setReport_type_id(crs.getInt("report_type_id"));
+            temp.setHasTax(crs.getBoolean("hasTax"));
             temp.setTimeslots(getAllTimeslots(courseID));
          }
          return temp;
@@ -165,6 +168,8 @@ public class SchoolDBM {
       int new_id = DatabaseManager.executeGetPK(stmt);
 
       for (Timeslot t : course.getTimeslots()) {
+         
+         t = createTimeslot(t.getDayOfWeek(),t.getStart());
          createCourseSection(new_id, t.getTimeslot_id());
       }
       return new_id;
@@ -177,25 +182,11 @@ public class SchoolDBM {
     * @throws DatabaseException
     */
    public static void modifyCourse(Course course) throws DatabaseException {
-      //Delete old timeslots for this course
-      List<Timeslot> timeslots = getAllTimeslots(course.getId());
-      for (Timeslot t : timeslots) {
-         try {
-            deleteCourseSection(course.getId(), t.getTimeslot_id());
-         } catch (SQLException ex) {
-            throw new DatabaseException(ex.getMessage());
-         }
-      }
 
       //update course fields
       PreparedStatement stmt = updateCourse(course);
       DatabaseManager.executeUpdate(stmt);
 
-      timeslots = course.getTimeslots();
-      //add mapping between timeslots and modified course
-      for (Timeslot t : timeslots) {
-         createCourseSection(course.getId(), t.getTimeslot_id());
-      }
    }
 
    /**
@@ -218,6 +209,40 @@ public class SchoolDBM {
          throw new DatabaseException("SQL Error." + ex.getMessage());
       }
    }
+   public static boolean  hasCourseSection(int course_id, int timeslot_id) throws DatabaseException
+   {
+      try {
+         String query = "SELECT * FROM course_section WHERE course_id = ? AND slot_id = ?";
+         PreparedStatement stmt = DatabaseManager.getPreparedStatement(query);
+         stmt.setInt(1, course_id);
+         stmt.setInt(2, timeslot_id);
+         
+         CachedRowSet crs = DatabaseManager.executeQuery(stmt);
+         if (crs.next()){
+            return true;
+         }
+         return false;
+      } catch (SQLException ex) {
+         throw new DatabaseException(ex.getMessage());
+      }
+   }
+   public static void createCourseSection(int course_id, int timeslot_id) throws DatabaseException {
+      try {
+         String query;
+         if (hasCourseSection(course_id, timeslot_id))
+            query = "UPDATE course_section SET deleted = 0 WHERE slot_id = ? AND course_id = ?";
+         else
+            query = "INSERT INTO course_section (slot_id, course_id) VALUES (?,?)";
+         PreparedStatement stmt = DatabaseManager.getPreparedStatement(query);
+
+         stmt.setInt(1, timeslot_id);
+         stmt.setInt(2, course_id);
+
+         DatabaseManager.executeUpdate(stmt);
+      } catch (SQLException ex) {
+         throw new DatabaseException(ex.getMessage());
+      }
+   }
 
    /**
     * get all classrooms in database
@@ -226,7 +251,7 @@ public class SchoolDBM {
     */
    public static List<Classroom> getAllClassroom() throws DatabaseException {
       List<Classroom> rooms = new ArrayList();
-      String query = "SELECT * FROM classroom WHERE deleted = 0";
+      String query = "SELECT * FROM classroom WHERE deleted = 0 ORDER BY classroom_name ASC";
       PreparedStatement stmt;
       try {
          stmt = DatabaseManager.getPreparedStatement(query);
@@ -331,16 +356,174 @@ public class SchoolDBM {
    }
 
    /**
-    * 
+    * create a new timeslot in database. If there already exists one, return that timeslot.
     * @param timeslot
     * @return
     * @throws DatabaseException
     */
-   public static int createTimeSlot(Timeslot timeslot) throws DatabaseException {
-      PreparedStatement stmt = insertTimeslot(timeslot);
-      return DatabaseManager.executeGetPK(stmt);
+   public static Timeslot createTimeslot(DayOfWeek day, Time start) throws DatabaseException {
+      Timeslot t = hasTimeslot(day,start);
+      if (t == null)
+      {
+         t = new Timeslot();
+         PreparedStatement stmt = insertTimeslot(day, start);
+         t.setTimeslot_id(DatabaseManager.executeGetPK(stmt));
+         t.setDayOfWeek(day);
+         t.setStart(start);
+      }
+      return t;     
    }
-
+   
+   public static Timeslot hasTimeslot(DayOfWeek day, Time start) throws DatabaseException
+   {
+      Timeslot t = null;
+      try {
+         String query = "SELECT * FROM timeslot WHERE day_of_week = ? AND start = ?";
+         PreparedStatement stmt = DatabaseManager.getPreparedStatement(query);
+         stmt.setString(1,day.toString());
+         stmt.setTime(2,start);
+         
+         CachedRowSet crs = DatabaseManager.executeQuery(stmt);
+         if (crs.next()){
+            t = new Timeslot();
+            t.setTimeslot_id(crs.getInt("slot_id"));
+            t.setStart(crs.getTime("start"));
+            t.setDayOfWeek(DayOfWeek.valueOf(crs.getString("day_of_week")));
+         }
+         return t;
+      } catch (SQLException ex) {
+         throw new DatabaseException(ex.getMessage());
+      }
+      
+   }
+   public static List<Project> getAllProjects(int course_id) throws DatabaseException
+   {
+      try {
+         List<Project> projects = new ArrayList();
+         String query;
+         if (course_id > 0)
+            query = "SELECT * FROM project WHERE course_id = ? AND deleted = 0 ORDER BY name ASC";
+         else
+            query = "SELECT * FROM project WHERE deleted = 0 ORDER BY name ASC";
+         PreparedStatement stmt = DatabaseManager.getPreparedStatement(query);
+         
+         stmt.setInt(1, course_id);
+         
+         CachedRowSet crs = DatabaseManager.executeQuery(stmt);
+         
+         while(crs.next())
+         {
+            Project p = new Project();
+            p.setDeleted(false);
+            p.setActivityID(course_id);
+            p.setName(crs.getString("name"));
+            p.setProject_id(crs.getInt("project_id"));
+            
+            projects.add(p);
+         }
+         return projects;
+      } catch (SQLException ex) {
+         throw new DatabaseException(ex.getMessage());
+      }
+   }
+   
+   public static Project getProjectByID(int projectID) throws DatabaseException
+   {
+      try {
+         String query = "SELECT * FROM project WHERE project_id = ? ";
+         
+         PreparedStatement stmt = DatabaseManager.getPreparedStatement(query);
+         stmt.setInt(1,projectID);
+         CachedRowSet crs = DatabaseManager.executeQuery(stmt);
+         
+         while(crs.next())
+         {
+            Project p = new Project();
+            p.setDeleted(crs.getBoolean("deleted"));
+            p.setActivityID(crs.getInt("course_id"));
+            p.setName(crs.getString("name"));
+            p.setProject_id(crs.getInt("project_id"));
+            
+            return p;
+         }
+         return null;
+      } catch (SQLException ex) {
+         throw new DatabaseException(ex.getMessage());
+      }
+      
+   }
+   public static void createCourseProject(int course_id, String name) throws DatabaseException
+   {
+      String update;
+      if (hasCourseProject(name,course_id))
+      {
+         update = "UPDATE project SET deleted = 0 WHERE  name = ? AND course_id = ?";
+      }else
+      {
+         update = "INSERT INTO project (name, course_id) VALUES (?,?)";
+      }
+      
+      try {
+         
+         PreparedStatement stmt = DatabaseManager.getPreparedStatement(update);
+         stmt.setString(1,name);
+         stmt.setInt(2,course_id);
+         DatabaseManager.executeUpdate(stmt);
+      } catch (SQLException ex) {
+         throw new DatabaseException(ex.getMessage());
+      }
+      
+   }
+   public static void deleteCourseProject(int project_id) throws DatabaseException
+   {
+      try {
+         String delete = "UPDATE project SET deleted = 1 WHERE project_id = ? ";
+         PreparedStatement stmt = DatabaseManager.getPreparedStatement(delete);
+         stmt.setInt(1,project_id);
+         
+         DatabaseManager.executeUpdate(stmt);
+      } catch (SQLException ex) {
+         throw new DatabaseException(ex.getMessage());
+      }
+      
+   }
+   public static boolean hasCourseProject(String name, int course_id) throws DatabaseException
+   {
+      try {
+         String query = "SELECT * FROM project WHERE name = ? AND course_id = ?";
+         PreparedStatement stmt = DatabaseManager.getPreparedStatement(query);
+         stmt.setString(1, name);
+         stmt.setInt(2, course_id);
+         
+         CachedRowSet crs = DatabaseManager.executeQuery(stmt);
+         if (crs.next()){
+            return true;
+         }
+         return false;
+      } catch (SQLException ex) {
+         throw new DatabaseException(ex.getMessage());
+      }
+   }
+   public static String getProgressReportNameById(int reportTypeID) throws DatabaseException
+   {
+      try {
+         String query = "SELECT name FROM progress_report_type WHERE report_type_id = ?";
+         PreparedStatement stmt;
+       
+            stmt = DatabaseManager.getPreparedStatement(query);
+         
+            stmt.setInt(1,reportTypeID);
+         CachedRowSet crs = DatabaseManager.executeQuery(stmt);
+            while(crs.next())
+            {
+               return crs.getString("name");
+            }
+            return null;
+      } catch (SQLException ex) {
+         throw new DatabaseException(ex.getMessage());
+      }
+      
+   }
    /**
     * get Progress report Type by report_type_id
     * @param reportTypeID
@@ -393,11 +576,42 @@ public class SchoolDBM {
     * @return
     * @throws DatabaseException
     */
+   public static List<ProgressReportType> getAllProgressReportTypeLight() throws DatabaseException
+   {
+      try {
+         List<ProgressReportType> reportTypes = new ArrayList();
+         String query = "SELECT * FROM progress_report_type WHERE deleted = 0 ORDER BY name ASC";
+         PreparedStatement stmt;
+         try {
+            stmt = DatabaseManager.getPreparedStatement(query);
+         } catch (SQLException ex) {
+            throw new DatabaseException(ex.getMessage());
+         }
+         
+         CachedRowSet crs = DatabaseManager.executeQuery(stmt);
+         while(crs.next())
+         {
+            ProgressReportType t = new ProgressReportType();
+            t.setReport_type_id(crs.getInt("report_type_id"));
+            t.setName(crs.getString("name"));
+            reportTypes.add(t);
+         }
+         return reportTypes;
+      } catch (SQLException ex) {
+         throw new DatabaseException(ex.getMessage());
+      }
+      
+   }
+   /**
+    * get all progress report Type in system.
+    * @return
+    * @throws DatabaseException
+    */
    public static List<ProgressReportType> getAllProgressReportType() throws DatabaseException
    {
       try {
          List<ProgressReportType> reportTypes = new ArrayList();
-         String query = "SELECT * FROM progress_report_type WHERE deleted = 0";
+         String query = "SELECT report_type_id FROM progress_report_type WHERE deleted = 0";
          PreparedStatement stmt;
          try {
             stmt = DatabaseManager.getPreparedStatement(query);
@@ -614,13 +828,13 @@ public class SchoolDBM {
       }
    }
 
-   private static PreparedStatement insertTimeslot(Timeslot timeslot) throws DatabaseException {
+   private static PreparedStatement insertTimeslot(DayOfWeek day, Time start) throws DatabaseException {
       try {
          String query = "INSERT INTO timeslot (day_of_week, start) VALUES (?,?)";
 
          PreparedStatement stmt = DatabaseManager.getPreparedStatement(query);
-         stmt.setString(1, timeslot.getDayOfWeek().toString());
-         stmt.setTime(2, timeslot.getStart());
+         stmt.setString(1, day.toString());
+         stmt.setTime(2, start);
          return stmt;
       } catch (SQLException ex) {
          throw new DatabaseException("SQL Error." + ex.getMessage());
@@ -695,8 +909,8 @@ public class SchoolDBM {
 
    private static PreparedStatement insertCourse(Course course) throws DatabaseException {
       try {
-         String query = "INSERT INTO course (code,name,description,duration,classroom_id,rate,report_type_id)"
-            + "VALUES(?,?,?,?,?,?,?)";
+         String query = "INSERT INTO course (code,name,description,duration,classroom_id,rate,report_type_id, hasTax)"
+            + "VALUES(?,?,?,?,?,?,?,?)";
          PreparedStatement stmt = DatabaseManager.getPreparedStatement(query);
          stmt.setString(1, course.getCode());
          stmt.setString(2, course.getName());
@@ -705,26 +919,14 @@ public class SchoolDBM {
          stmt.setInt(5, course.getClassroom().getClassroom_id());
          stmt.setFloat(6, course.getRate());
          stmt.setInt(7, course.getReport_type_id());
+         stmt.setBoolean(8,course.hasTax());
          return stmt;
 
       } catch (SQLException ex) {
          throw new DatabaseException("SQL Error." + ex.getMessage());
       }
    }
-
-   private static void createCourseSection(int course_id, int timeslot_id) throws DatabaseException {
-      try {
-         String query = "INSERT INTO course_section (slot_id, course_id) VALUES (?,?)";
-         PreparedStatement stmt = DatabaseManager.getPreparedStatement(query);
-
-         stmt.setInt(1, timeslot_id);
-         stmt.setInt(2, course_id);
-
-         DatabaseManager.executeUpdate(stmt);
-      } catch (SQLException ex) {
-         Logger.getLogger(SchoolDBM.class.getName()).log(Level.SEVERE, null, ex);
-      }
-   }
+   
 
    private static List<Timeslot> getAllTimeslots(int course_id) throws DatabaseException {
       try {
@@ -732,9 +934,9 @@ public class SchoolDBM {
 
          String query;
          if (course_id < 1) {
-            query = "SELECT slot_id,day_of_week,start FROM course_view GROUP BY slot_id ORDER BY start ASC";
+            query = "SELECT slot_id,day_of_week,start FROM course_view GROUP BY slot_id ORDER BY day_of_week ASC,start ASC";
          } else {
-            query = "SELECT slot_id, day_of_week, start FROM course_view WHERE course_id = " + String.valueOf(course_id) + " ORDER BY start ASC";
+            query = "SELECT slot_id, day_of_week, start FROM course_view WHERE course_id = " + String.valueOf(course_id) + " ORDER BY day_of_week ASC, start ASC";
          }
          PreparedStatement stmt = DatabaseManager.getPreparedStatement(query);
 
@@ -752,16 +954,20 @@ public class SchoolDBM {
       }
    }
 
-   private static void deleteCourseSection(int course_id, int timeslot_id) throws SQLException, DatabaseException {
-      String delete = "DELETE FROM course_section WHERE course_id = " + String.valueOf(course_id)
-         + " AND timeslot_id = " + String.valueOf(timeslot_id);
-      PreparedStatement stmt = DatabaseManager.getPreparedStatement(delete);
-      DatabaseManager.executeUpdate(stmt);
+   public static void deleteCourseSection(int course_id, int timeslot_id) throws DatabaseException {
+      try {
+         String delete = "UPDATE course_section SET deleted = 1 WHERE course_id = " + String.valueOf(course_id)
+            + " AND slot_id = " + String.valueOf(timeslot_id);
+         PreparedStatement stmt = DatabaseManager.getPreparedStatement(delete);
+         DatabaseManager.executeUpdate(stmt);
+      } catch (SQLException ex) {
+         throw new DatabaseException("SQL Error." + ex.getMessage());
+      }
    }
 
    private static PreparedStatement updateCourse(Course course) throws DatabaseException {
       String updateCourse = "UPDATE course SET code = ?, name = ?, description = ?, duration = ?,"
-         + "classroom_id = ? ,rate = ? ,report_type_id = ? WHERE user_id = ?";
+         + "classroom_id = ? ,rate = ? ,report_type_id = ? , hasTax = ? WHERE course_id = ?";
       try {
          PreparedStatement stmt = DatabaseManager.getPreparedStatement(updateCourse);
          stmt.setString(1, course.getCode());
@@ -771,7 +977,8 @@ public class SchoolDBM {
          stmt.setInt(5, course.getClassroom().getClassroom_id());
          stmt.setFloat(6, course.getRate());
          stmt.setInt(7, course.getReport_type_id());
-         stmt.setInt(8, course.getId());
+         stmt.setBoolean(8,course.hasTax());
+         stmt.setInt(9, course.getId());
 
          return stmt;
       } catch (SQLException ex) {
@@ -824,7 +1031,7 @@ public class SchoolDBM {
             temp.setDuration(crs.getInt("duration"));
             temp.setRate(crs.getFloat("rate"));
             temp.setName(crs.getString("name"));
-            temp.setReport_type_id(courseID);
+            temp.setReport_type_id(crs.getInt("report_type_id"));
             temp.setTimeslots(getAllTimeslots(courseID));
          }
          return temp;
@@ -1042,4 +1249,12 @@ public class SchoolDBM {
          throw new DatabaseException(ex.getMessage());
       }
    }
+   
+   public static void main(String args[]) throws DatabaseException
+   {
+      System.out.println(hasTimeslot(DayOfWeek.Wed,new Time(12,0,0)));
+      createTimeslot(DayOfWeek.Wed,new Time(12,0,0));
+   }
+
+   
 }

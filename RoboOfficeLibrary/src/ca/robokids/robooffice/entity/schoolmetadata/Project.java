@@ -6,16 +6,16 @@ public class Project {
 
     private int project_id;
 
-    private int id;
+    private int activity_id;
     private String name;
     private boolean deleted;
 
-   public int getId() {
-      return id;
+   public int getActivityID() {
+      return activity_id;
    }
 
-   public void setId(int course_id) {
-      this.id = course_id;
+   public void setActivityID(int course_id) {
+      this.activity_id = course_id;
    }
 
    public boolean isDeleted() {
@@ -42,5 +42,9 @@ public class Project {
       this.project_id = project_id;
    }
     
+   public String toString()
+   {
+      return getName();
+   }
     
  }

@@ -4,7 +4,7 @@ package ca.robokids.robooffice.entity.schoolmetadata;
 import java.sql.Time;
 
 
-public class Timeslot {
+public class Timeslot implements Comparable {
 
 
     private int timeslot_id;
@@ -35,5 +35,40 @@ public class Timeslot {
       this.timeslot_id = timeslot_id;
    }
     
+   public String toString()
+   {
+      return this.dayOfWeek.toString()+ " " + this.getStart().toString().substring(0, 5);
+   }
+   public boolean equals(Object o)
+   {
+      Timeslot t = (Timeslot) o;
+      return ((t.getStart().getTime() == this.getStart().getTime()) && 
+          t.getDayOfWeek().equals(this.getDayOfWeek()));
+
+   }
+   @Override
+   public int compareTo(Object o) {
+      Timeslot t = (Timeslot) o;
+      if (equals(t))
+         return 0;
+      
+      if (t.getDayOfWeek().compareTo(dayOfWeek) == 0)
+         return start.compareTo(t.getStart());
+      
+      return dayOfWeek.compareTo(t.getDayOfWeek());
+   }
+   
+   public static void main(String [] args)
+   {
+      Timeslot t = new Timeslot();
+      Timeslot t2 = new Timeslot();
+      
+      t.setDayOfWeek(DayOfWeek.Wed);
+      t2.setDayOfWeek(DayOfWeek.Wed);
+      t.setStart(new Time(23,32,00));
+      t2.setStart(new Time(12,00,00));
+      
+      System.out.println(t.compareTo(t2));
+   }
     
  }

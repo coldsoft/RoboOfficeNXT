@@ -7,7 +7,7 @@ package ca.robokids.robooffice.db.finance;
 import ca.robokids.exception.DatabaseException;
 import ca.robokids.robooffice.db.DatabaseManager;
 import ca.robokids.robooffice.db.usermanagement.UserDBM;
-import ca.robokids.robooffice.entity.schoolmetadata.Fee;
+import ca.robokids.robooffice.entity.finance.Fee;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;

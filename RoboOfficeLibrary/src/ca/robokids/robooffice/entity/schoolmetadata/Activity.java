@@ -4,6 +4,9 @@
  */
 package ca.robokids.robooffice.entity.schoolmetadata;
 
+import java.text.NumberFormat;
+import java.util.List;
+
 /**
  *
  * @author Coldsoft
@@ -17,11 +20,34 @@ public class Activity {
    private String description;
    private float rate;
    private Classroom classroom;
+   private int duration;
+   private List<Timeslot> timeslots;
+   boolean hasTax;
 
-   public String toString()
-   {
-      return getName();
+   public boolean hasTax() {
+      return hasTax;
    }
+
+   public void setHasTax(boolean hasTax) {
+      this.hasTax = hasTax;
+   }
+   
+   public List<Timeslot> getTimeslots() {
+      return timeslots;
+   }
+
+   public void setTimeslots(List<Timeslot> timeslots) {
+      this.timeslots = timeslots;
+   }
+
+   public int getDuration() {
+      return duration;
+   }
+
+   public void setDuration(int duration) {
+      this.duration = duration;
+   }
+
    public Classroom getClassroom() {
       return classroom;
    }
@@ -78,6 +104,13 @@ public class Activity {
    public void setRate(float rate) {
       this.rate = rate;
    }
+   public String getRateString() {
+      NumberFormat mf = NumberFormat.getCurrencyInstance();
+      return mf.format(rate);
+   }
    
-   
+      public String toString()
+   {
+      return this.getCode()+" "+this.getName();
+   }
 }

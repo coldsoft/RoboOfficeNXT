@@ -298,7 +298,7 @@ public class UserDBM {
             g.setGroup_id(crs.getInt("group_id"));
             g.setGroupName(crs.getString("group_name"));
             g.setActions(getAllActions(g.getGroup_id()));
-            if (g.getGroupName().equals("superuser"))
+            if (g.getGroupName().equals("superuser") && userID < 1)
                continue;
             groups.add(g);
          }

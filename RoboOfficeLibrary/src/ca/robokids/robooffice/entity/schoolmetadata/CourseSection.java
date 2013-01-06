@@ -1,11 +1,7 @@
 
 package ca.robokids.robooffice.entity.schoolmetadata;
 
-/**
- * 
- * 
- * @poseidon-object-id [I4979bea0m13ba8059043mm5b81]
- */
+
 public class CourseSection {
 
 

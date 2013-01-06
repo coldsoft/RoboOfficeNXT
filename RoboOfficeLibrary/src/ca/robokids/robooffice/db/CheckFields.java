@@ -4,10 +4,9 @@
  */
 package ca.robokids.robooffice.db;
 
+import ca.robokids.robooffice.entity.finance.Fee;
 import ca.robokids.exception.BadFieldException;
-import ca.robokids.robooffice.entity.schoolmetadata.Classroom;
-import ca.robokids.robooffice.entity.schoolmetadata.Fee;
-import ca.robokids.robooffice.entity.schoolmetadata.ProgressReportType;
+import ca.robokids.robooffice.entity.schoolmetadata.*;
 import ca.robokids.robooffice.entity.user.Action;
 import ca.robokids.robooffice.entity.user.User;
 import ca.robokids.robooffice.entity.user.UserGroup;
@@ -104,6 +103,15 @@ public class CheckFields {
          throw new BadFieldException(maxMsg);
       }
    }
+   private static void checkLength(int min, int max, float field, String minMsg, String maxMsg) throws BadFieldException
+   {
+      if (field < min ) {
+         throw new BadFieldException(minMsg);
+      }
+      if (field > max) {
+         throw new BadFieldException(maxMsg);
+      }
+   }
    private static void checkLength(int min, int max, String field, String minMsg, String maxMsg) throws BadFieldException
    {
       if (field == null || field.length() < min ) {
@@ -112,6 +120,19 @@ public class CheckFields {
       if (field.length() > max) {
          throw new BadFieldException(maxMsg);
       }
+   }
+
+   public static void checkProjects(Project p) throws BadFieldException {
+      checkLength(3,100,p.getName(),"Please give the project a more meaningful name.","Project name needs to be less than 100 chars.");
+   }
+   
+   public static void checkCourse(Course c) throws BadFieldException
+   {
+      checkLength(4,40,c.getName(),"Please give the course a more meaningful name.", "Course name needs to be less than 40 chars.");
+      checkLength(4,4,c.getCode(), "Course Code needs to be 4 characters exactly.","Course Code needs to be 4 characters exactly.");
+      checkLength(1,500,c.getDescription(),"Course Description cannot be empty.", "Course Description is too long");
+      checkLength(1,10000,c.getDuration(),"Course Duration is too short. ", "Course Duration is too long");
+      checkLength(0,10000,c.getRate(),"Course rate is negative.", "Too expensive. Consider change your business model.");
    }
 
 
