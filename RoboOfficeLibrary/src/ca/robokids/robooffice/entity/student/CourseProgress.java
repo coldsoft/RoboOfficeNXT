@@ -6,7 +6,6 @@ import ca.robokids.robooffice.entity.schoolmetadata.CourseSection;
 
 public class CourseProgress extends Progress {
 
-    private int course_progress_id;
     private CourseSection section;
     private int progress;
     private int totalClass;
@@ -30,13 +29,7 @@ public class CourseProgress extends Progress {
       this.bonusClass = bonusClass;
    }
 
-   public int getCourse_progress_id() {
-      return course_progress_id;
-   }
 
-   public void setCourse_progress_id(int course_progress_id) {
-      this.course_progress_id = course_progress_id;
-   }
 
    public CourseProgress getNextProgress() {
       return nextProgress;

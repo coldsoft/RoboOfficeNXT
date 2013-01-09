@@ -91,6 +91,34 @@ public class UserDBM {
 
    }
 
+   public static User getUserNameByID(int userID) throws DatabaseException
+   {
+      try {
+         User temp = null;
+         String getUserByID = "SELECT user_name,first_name,last_name FROM user WHERE user_id = ?";
+         PreparedStatement stmt;
+
+         stmt = DatabaseManager.getPreparedStatement(getUserByID);
+         stmt.setInt(1, userID);
+
+         CachedRowSet crs = DatabaseManager.executeQuery(stmt);
+
+         if (crs.next()) {
+            temp = new User();
+            temp.setUser_id(userID);
+            temp.setUserName((crs.getString("user_name")));
+            temp.setFirstName(crs.getString("first_name"));
+            temp.setLastName(crs.getString("last_name"));
+            
+         }
+         return temp;
+
+
+      } catch (SQLException ex) {
+         throw new DatabaseException("SQL Error." + ex.getMessage() + ex.getLocalizedMessage());
+      }
+
+   }
    public static User getUserByID(int userID) throws DatabaseException
    {
       User user = getActiveUserByID(userID);

@@ -7,6 +7,7 @@ package ca.robokids.robooffice.db;
 import ca.robokids.robooffice.entity.finance.Fee;
 import ca.robokids.exception.BadFieldException;
 import ca.robokids.robooffice.entity.schoolmetadata.*;
+import ca.robokids.robooffice.entity.student.Student;
 import ca.robokids.robooffice.entity.user.Action;
 import ca.robokids.robooffice.entity.user.User;
 import ca.robokids.robooffice.entity.user.UserGroup;
@@ -94,6 +95,24 @@ public class CheckFields {
       
    }
 
+   private static void checkCanadianZipcode (String zipcode) throws BadFieldException
+   {
+      boolean isCorrectZipcode = zipcode.matches("^[A-Z][0-9][A-Z][0-9][A-Z][0-9]$");
+        if(!isCorrectZipcode)
+        {
+            throw new BadFieldException("Please enter correct Canadian zipcode format.");
+        }
+      
+   }
+   
+   private static void checkEmail(String email) throws BadFieldException
+   {
+      boolean isCorrectEmail = email.matches("^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$");
+        if(!isCorrectEmail)
+        {
+            throw new BadFieldException("Please enter correct email format.");
+        }
+   }
    private static void checkLength(int min, int max, int field, String minMsg, String maxMsg) throws BadFieldException
    {
       if (field < min ) {
@@ -134,6 +153,18 @@ public class CheckFields {
       checkLength(1,10000,c.getDuration(),"Course Duration is too short. ", "Course Duration is too long");
       checkLength(0,10000,c.getRate(),"Course rate is negative.", "Too expensive. Consider change your business model.");
    }
+
+   public static void checkStudent(Student s) throws BadFieldException {
+      checkLength(1,40,s.getFirstName(),"First name is empty.","First name is too long");
+      checkLength(1,40,s.getLastName(),"Last name is empty.", "Last name is too long");
+      checkLength(1,40,s.getSchool(), "School name is empty.","School name is too long");
+      checkLength(1,100,s.getAddress(),"Address is empty.","Address is too long");
+      checkLength(1,100,s.getMother(),"Mother name is empty.","Mother name is too long");
+      checkLength(1,45, s.getEmergency(),"Emergency contact # is empty.","Emergency contact # is too long");
+
+   }
+   
+ 
 
 
    
