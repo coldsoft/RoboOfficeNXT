@@ -77,6 +77,8 @@ public class PopupMessage {
    
    public static void startLoading()
    {
+      
+      
       if (modalDialog == null)
       { 
          modalDialog =  new JDialog(MainRoboOfficeJFrame.getInstance(), "Busy", ModalityType.DOCUMENT_MODAL);
@@ -84,6 +86,7 @@ public class PopupMessage {
          modalDialog.setLocationRelativeTo(MainRoboOfficeJFrame.getInstance());
       }
       modalDialog.setVisible(true);
+   
       
    }
    public static void endLoading()

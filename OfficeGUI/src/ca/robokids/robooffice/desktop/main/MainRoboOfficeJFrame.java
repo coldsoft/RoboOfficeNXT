@@ -12,14 +12,14 @@ import ca.robokids.robooffice.desktop.util.PopupMessage;
 import ca.robokids.robooffice.entity.user.User;
 import ca.robokids.robooffice.logic.usermanagement.UserActivity;
 import de.javasoft.swing.JYTabbedPane;
+import java.awt.*;
 import java.awt.Component;
+import java.awt.Cursor;
 import java.awt.Dimension;
-import java.awt.Toolkit;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.*;
 import javax.swing.JToolBar.Separator;
 
@@ -34,20 +34,24 @@ public class MainRoboOfficeJFrame extends javax.swing.JFrame {
    private ActionListener actionListener = new TabManager();
    private boolean active;
    private LoginTab loginPanel = new LoginTab();
+   private final static MouseAdapter mouseAdapter =
+      new MouseAdapter() {
+      };
+   private ProgressGlassPane glassPane;
 
    /**
     * Creates new form MainRoboOfficeJFrame
     */
    public MainRoboOfficeJFrame() {
       initComponents();
-      
+      setGlassPane(glassPane = new ProgressGlassPane());
       setMenuItemsActionID();
       setTabbedPaneProperty();
       initFrameProperty();
       addCloseConfirmation();
       addButtons();
       setFrameInactive();
-      
+
 
       loginPanel.focusTxtUser();
 
@@ -391,15 +395,15 @@ public class MainRoboOfficeJFrame extends javax.swing.JFrame {
    }//GEN-LAST:event_formWindowOpened
 
    private void tabbedPaneComponentAdded(java.awt.event.ContainerEvent evt) {//GEN-FIRST:event_tabbedPaneComponentAdded
-       resize();
+      resize();
    }//GEN-LAST:event_tabbedPaneComponentAdded
 
    private void tabbedPaneComponentRemoved(java.awt.event.ContainerEvent evt) {//GEN-FIRST:event_tabbedPaneComponentRemoved
-       resize();
+      resize();
    }//GEN-LAST:event_tabbedPaneComponentRemoved
 
    private void tabbedPaneComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_tabbedPaneComponentResized
-       resize();
+      resize();
    }//GEN-LAST:event_tabbedPaneComponentResized
 
    private void formComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentResized
@@ -476,7 +480,7 @@ public class MainRoboOfficeJFrame extends javax.swing.JFrame {
       Dimension size = new Dimension(FramePropertyLoader.getFrameWidth(), FramePropertyLoader.getFrameHeight());
       this.setMinimumSize(size);
       this.setPreferredSize(size);
-      
+
       // Get the current screen size
       // Set frame in the middle of the screen
       //Toolkit toolkit = Toolkit.getDefaultToolkit();
@@ -501,13 +505,13 @@ public class MainRoboOfficeJFrame extends javax.swing.JFrame {
       //For every menu in menu bar
       for (int i = 0; i < mainMenuBar.getMenuCount(); i++) {
          JMenu menu = (JMenu) mainMenuBar.getMenu(i);
-         
+
          //for every menu item or submenu within each menu
          for (int j = 0; j < menu.getMenuComponentCount(); j++) {
             JComponent component = menu.getItem(j);
             //add menu item action id
             if (component instanceof JMenuItem) {
-               
+
                JMenuItem item = (JMenuItem) component;
                item.setName(ActionMappingLoader.getActionIDByMenuItemText(item.getText()));
                item.addActionListener(actionListener);
@@ -539,38 +543,31 @@ public class MainRoboOfficeJFrame extends javax.swing.JFrame {
       tabbedPane.setMinimumTabSize(FramePropertyLoader.getMinimumTabSize());
       tabbedPane.setPaintSelectedTabBold(true);
       tabbedPane.setFont(FontsLoader.getTabFont());
-      tabbedPane.getContentPanel().addComponentListener(new java.awt.event.ComponentAdapter()
-        {
+      tabbedPane.getContentPanel().addComponentListener(new java.awt.event.ComponentAdapter() {
 
-            public void componentResized(java.awt.event.ComponentEvent evt)
-            {
-                tabbedPaneComponentResized(evt);
-            }
-        });
-        tabbedPane.getContentPanel().addContainerListener(new java.awt.event.ContainerAdapter()
-        {
+         public void componentResized(java.awt.event.ComponentEvent evt) {
+            tabbedPaneComponentResized(evt);
+         }
+      });
+      tabbedPane.getContentPanel().addContainerListener(new java.awt.event.ContainerAdapter() {
 
-            public void componentAdded(java.awt.event.ContainerEvent evt)
-            {
-                tabbedPaneComponentAdded(evt);
-            }
+         public void componentAdded(java.awt.event.ContainerEvent evt) {
+            tabbedPaneComponentAdded(evt);
+         }
 
-            public void componentRemoved(java.awt.event.ContainerEvent evt)
-            {
-                tabbedPaneComponentRemoved(evt);
-            }
-        });
-      
+         public void componentRemoved(java.awt.event.ContainerEvent evt) {
+            tabbedPaneComponentRemoved(evt);
+         }
+      });
+
    }
-
-
 
    private void resize() {
       TabManager.resizeTab(this.getWidth());
-      Dimension dim = new Dimension(this.getSize().width-getButtonSpacing(),0);
+      Dimension dim = new Dimension(this.getSize().width - getButtonSpacing(), 0);
       buttonSpacing.setSeparatorSize(dim);
       this.revalidate();
-      
+
    }
 
    public void exit() {
@@ -607,8 +604,9 @@ public class MainRoboOfficeJFrame extends javax.swing.JFrame {
    }
 
    public void login(User user) {
-      if (user == null)
+      if (user == null) {
          return;
+      }
       this.active = true;
       setMenuActive(user);
 
@@ -621,12 +619,12 @@ public class MainRoboOfficeJFrame extends javax.swing.JFrame {
       tabbedPane.removeAll();
       this.mainMenuBar.repaint();
       this.toolBar.repaint();
-      
+
 
    }
 
    private void setMenuActive(User user) {
-      accountMenu.setText(user.getFirstName()+" "+user.getLastName());
+      accountMenu.setText(user.getFirstName() + " " + user.getLastName());
       tabbedPane.setCloseButtonStrategy(JYTabbedPane.CloseButtonStrategy.ALL_TABS);
    }
 
@@ -643,6 +641,20 @@ public class MainRoboOfficeJFrame extends javax.swing.JFrame {
       schoolMenu.setEnabled(enable);
       systemMenu.setEnabled(enable);
       mainMenuBar.repaint();
+   }
+
+   public static void setBusy(boolean busy) {
+      if (busy) {
+         self.glassPane.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+         self.glassPane.addMouseListener(mouseAdapter);
+         self.glassPane.setVisible(true);
+
+      } else {
+         self.glassPane.setCursor(Cursor.getDefaultCursor());
+         self.glassPane.removeMouseListener(mouseAdapter);
+         self.glassPane.setVisible(false);
+
+      }
    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem ARMenuItem;
@@ -717,7 +729,7 @@ public class MainRoboOfficeJFrame extends javax.swing.JFrame {
          //for every menu item or submenu within each menu
          for (int j = 0; j < menu.getMenuComponentCount(); j++) {
             JComponent component = menu.getItem(j);
-            if (component instanceof JMenuItem) {              
+            if (component instanceof JMenuItem) {
                JMenuItem item = (JMenuItem) component;
                item.setEnabled(UserActivity.hasPrivilege(item.getName()));
                disabled |= item.isEnabled();
@@ -725,7 +737,7 @@ public class MainRoboOfficeJFrame extends javax.swing.JFrame {
             //or search sub menu for more menu items
             if (component instanceof JMenu) {
                JMenu submenu = (JMenu) component;
-               
+
                for (int k = 0; k < submenu.getMenuComponentCount(); k++) {
                   JComponent submenuitem = submenu.getItem(k);
                   if (component instanceof JMenuItem) {
@@ -736,67 +748,177 @@ public class MainRoboOfficeJFrame extends javax.swing.JFrame {
                }
             }
          }
-        //If every menus Items in a menu is disabled, then disable the menu
-        menu.setEnabled(disabled);
+         //If every menus Items in a menu is disabled, then disable the menu
+         menu.setEnabled(disabled);
       }
       //setButton privilege
       Component[] buttons = toolBar.getComponents();
-        for (int i = 0; i < buttons.length; i++)
-        {
-           if (!(buttons[i] instanceof JButton))
-              continue;
-           String action = buttons[i].getName();
-           System.out.println(action);
-           if (action.equals("quickPrintAttendance") || action.equals("printAttendance") || action.equals("recordAttendance"))
-              action = "attendance";
-            buttons[i].setEnabled(UserActivity.hasPrivilege(action));
-        }
+      for (int i = 0; i < buttons.length; i++) {
+         if (!(buttons[i] instanceof JButton)) {
+            continue;
+         }
+         String action = buttons[i].getName();
+         System.out.println(action);
+         if (action.equals("quickPrintAttendance") || action.equals("printAttendance") || action.equals("recordAttendance")) {
+            action = "attendance";
+         }
+         buttons[i].setEnabled(UserActivity.hasPrivilege(action));
+      }
    }
 
    private void addButtons() {
-      toolBar.add(getButton("viewAllStudents",this.actionListener));
-      toolBar.add(getButton("weeklySchedule",this.actionListener));
+      toolBar.add(getButton("viewAllStudents", this.actionListener));
+      toolBar.add(getButton("weeklySchedule", this.actionListener));
       toolBar.add(new Separator());
       toolBar.add(getButton("printAttendance", this.actionListener));
-      toolBar.add(getButton("recordAttendance",this.actionListener));   
-      toolBar.add(getButton("newStudent",this.actionListener));
+      toolBar.add(getButton("recordAttendance", this.actionListener));
+      toolBar.add(getButton("newStudent", this.actionListener));
       toolBar.add(new Separator());
-      toolBar.add(getButton("newPayment",this.actionListener));
-      toolBar.add(getButton("accountReceivable",this.actionListener));
+      toolBar.add(getButton("newPayment", this.actionListener));
+      toolBar.add(getButton("accountReceivable", this.actionListener));
       toolBar.add(new Separator());
-      toolBar.add(getButton("enterProgressReport",this.actionListener));
-      
-      
-      Dimension dim = new Dimension(this.getMinimumSize().width-getButtonSpacing(),0);
+      toolBar.add(getButton("enterProgressReport", this.actionListener));
+
+
+      Dimension dim = new Dimension(this.getMinimumSize().width - getButtonSpacing(), 0);
       buttonSpacing = new Separator(dim);
       toolBar.add(buttonSpacing);
-      toolBar.add(getButton("logOut",this.actionListener));
-      
-      
+      toolBar.add(getButton("logOut", this.actionListener));
+
+
    }
-   private int getButtonSpacing()
-   {
+
+   private int getButtonSpacing() {
       int BUTTON_SIZE = 72;
       int count = 9;
-      return count*BUTTON_SIZE;
+      return count * BUTTON_SIZE;
    }
-   private JButton getButton(String actionID,ActionListener listener)
-   {
+
+   private JButton getButton(String actionID, ActionListener listener) {
       JButton btn = new JButton();
-        btn.setFont(FontsLoader.getShortCutButtonFont());
-        btn.setName(actionID);
-        btn.addActionListener(listener);
-        btn.setIcon(ActionMappingLoader.getImageFileName(actionID));
-        btn.setToolTipText(ActionMappingLoader.getTabName(actionID));
-        return btn;
+      btn.setFont(FontsLoader.getShortCutButtonFont());
+      btn.setName(actionID);
+      btn.addActionListener(listener);
+      btn.setIcon(ActionMappingLoader.getImageFileName(actionID));
+      btn.setToolTipText(ActionMappingLoader.getTabName(actionID));
+      return btn;
    }
 
    private void EnableButtons(boolean enable) {
-       Component[] buttons = toolBar.getComponents();
-        for (int i = 0; i < buttons.length; i++)
-        {
-            buttons[i].setEnabled(enable);
-        }
-       // btnLogoff.setEnabled(enable);
+      Component[] buttons = toolBar.getComponents();
+      for (int i = 0; i < buttons.length; i++) {
+         buttons[i].setEnabled(enable);
+      }
+      // btnLogoff.setEnabled(enable);
    }
+}
+
+/**
+ *
+ * @author Romain Guy
+ */
+class ProgressGlassPane extends JComponent {
+    private static final int BAR_WIDTH = 250;
+    private static final int BAR_HEIGHT = 10;
+    
+    private static final Color TEXT_COLOR = new Color(0x333333);
+    private static final Color BORDER_COLOR = new Color(0x333333);
+    
+    private static final float[] GRADIENT_FRACTIONS = new float[] {
+        0.0f, 0.499f, 0.5f, 1.0f
+    };
+    private static final Color[] GRADIENT_COLORS = new Color[] {
+        Color.GRAY, Color.DARK_GRAY, Color.BLACK, Color.GRAY
+    };
+    private static final Color GRADIENT_COLOR2 = Color.WHITE;
+    private static final Color GRADIENT_COLOR1 = Color.GRAY;
+
+    private String message = "I'm loading...Please be patient~ :)";
+    private int progress = 0;
+    
+    public ProgressGlassPane() {
+        setBackground(Color.WHITE);
+        setFont(new Font("Comic Sans MS", Font.PLAIN, 16));
+    }
+
+    public int getProgress() {
+        return progress;
+    }
+
+    public void setProgress(int progress) {
+        int oldProgress = this.progress;
+        this.progress = progress;
+        
+        // computes the damaged area
+        FontMetrics metrics = getGraphics().getFontMetrics(getFont()); 
+        int w = (int) (BAR_WIDTH * ((float) oldProgress / 100.0f));
+        int x = w + (getWidth() - BAR_WIDTH) / 2;
+        int y = (getHeight() - BAR_HEIGHT) / 2;
+        y += metrics.getDescent() / 2;
+        
+        w = (int) (BAR_WIDTH * ((float) progress / 100.0f)) - w;
+        int h = BAR_HEIGHT;
+        
+        repaint(x, y, w, h);
+    }
+    
+    @Override
+    protected void paintComponent(Graphics g) {
+        // enables anti-aliasing
+        Graphics2D g2 = (Graphics2D) g;
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                RenderingHints.VALUE_ANTIALIAS_ON);
+        
+        // gets the current clipping area
+        Rectangle clip = g.getClipBounds();
+        
+        // sets a 65% translucent composite
+        AlphaComposite alpha = AlphaComposite.SrcOver.derive(0.80f);
+        Composite composite = g2.getComposite();
+        g2.setComposite(alpha);
+        
+        // fills the background
+        g2.setColor(getBackground());
+        g2.fillRect(clip.x, clip.y, clip.width, clip.height);
+        
+        // centers the progress bar on screen
+        FontMetrics metrics = g.getFontMetrics();        
+        int x = (getWidth() - BAR_WIDTH) / 2;
+        int y = (getHeight() - BAR_HEIGHT - metrics.getDescent()) / 2;
+        // set background for progress bar and text
+        g2.setColor(Color.WHITE);
+        g2.fillRect(x, y, BAR_WIDTH+100, BAR_HEIGHT+100);
+        // draws the text
+        g2.setColor(TEXT_COLOR);
+        g2.drawString(message, x, y);
+        
+        // goes to the position of the progress bar
+        y += metrics.getDescent();
+        
+        // computes the size of the progress indicator
+        int w = (int) (BAR_WIDTH * ((float) progress / 100.0f));
+        int h = BAR_HEIGHT;
+        
+        // draws the content of the progress bar
+        Paint paint = g2.getPaint();
+        
+        // bar's background
+        Paint gradient = new GradientPaint(x, y, GRADIENT_COLOR1,
+                x, y + h, GRADIENT_COLOR2);
+        g2.setPaint(gradient);
+        g2.fillRect(x, y, BAR_WIDTH, BAR_HEIGHT);
+        
+        // actual progress
+        gradient = new LinearGradientPaint(x, y, x, y + h,
+                GRADIENT_FRACTIONS, GRADIENT_COLORS);
+        g2.setPaint(gradient);
+        g2.fillRect(x, y, w, h);
+        
+        g2.setPaint(paint);
+        
+        // draws the progress bar border
+        g2.drawRect(x, y, BAR_WIDTH, BAR_HEIGHT);
+        
+        g2.setComposite(composite);
+    }
 }

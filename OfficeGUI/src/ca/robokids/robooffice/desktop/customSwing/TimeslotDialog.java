@@ -30,7 +30,7 @@ public class TimeslotDialog extends javax.swing.JDialog {
          dayModel.addElement(all[i]);
       this.setLocationRelativeTo(null);
       this.spinHour.setValue(16);
-      this.spinMinute.setValue(30);
+      this.spinMinute.setValue(00);
       
    }
 
@@ -174,6 +174,7 @@ public class TimeslotDialog extends javax.swing.JDialog {
    }//GEN-LAST:event_btnSelectActionPerformed
 
    private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
+      timeslot = null;
       this.setVisible(false);
    }//GEN-LAST:event_btnCancelActionPerformed
 

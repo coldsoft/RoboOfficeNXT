@@ -87,7 +87,7 @@ This xml keeps mapping between four things:
     <action id = "newStudent" menuItem = "New Student Registration">
        <image>newStudent.png</image>
         <tabName>New Student</tabName>
-        <tabClass>AddResourceTab</tabClass>       
+        <tabClass>students.NewStudentTab</tabClass>       
     </action>
     
     <action id = "printAssessmentSheet" menuItem = "Print Assessment Sheet">
@@ -139,11 +139,11 @@ This xml keeps mapping between four things:
     
     <action id = "membershipSettings" menuItem = "Memberships...">
         <tabName>Membership Setting</tabName>
-        <tabClass></tabClass>       
+        <tabClass>school.MembershipTab</tabClass>       
     </action>
     <action id = "projectSettings" menuItem = "Projects...">
         <tabName>Project Setting</tabName>
-        <tabClass></tabClass>       
+        <tabClass>school.CourseTab</tabClass>       
     </action>
     <action id = "feeSettings" menuItem = "Fees...">
         <tabName>Fee Setting</tabName>

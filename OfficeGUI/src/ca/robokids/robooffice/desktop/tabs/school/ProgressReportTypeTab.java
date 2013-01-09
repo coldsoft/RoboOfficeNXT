@@ -40,7 +40,8 @@ public class ProgressReportTypeTab extends javax.swing.JPanel implements Tab{
    ReportSectionPanel section4;
    
    ProgressReportType current;
-   
+   int index;
+   boolean refreshing;
    public ProgressReportTypeTab() {
       initComponents();
       initialize();
@@ -223,10 +224,10 @@ public class ProgressReportTypeTab extends javax.swing.JPanel implements Tab{
                     .addGroup(editHeaderLayout.createSequentialGroup()
                         .addGroup(editHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addComponent(spinMaxScore, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(editHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnSave, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnCancel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, editHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                 .addComponent(lblProgressReport)
-                                .addComponent(btnSave, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(btnCancel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(txtReportName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
@@ -297,7 +298,9 @@ public class ProgressReportTypeTab extends javax.swing.JPanel implements Tab{
     }// </editor-fold>//GEN-END:initComponents
 
    private void lstReportsValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_lstReportsValueChanged
-      int index = lstReports.getSelectedIndex();
+      if (refreshing)
+         return;
+      index = lstReports.getSelectedIndex();
       if (index > -1)
       {
          current = reportTypeModel.get(index);
@@ -353,15 +356,15 @@ public class ProgressReportTypeTab extends javax.swing.JPanel implements Tab{
       try {
          SchoolManager.createProgressReportType(t);
          refresh();
-         int index = 0;
+         int pos = 0;
          for (int i = 0; i < reportTypeModel.size();i++)
          {
             if (reportTypeModel.get(i).getName().equals(name)){
-               index = i;
+               i = i;
                break;
             }
          }
-         lstReports.setSelectedIndex(index);
+         lstReports.setSelectedIndex(pos);
          switchToEdit(true);
       } catch (BadFieldException | DatabaseException ex) {
          PopupMessage.createInfo(ex.getMessage(), null);
@@ -428,6 +431,7 @@ public class ProgressReportTypeTab extends javax.swing.JPanel implements Tab{
 
    @Override
    public void refresh() {
+      refreshing = true;
       switchToEdit(false);
       try {
          reportTypeModel.clear();
@@ -442,12 +446,20 @@ public class ProgressReportTypeTab extends javax.swing.JPanel implements Tab{
       } catch (DatabaseException ex) {
          PopupMessage.createErrorPopUp(ex.getMessage(), null);
       }
+      
+      refreshing = false;
       if (reportTypeModel.size() > 0)
       {
          display.setVisible(true);
-         lstReports.setSelectedIndex(0);
+         if (index > -1 && index < reportTypeModel.size()){
+         
+         lstReports.setSelectedIndex(index);
+         }else {
+            lstReports.setSelectedIndex(0);
+         }
       }else
       {
+         
          display.setVisible(false);
       }
      

@@ -52,7 +52,6 @@ public class UserSettingTab extends javax.swing.JPanel implements Tab{
       initComponents();
       try {
            this.tabbedPane.setEnabledAt(1,(UserActivity.hasPrivilege(pnlUserGroupManagement.getName())));
-         
       } catch (DatabaseException ex) {
          Logger.getLogger(UserSettingTab.class.getName()).log(Level.SEVERE, null, ex);
       }

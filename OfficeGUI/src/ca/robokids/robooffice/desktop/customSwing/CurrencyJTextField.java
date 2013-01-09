@@ -11,50 +11,52 @@ import javax.swing.JTextField;
  *
  * @author Coldsoft
  */
-public class CurrencyJTextField extends JTextField
-{
-    
-    final static String badchars = "`~!@#$%^&*()_+=\\|\"':;?/><, ";
-    private int limit = 8;
+public class CurrencyJTextField extends JTextField {
 
-    /**
-     * 
-     * @param limit
-     */
-    public void setLimit(int limit)
-    {
-        this.limit = limit;
-    }
+   final static String badchars = "`~!@#$%^&*()_+=\\|\"':;?/><, ";
+   private int limit = 8;
 
-    @Override
-    public void processKeyEvent(KeyEvent ev)
-    {
-        char c = ev.getKeyChar();
-        if ((Character.isLetter(c) && !ev.isAltDown())
-            || badchars.indexOf(c) > -1)
-        {
+   /**
+    *
+    * @param limit
+    */
+   public void setLimit(int limit) {
+      this.limit = limit;
+   }
+
+   @Override
+   public void processKeyEvent(KeyEvent ev) {
+      try {
+         char c = ev.getKeyChar();
+         if ((Character.isLetter(c) && !ev.isAltDown())
+            || badchars.indexOf(c) > -1) {
             ev.consume();
-        } else
-        {
-            
-            if (c == '.')
-            {
-                if (this.getText().contains("."))
-                {
-                    return;
-                }
+         } else {
+            int length = this.getText().length();
+            if (c == '.') {
+               if (this.getText().contains(".")) {
+
+                  return;
+               }
+
             }
+
+
             super.processKeyEvent(ev);
 
-            if (this.getText().length() > limit)
-            {
-                String text = this.getText();
-                this.setText(text.substring(0, limit));
+
+
+            if (length + 1 > limit) {
+               String text = this.getText();
+               this.setText(text.substring(0, length));
             }
-            
-            
-            
-        }
-    }
-    
+            if (this.getText().contains(".") && (this.getText().indexOf(".") + 3 == length)) {
+               String text = this.getText();
+               this.setText(text.substring(0, length));
+            }
+         }
+
+      } catch (Exception ex) {
+      }
+   }
 }

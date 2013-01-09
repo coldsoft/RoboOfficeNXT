@@ -103,6 +103,7 @@ public class UserInfoPanel extends javax.swing.JPanel {
         jSeparator1 = new javax.swing.JSeparator();
         jSeparator2 = new javax.swing.JSeparator();
 
+        setMaximumSize(new java.awt.Dimension(288, 442));
         setLayout(new java.awt.CardLayout());
 
         jLabel2.setFont(FontsLoader.getStaticLabelFont());
@@ -426,6 +427,7 @@ public class UserInfoPanel extends javax.swing.JPanel {
             if (temp.equals(UserActivity.loginUser))
             {
                MainRoboOfficeJFrame.getInstance().setUserMenu(temp);
+               UserActivity.loginUser = temp;
             }
          } catch (BadFieldException ex) {
             lblErrorMsg.setText(ex.getMessage());

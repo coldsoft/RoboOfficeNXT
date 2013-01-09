@@ -124,7 +124,18 @@ public class TabManager implements ActionListener {
 
    @Override
    public void actionPerformed(ActionEvent e) {
-      JComponent source = (JComponent) e.getSource();
-      TabManager.createTab(source.getName());
+      final JComponent source = (JComponent) e.getSource();
+      Thread t = new Thread(){
+         public void run(){
+            MainRoboOfficeJFrame.setBusy(true);
+            TabManager.createTab(source.getName());
+            MainRoboOfficeJFrame.setBusy(false);
+      }
+      };
+      
+      t.start();
+      
+      
    }
+   
 }

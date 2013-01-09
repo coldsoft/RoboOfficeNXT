@@ -9,7 +9,7 @@ import ca.robokids.exception.DatabaseException;
 import ca.robokids.robooffice.desktop.loaders.FontsLoader;
 import ca.robokids.robooffice.desktop.tabs.Tab;
 import ca.robokids.robooffice.desktop.util.PopupMessage;
-import ca.robokids.robooffice.entity.schoolmetadata.Fee;
+import ca.robokids.robooffice.entity.finance.Fee;
 import ca.robokids.robooffice.logic.finance.FinanceSetting;
 import java.awt.CardLayout;
 import java.awt.Color;

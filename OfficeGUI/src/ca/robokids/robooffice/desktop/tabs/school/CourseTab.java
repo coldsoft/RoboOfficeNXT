@@ -14,9 +14,12 @@ import ca.robokids.robooffice.entity.schoolmetadata.Course;
 import ca.robokids.robooffice.entity.schoolmetadata.DayOfWeek;
 import ca.robokids.robooffice.entity.schoolmetadata.Timeslot;
 import ca.robokids.robooffice.logic.schoolsettings.SchoolManager;
+import ca.robokids.robooffice.logic.usermanagement.UserActivity;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 
 /**
@@ -31,11 +34,20 @@ public class CourseTab extends javax.swing.JPanel implements Tab{
    CourseInfoPanel coursePane;
    Course current;
    DefaultListModel<Course> courseModel = new DefaultListModel();
-   int index;
+   int index;  
+   boolean refreshing;
+   boolean addCoursePrivilege;
    
    public CourseTab() {
       initComponents();
       coursePane = new CourseInfoPanel(this);
+      try {
+         coursePane.checkPrivilege();
+         addCoursePrivilege = UserActivity.hasPrivilege("courseSettings");
+         btnAdd.setEnabled(addCoursePrivilege);
+      } catch (DatabaseException ex) {
+         Logger.getLogger(CourseTab.class.getName()).log(Level.SEVERE, null, ex);
+      }
       pnlCourse.add(coursePane);
       initialize();
 
@@ -64,7 +76,7 @@ public class CourseTab extends javax.swing.JPanel implements Tab{
         jLabel1.setFont(FontsLoader.getStaticLabelFont());
         jLabel1.setText("Courses");
 
-        lstCourses.setFont(FontsLoader.getBigListFont());
+        lstCourses.setFont(FontsLoader.getListFont());
         lstCourses.setModel(courseModel);
         lstCourses.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
             public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
@@ -83,12 +95,14 @@ public class CourseTab extends javax.swing.JPanel implements Tab{
 
         btnAdd.setFont(FontsLoader.getButtonFont());
         btnAdd.setText("Add");
+        btnAdd.setName("courseSettings");
         btnAdd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAddActionPerformed(evt);
             }
         });
 
+        pnlCourse.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
         pnlCourse.setLayout(new javax.swing.BoxLayout(pnlCourse, javax.swing.BoxLayout.LINE_AXIS));
 
         javax.swing.GroupLayout centerLayout = new javax.swing.GroupLayout(center);
@@ -96,7 +110,7 @@ public class CourseTab extends javax.swing.JPanel implements Tab{
         centerLayout.setHorizontalGroup(
             centerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(centerLayout.createSequentialGroup()
-                .addContainerGap()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(centerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(centerLayout.createSequentialGroup()
                         .addComponent(jLabel1)
@@ -105,32 +119,39 @@ public class CourseTab extends javax.swing.JPanel implements Tab{
                     .addComponent(jScrollPane1)
                     .addComponent(btnReportType, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(pnlCourse, javax.swing.GroupLayout.DEFAULT_SIZE, 626, Short.MAX_VALUE))
+                .addComponent(pnlCourse, javax.swing.GroupLayout.PREFERRED_SIZE, 736, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         centerLayout.setVerticalGroup(
             centerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(centerLayout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, centerLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(centerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnAdd))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 406, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 395, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnReportType)
-                .addContainerGap())
+                .addComponent(btnReportType))
             .addComponent(pnlCourse, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
-        add(center, new java.awt.GridBagConstraints());
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(7, 0, 0, 0);
+        add(center, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
    private void lstCoursesValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_lstCoursesValueChanged
+      if (refreshing)
+         return;
       index = lstCourses.getSelectedIndex();
       if (index > -1)
       {
          current = courseModel.elementAt(index);
          coursePane.setCourse(current);
+         
       }
    }//GEN-LAST:event_lstCoursesValueChanged
 
@@ -139,6 +160,8 @@ public class CourseTab extends javax.swing.JPanel implements Tab{
    }//GEN-LAST:event_btnReportTypeActionPerformed
 
    private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
+     lstCourses.clearSelection();
+     btnAdd.setEnabled(false);
       coursePane.add();
 //      try {
 //         String name = PopupMessage.createInput("Enter the course name:", "Add Course");
@@ -146,7 +169,7 @@ public class CourseTab extends javax.swing.JPanel implements Tab{
 //            return;
 //         Course newCourse = getSampleCourse();
 //         newCourse.setName(name);
-//         SchoolManager.createCourse(newCourse);
+//         SchoolManager.addCourse(newCourse);
 //         refresh();
 //         PopupMessage.createInfo("New course "+ name + " is added! \nPlease edit the course info right now.", "Congratulations!");
 //         for (int i = 0 ; i < courseModel.getSize(); i++)
@@ -180,6 +203,8 @@ public class CourseTab extends javax.swing.JPanel implements Tab{
 
    @Override
    public void refresh() {
+      refreshing = true;
+      btnAdd.setEnabled(addCoursePrivilege);
       courseModel.removeAllElements();
       try {
          List<Course> courses = SchoolManager.loadAllCourses();
@@ -188,7 +213,7 @@ public class CourseTab extends javax.swing.JPanel implements Tab{
       } catch (DatabaseException ex) {
          PopupMessage.createErrorPopUp(ex.getMessage(), null);
       }
-      
+      refreshing = false;
       if (courseModel.getSize() > 0)
       {
          if (index > -1 && index < courseModel.getSize())
@@ -197,6 +222,7 @@ public class CourseTab extends javax.swing.JPanel implements Tab{
             lstCourses.setSelectedIndex(0);
       }
       coursePane.setEditable(false);
+      
    }
 
    @Override
@@ -206,21 +232,5 @@ public class CourseTab extends javax.swing.JPanel implements Tab{
       
    }
 
-   private Course getSampleCourse() throws DatabaseException {
-      Course course = new Course();
-      course.setClassroom(SchoolManager.loadAllClassroom().get(0));
-      course.setCode("CODE");
-      course.setDescription("Fill in a course description please.");
-      course.setDuration(90);
-      course.setRate(30.0f);
-      course.setReport_type_id(SchoolManager.loadAllProgressReportType().get(0).getReport_type_id());
-      List<Timeslot> temp = new ArrayList();
-      Timeslot t = new Timeslot();
-      t.setDayOfWeek(DayOfWeek.Mon);
-      t.setStart(new Time(16,30,00));
-      temp.add(t);
-      course.setTimeslots(temp);
-      return course;
-      
-   }
+   
 }
