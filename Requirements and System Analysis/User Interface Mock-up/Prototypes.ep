@@ -1508,4 +1508,23 @@ Mar 19,2012 |FLL fees
         </g><g xmlns="http://www.w3.org/2000/svg" p:type="Shape" xmlns:p="http://www.evolus.vn/Namespace/Pencil" p:def="Evolus.Common:PlainTextV2" p:sc="Label" id="d151bf2225ae4ffda05b06750544b0c9" transform="matrix(1,0,0,1,306,239)"><p:metadata><p:property name="disabled"><![CDATA[false]]></p:property><p:property name="width"><![CDATA[100,0]]></p:property><p:property name="fixedWidth"><![CDATA[false]]></p:property><p:property name="label"><![CDATA[Progress Report : Sep 23, 2012 Fri 16:00 Roaring Lion]]></p:property><p:property name="textColor"><![CDATA[#000000FF]]></p:property><p:property name="textFont"><![CDATA[Comic Sans MS|bold|normal|14px|none]]></p:property><p:property name="textAlign"><![CDATA[0,0]]></p:property></p:metadata>
             <rect x="0" y="0" style="fill: none; stroke: none; visibility: hidden; display: none;" p:name="bgRect" id="07514a3eae45465d884c1496e5d5cd35" width="0" height="0"/>
             <text y="9.0077095" x="17.999992" text-anchor="start" style="dominant-baseline: hanging; fill: rgb(0, 0, 0); fill-opacity: 1; font-family: Comic Sans MS; font-size: 14px; font-weight: bold; font-style: normal; text-decoration: none;" xml:space="preserve" p:name="text" id="76e4c3c6b5034b638de1cd3541fb440b"><tspan x="0" y="0">Progress Report : Sep 23, 2012 Fri 16:00 Roaring Lion</tspan></text>
-        </g></Content></Page></Pages></Document>
+        </g></Content></Page><Page><Properties><Property name="name">Attendance</Property><Property name="id">1357545497616_780</Property><Property name="width">900</Property><Property name="height">500</Property><Property name="dimBackground"/><Property name="transparentBackground">true</Property><Property name="backgroundColor">#FFFFFFFF</Property><Property name="background">transparent</Property></Properties><Content><g xmlns="http://www.w3.org/2000/svg" p:type="Shape" xmlns:p="http://www.evolus.vn/Namespace/Pencil" p:def="Evolus.iOSWireframe:switch" p:sc="Orange Switch" id="eb4525013de742aead36c8d8097a1e53" transform="matrix(1,0,0,1,61,76)"><p:metadata><p:property name="status"><![CDATA[orange]]></p:property><p:property name="strokeStyle"><![CDATA[1|]]></p:property><p:property name="textFont"><![CDATA[Adobe Caslon Pro|bold|normal|12px|none]]></p:property><p:property name="textColor"><![CDATA[#000000FF]]></p:property><p:property name="textAlign"><![CDATA[1,1]]></p:property></p:metadata>
+			<defs>
+				<linearGradient x1="0%" y1="0%" x2="0%" y2="100%" p:name="linearFill" id="78c47d7364d84cd5b946908746a464d6">
+					<stop style="stop-color: rgb(186, 124, 0); stop-opacity: 1;" offset="0" p:name="stop1" id="96448da47b91410f819230a83195e288"/>
+					<stop style="stop-color: rgb(243, 185, 70); stop-opacity: 1;" offset="1" p:name="stop2" id="1a055a4d969a4b8ca85cf6f004076979"/>
+				</linearGradient>
+				<linearGradient xlink:href="#78c47d7364d84cd5b946908746a464d6" xmlns:xlink="http://www.w3.org/1999/xlink" x1="0" y1="0" x2="0" y2="23" gradientUnits="userSpaceOnUse" p:name="linearBgFill" id="45e40289389e432bb7691e7f5fc25c0f"/>
+				
+				<linearGradient x1="0%" y1="0%" x2="0%" y2="100%" p:name="tickLinearFill" id="f36bfdcade2742a09b7a861912d8c2ff">
+					<stop style="stop-color:#c0c0c0;stop-opacity:1" offset="0"/>
+					<stop style="stop-color:#f3f3f3;stop-opacity:1" offset="1"/>
+				</linearGradient>
+				<linearGradient xlink:href="#f36bfdcade2742a09b7a861912d8c2ff" xmlns:xlink="http://www.w3.org/1999/xlink" x1="0" y1="0" x2="0" y2="23" gradientUnits="userSpaceOnUse" p:name="tickLinearBgFill" id="381813a63a54439ba0c9729028d49f3a"/>
+				<rect width="30" height="20" rx="7" ry="7" x="35" y="0" p:name="tick" id="c0cf92d7e2004beb95728e85f282f552" transform="translate(1,1)"/>
+			</defs>
+			<rect width="65" height="20" rx="7" ry="7" x="0" y="0" style="fill: url(#45e40289389e432bb7691e7f5fc25c0f); stroke: #404040; stroke-width: 1px;" p:name="rrRect" id="01c4ad923ac4487a9b11359a59a4241b" transform="translate(1,1)"/>
+			<use xlink:href="#c0cf92d7e2004beb95728e85f282f552" xmlns:xlink="http://www.w3.org/1999/xlink" transform="translate(-3,0)" style="fill: rgb(132, 92, 15); fill-opacity: 1; stroke: none;" p:name="bgCopy" id="e97e6f25dd3b467bbb1f1dfa2805cb76"/>
+			<use xlink:href="#c0cf92d7e2004beb95728e85f282f552" xmlns:xlink="http://www.w3.org/1999/xlink" style="fill: url(#381813a63a54439ba0c9729028d49f3a); stroke: #666666; stroke-width: 1px;"/>
+			<text p:name="text" id="c701b67775104e8da4478661557f54d1" style="font-family: Adobe Caslon Pro; font-size: 12px; font-weight: bold; font-style: normal; text-decoration: none; fill: rgb(255, 255, 255); fill-opacity: 1;" transform="translate(10,13)">ON</text>
+		</g></Content></Page></Pages></Document>
