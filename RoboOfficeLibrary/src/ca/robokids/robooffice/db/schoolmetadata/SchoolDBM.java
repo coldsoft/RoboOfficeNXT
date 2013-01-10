@@ -177,7 +177,7 @@ public class SchoolDBM {
 
    /**
     * Modify an existing course.<p>
-    * This Method removes existing course-timeslot mappings and replace them with new ones.
+    * This Method ONLY modifies existing course information. course timeslots is unchanged.
     * @param course
     * @throws DatabaseException
     */
@@ -1254,6 +1254,44 @@ public class SchoolDBM {
    {
       System.out.println(hasTimeslot(DayOfWeek.Wed,new Time(12,0,0)));
       createTimeslot(DayOfWeek.Wed,new Time(12,0,0));
+   }
+
+   
+   public static List<Timeslot> getUniqueActiveTimeslot(DayOfWeek day) throws DatabaseException {
+      try {
+         List<Timeslot> timeslots = new ArrayList();
+         String query = new String();
+         if (day == null)
+         {
+            query = "SELECT slot_id, day_of_week, start FROM test_roboofficenxt.course_view GROUP BY slot_id ORDER BY day_of_week, start";
+         }else
+         {
+            query = "SELECT slot_id, day_of_week, start FROM test_roboofficenxt.course_view WHERE day_of_week = ? GROUP BY slot_id ORDER BY start";     
+         }
+         
+         PreparedStatement stmt = DatabaseManager.getPreparedStatement(query);
+         
+         if (day != null)
+            stmt.setString(1,day.toString());
+         CachedRowSet crs = DatabaseManager.executeQuery(stmt);
+         
+         while(crs.next())
+         {
+            Timeslot t = new Timeslot();
+            t.setTimeslot_id(crs.getInt("slot_id"));
+            t.setStart(crs.getTime("start"));
+            t.setDayOfWeek(DayOfWeek.valueOf(crs.getString("day_of_week")));
+            
+            timeslots.add(t);
+         }
+            
+            
+         
+         return timeslots;
+      } catch (SQLException ex) {
+         throw new DatabaseException(ex.getMessage());
+      }
+      
    }
 
    

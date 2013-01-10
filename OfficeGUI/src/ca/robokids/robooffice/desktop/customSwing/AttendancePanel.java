@@ -6,6 +6,7 @@ package ca.robokids.robooffice.desktop.customSwing;
 
 import ca.robokids.robooffice.entity.schoolmetadata.Classroom;
 import ca.robokids.robooffice.entity.student.Progress;
+import java.awt.Component;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,7 +29,10 @@ public class AttendancePanel extends javax.swing.JPanel {
 
    public void addClassroom(Classroom classroom, List<Progress> progresses,boolean selected)
    {
+      
       ClassroomPanel cp = new ClassroomPanel(classroom, progresses, selected);
+      cp.setAlignmentX(Component.LEFT_ALIGNMENT);
+      cp.setAlignmentY(Component.TOP_ALIGNMENT);
       classroomPanels.add(cp);
       this.classroomContainer.add(cp);
    }

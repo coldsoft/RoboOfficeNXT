@@ -19,6 +19,10 @@ public class CourseSection {
       this.course = course;
    }
 
+
+
+
+
    public int getSection_id() {
       return section_id;
    }
