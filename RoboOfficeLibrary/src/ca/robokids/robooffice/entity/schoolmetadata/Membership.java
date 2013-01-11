@@ -1,7 +1,7 @@
 package ca.robokids.robooffice.entity.schoolmetadata;
 
 import java.sql.Date;
-import java.util.List;
+import java.text.SimpleDateFormat;
 
 public class Membership extends Activity {
 
@@ -13,6 +13,14 @@ public class Membership extends Activity {
       return endDate;
    }
 
+   public String getEndDateString()
+   {
+      SimpleDateFormat format = new SimpleDateFormat("dd-MMM-yyyy");
+      if (endDate != null)
+         return format.format(endDate);
+      return "";
+   }
+   
    public void setEndDate(Date endDate) {
       this.endDate = endDate;
    }
@@ -21,6 +29,13 @@ public class Membership extends Activity {
       return startDate;
    }
 
+   public String getStartDateString()
+   {
+      SimpleDateFormat format = new SimpleDateFormat("dd-MMM-yyyy");
+      if (startDate != null)
+         return format.format(startDate);
+      return "";
+   }
    public void setStartDate(Date startDate) {
       this.startDate = startDate;
    }

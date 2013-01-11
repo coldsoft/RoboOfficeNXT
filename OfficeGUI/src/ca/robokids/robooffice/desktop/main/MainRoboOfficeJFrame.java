@@ -818,10 +818,10 @@ public class MainRoboOfficeJFrame extends javax.swing.JFrame {
  * @author Romain Guy
  */
 class ProgressGlassPane extends JComponent {
-    private static final int BAR_WIDTH = 250;
+    private static int BAR_WIDTH = 250;
     private static final int BAR_HEIGHT = 10;
     
-    private static final Color TEXT_COLOR = new Color(0x333333);
+    private static final Color TEXT_COLOR = new Color(250,102,0);
     private static final Color BORDER_COLOR = new Color(0x333333);
     
     private static final float[] GRADIENT_FRACTIONS = new float[] {
@@ -833,12 +833,13 @@ class ProgressGlassPane extends JComponent {
     private static final Color GRADIENT_COLOR2 = Color.WHITE;
     private static final Color GRADIENT_COLOR1 = Color.GRAY;
 
-    private String message = "I'm loading...Please be patient~ :)";
+    private String message = FramePropertyLoader.getLoadingMessage();
     private int progress = 0;
     
     public ProgressGlassPane() {
         setBackground(Color.WHITE);
-        setFont(new Font("Comic Sans MS", Font.PLAIN, 16));
+        setFont(new Font("宋体", Font.BOLD, 14)); 
+        BAR_WIDTH = message.length() * 10;
     }
 
     public int getProgress() {
@@ -865,7 +866,7 @@ class ProgressGlassPane extends JComponent {
     @Override
     protected void paintComponent(Graphics g) {
         // enables anti-aliasing
-        Graphics2D g2 = (Graphics2D) g;
+        Graphics2D g2 = (Graphics2D) g; 
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                 RenderingHints.VALUE_ANTIALIAS_ON);
         
@@ -873,52 +874,57 @@ class ProgressGlassPane extends JComponent {
         Rectangle clip = g.getClipBounds();
         
         // sets a 65% translucent composite
-        AlphaComposite alpha = AlphaComposite.SrcOver.derive(0.80f);
+        AlphaComposite alpha = AlphaComposite.SrcOver.derive(0.87f);
         Composite composite = g2.getComposite();
         g2.setComposite(alpha);
         
         // fills the background
         g2.setColor(getBackground());
         g2.fillRect(clip.x, clip.y, clip.width, clip.height);
-        
-        // centers the progress bar on screen
-        FontMetrics metrics = g.getFontMetrics();        
+        FontMetrics metrics = g.getFontMetrics();   
         int x = (getWidth() - BAR_WIDTH) / 2;
         int y = (getHeight() - BAR_HEIGHT - metrics.getDescent()) / 2;
-        // set background for progress bar and text
-        g2.setColor(Color.WHITE);
-        g2.fillRect(x, y, BAR_WIDTH+100, BAR_HEIGHT+100);
+//        // centers the progress bar on screen
+//             
+//        
+//        // set background for progress bar and text
+//        g2.setColor(Color.WHITE);
+//        g2.fillRect(x, y, BAR_WIDTH+100, BAR_HEIGHT+100);
         // draws the text
-        g2.setColor(TEXT_COLOR);
-        g2.drawString(message, x, y);
+        g2.setColor(TEXT_COLOR);       
+        drawString(g2,message, x, y);
         
-        // goes to the position of the progress bar
-        y += metrics.getDescent();
-        
-        // computes the size of the progress indicator
-        int w = (int) (BAR_WIDTH * ((float) progress / 100.0f));
-        int h = BAR_HEIGHT;
-        
-        // draws the content of the progress bar
-        Paint paint = g2.getPaint();
-        
-        // bar's background
-        Paint gradient = new GradientPaint(x, y, GRADIENT_COLOR1,
-                x, y + h, GRADIENT_COLOR2);
-        g2.setPaint(gradient);
-        g2.fillRect(x, y, BAR_WIDTH, BAR_HEIGHT);
-        
-        // actual progress
-        gradient = new LinearGradientPaint(x, y, x, y + h,
-                GRADIENT_FRACTIONS, GRADIENT_COLORS);
-        g2.setPaint(gradient);
-        g2.fillRect(x, y, w, h);
-        
-        g2.setPaint(paint);
-        
-        // draws the progress bar border
-        g2.drawRect(x, y, BAR_WIDTH, BAR_HEIGHT);
+//        // goes to the position of the progress bar
+//        y += metrics.getDescent();
+//        
+//        // computes the size of the progress indicator
+//        int w = (int) (BAR_WIDTH * ((float) progress / 100.0f));
+//        int h = BAR_HEIGHT;
+//        
+//        // draws the content of the progress bar
+//        Paint paint = g2.getPaint();
+//        
+//        // bar's background
+//        Paint gradient = new GradientPaint(x, y, GRADIENT_COLOR1,
+//                x, y + h, GRADIENT_COLOR2);
+//        g2.setPaint(gradient);
+//        g2.fillRect(x, y, BAR_WIDTH, BAR_HEIGHT);
+//        
+//        // actual progress
+//        gradient = new LinearGradientPaint(x, y, x, y + h,
+//                GRADIENT_FRACTIONS, GRADIENT_COLORS);
+//        g2.setPaint(gradient);
+//        g2.fillRect(x, y, w, h);
+//        
+//        g2.setPaint(paint);
+//        
+//        // draws the progress bar border
+//        g2.drawRect(x, y, BAR_WIDTH, BAR_HEIGHT);
         
         g2.setComposite(composite);
+    }
+    private void drawString(Graphics g, String text, int x, int y) {
+        for (String line : text.split("\n"))
+            g.drawString(line, x, y += g.getFontMetrics().getHeight());
     }
 }

@@ -34,6 +34,16 @@ public class FramePropertyLoader {
         return "JFrame title";
     }
 
+    public static String getLoadingMessage()
+    {
+       if (getBundle() != null)
+       {
+          String loading = getBundle().getString("systemBusyMessage");
+          System.out.println(loading);
+          return loading;
+       }
+        return "Loading";
+    }
     /**
      * returns frame width.<p> If property file is missing, default width is 750.
      * @return frame width.

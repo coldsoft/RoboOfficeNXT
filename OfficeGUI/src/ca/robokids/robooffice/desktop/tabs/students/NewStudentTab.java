@@ -100,7 +100,7 @@ public class NewStudentTab extends javax.swing.JPanel implements Tab {
 
         jLabel1.setFont(FontsLoader.getStaticLabelFont());
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel1.setText("First Name*:");
+        jLabel1.setText("First Name*");
 
         txtFirstname.setFont(FontsLoader.getTextFieldFont());
 
@@ -115,13 +115,13 @@ public class NewStudentTab extends javax.swing.JPanel implements Tab {
 
         jLabel2.setFont(FontsLoader.getStaticLabelFont());
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel2.setText("Last Name*:");
+        jLabel2.setText("Last Name*");
 
         txtLastname.setFont(FontsLoader.getTextFieldFont());
 
         jLabel3.setFont(FontsLoader.getStaticLabelFont());
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel3.setText("Birthday*:");
+        jLabel3.setText("Birthday*");
 
         calBirthday.setFont(FontsLoader.getTextFieldFont());
         calBirthday.setMaxSelectableDate(new java.util.Date(253370797289000L));
@@ -130,15 +130,15 @@ public class NewStudentTab extends javax.swing.JPanel implements Tab {
         jLabel4.setFont(FontsLoader.getStaticLabelFont());
         jLabel4.setForeground(new java.awt.Color(255, 0, 0));
         jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel4.setText("Fields with  * must be filled ");
+        jLabel4.setText("Fields with  *  must be filled ");
 
         jLabel5.setFont(FontsLoader.getStaticLabelFont());
         jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel5.setText("Address*:");
+        jLabel5.setText("Address*");
 
         jLabel6.setFont(FontsLoader.getStaticLabelFont());
         jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel6.setText("City*:");
+        jLabel6.setText("City*");
 
         cboCity.setEditable(true);
         cboCity.setFont(FontsLoader.getComboBoxFont());
@@ -146,7 +146,7 @@ public class NewStudentTab extends javax.swing.JPanel implements Tab {
 
         jLabel7.setFont(FontsLoader.getStaticLabelFont());
         jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel7.setText("Postal Code:");
+        jLabel7.setText("Postal Code");
 
         txtZipcode.setFont(FontsLoader.getTextFieldFont());
 
@@ -156,27 +156,27 @@ public class NewStudentTab extends javax.swing.JPanel implements Tab {
 
         jLabel8.setFont(FontsLoader.getStaticLabelFont());
         jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel8.setText("Mother's name:");
+        jLabel8.setText("Mother's name*:");
 
         jLabel9.setFont(FontsLoader.getStaticLabelFont());
         jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel9.setText("Mother's phone:");
+        jLabel9.setText("Mother's phone*");
 
         jLabel10.setFont(FontsLoader.getStaticLabelFont());
         jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel10.setText("Father's name:");
+        jLabel10.setText("Father's name");
 
         jLabel11.setFont(FontsLoader.getStaticLabelFont());
         jLabel11.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel11.setText("Father's phone:");
+        jLabel11.setText("Father's phone");
 
         jLabel12.setFont(FontsLoader.getStaticLabelFont());
         jLabel12.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel12.setText("Home phone:");
+        jLabel12.setText("Home phone");
 
         jLabel13.setFont(FontsLoader.getStaticLabelFont());
         jLabel13.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel13.setText("Emergency number*:");
+        jLabel13.setText("Emergency number*");
 
         phoneMother.setFont(FontsLoader.getTextFieldFont());
 
@@ -192,13 +192,15 @@ public class NewStudentTab extends javax.swing.JPanel implements Tab {
 
         jLabel14.setFont(FontsLoader.getStaticLabelFont());
         jLabel14.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel14.setText("Email*:");
+        jLabel14.setText("Email*");
 
         txtEmail.setFont(FontsLoader.getTextFieldFont());
 
         jLabel17.setFont(FontsLoader.getStaticLabelFont());
         jLabel17.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel17.setText("School*:");
+        jLabel17.setText("School*");
+
+        txtSchool.setFont(FontsLoader.getTextFieldFont());
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);

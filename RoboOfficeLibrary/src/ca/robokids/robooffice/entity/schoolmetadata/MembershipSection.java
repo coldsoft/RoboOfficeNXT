@@ -11,7 +11,17 @@ public class MembershipSection {
     private Membership membership;
 
     private Timeslot timeslot;
+    private boolean deleted;
 
+   public boolean isDeleted() {
+      return deleted;
+   }
+
+   public void setDeleted(boolean deleted) {
+      this.deleted = deleted;
+   }
+
+    
    public Membership getMembership() {
       return membership;
    }

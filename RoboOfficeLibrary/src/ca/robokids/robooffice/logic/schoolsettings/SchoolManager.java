@@ -102,7 +102,24 @@ public class SchoolManager {
       return SchoolDBM.getProgressReportNameById(report_type_id);
    }
    
-   
+   public static void addMembershipSection(Membership membership, DayOfWeek day, Time start) throws DuplicateNameException, DatabaseException
+   {
+      Timeslot newTime = new Timeslot();
+      newTime.setDayOfWeek(day);
+      newTime.setStart(start);
+//      //check if the time is already a course section
+//      for (Timeslot t : course.getTimeslots())
+//      {
+//         if (t.equals(newTime)) {
+//            throw new DuplicateNameException();
+//         }
+//      }
+      //get Timeslot / create a new timeslot
+      newTime = SchoolDBM.createTimeslot(day, start);
+      //create a new mapping using the timeslot
+      SchoolDBM.createMembershipSection(membership.getId(), newTime.getTimeslot_id());
+      
+   };
    public static void addCourseSection(Course course, DayOfWeek day, Time start) throws DuplicateNameException, DatabaseException
    {
       Timeslot newTime = new Timeslot();
@@ -122,12 +139,17 @@ public class SchoolManager {
       
    }
    
+   public static void deleteMembershipSection(Membership membership, Timeslot timeslot) throws DatabaseException
+   {
+      SchoolDBM.deleteMembershipSection(membership.getId(), timeslot.getTimeslot_id());
+      
+   }
    public static void deleteCourseSection(Course course, Timeslot timeslot) throws DatabaseException
    {
       SchoolDBM.deleteCourseSection(course.getId(), timeslot.getTimeslot_id());
       
    }
-   
+
    public static List<Course> loadAllCourses() throws DatabaseException
    {
       return SchoolDBM.getAllCoursesByClassroom(null);
@@ -150,39 +172,48 @@ public class SchoolManager {
       return newCourse;
    }
 
-   public static void createMembership(Membership newMembership) throws DatabaseException, BadFieldException {
-      throw new DatabaseException("Not yet implemented");
+   public static Membership createMembership(Membership newMembership) throws DatabaseException, BadFieldException {
+      if (newMembership.getTimeslots().isEmpty())
+         throw new BadFieldException("Membership needs to have at least 1 timeslot assigned.");
+      CheckFields.checkMembership(newMembership);
+      int newID = SchoolDBM.createMembership(newMembership);
+      newMembership.setId(newID);
+      return newMembership;
    }
 
    public static void modifyMembership(Membership newMembership) throws DatabaseException{
-      throw new DatabaseException("Not yet implemented");
+      SchoolDBM.modifyMembership(newMembership);
    }
 
    public static boolean deleteMembership(Membership membership) throws DatabaseException{
-      throw new DatabaseException("Not yet implemented");
-   }
-
-   public static void addMembershipSection(Membership membership, DayOfWeek dayOfWeek, Time start)throws DatabaseException, DuplicateNameException {
-      throw new DatabaseException("Not yet implemented");
-   }
-
-   public static void deleteMembershipSection(Membership membership, Timeslot delete) throws DatabaseException{
-      throw new DatabaseException("Not yet implemented");
+      return SchoolDBM.deleteMembership(membership.getId());
    }
 
    public static List<Membership> loadAllMemberships() throws DatabaseException{
-      throw new DatabaseException("Not yet implemented");
+      return SchoolDBM.getAllMembershipsByClassroom(null);
    }
-   
-   public static List<Project> loadAllProject(Course course) throws DatabaseException
+   public static List<Project> loadAllMembershipProject(Membership membership) throws DatabaseException
+   {
+      return SchoolDBM.getAllMembershipProjects(membership.getId());
+   }
+   public static void deleteMembershipProject(Project p) throws DatabaseException
+   {
+      SchoolDBM.deleteMembershipProject(p.getProject_id());
+   }
+   public static void addMembershipProject(Membership m,Project p) throws DatabaseException, BadFieldException
+   {
+      CheckFields.checkProjects(p);
+      SchoolDBM.createMembershipProject(m.getId(),p.getName());
+   }
+   public static List<Project> loadAllCourseProject(Course course) throws DatabaseException
    {
       return SchoolDBM.getAllProjects(course.getId());
    }
-   public static void deleteProject(Project p) throws DatabaseException
+   public static void deleteCourseProject(Project p) throws DatabaseException
    {
       SchoolDBM.deleteCourseProject(p.getProject_id());
    }
-   public static void addProject(Course c,Project p) throws DatabaseException, BadFieldException
+   public static void addCourseProject(Course c,Project p) throws DatabaseException, BadFieldException
    {
       CheckFields.checkProjects(p);
       SchoolDBM.createCourseProject(c.getId(),p.getName());

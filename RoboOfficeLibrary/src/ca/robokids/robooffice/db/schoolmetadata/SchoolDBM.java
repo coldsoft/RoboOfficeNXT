@@ -30,6 +30,348 @@ import javax.sql.rowset.CachedRowSet;
 public class SchoolDBM {
 
    private static Location location = null;
+   
+   
+   public static List<Membership> getAllMembershipsByClassroom(Classroom cr) throws DatabaseException
+   {
+      try {
+         List<Membership> memberships = new ArrayList();
+         String query;
+
+         if (cr == null) {
+            query = "SELECT DISTINCT memberships_id FROM membership_view ORDER BY code";
+         } else {
+            query = "SELECT DISTINCT memberships_id FROM delete_membership_view WHERE classroom_id = " + String.valueOf(cr.getClassroom_id())
+               + " ORDER BY code";
+         }
+
+
+         PreparedStatement stmt = DatabaseManager.getPreparedStatement(query);
+         CachedRowSet crs = DatabaseManager.executeQuery(stmt);
+         while (crs.next()) {
+            Membership membership = getMembershipByID(crs.getInt("memberships_id"));
+            memberships.add(membership);
+         }
+
+         return memberships;
+      } catch (SQLException ex) {
+         throw new DatabaseException("SQL Error." + ex.getMessage());
+      }
+   }
+   
+   /**
+    * Get all courses.If TimeslotID >= 1, all courses of that particular slot will be returned.<p>
+    * If TimeslotID is less than 1, all course from the database will be returned 
+    * @param timeslotID
+    * @return ArrayList of courses
+    * @throws DatabaseException
+    */
+   public static List<Membership> getAllMembershipByTimeslot(Timeslot timeslotID) throws DatabaseException {
+      try {
+         List<Membership> memberships = new ArrayList();
+         String query;
+
+         if (timeslotID.getTimeslot_id() < 1) {
+            query = "SELECT DISTINCT memberships_id FROM membership_view ORDER BY code ASC";
+         } else {
+            query = "SELECT DISTINCT memberships_id FROM membership_view WHERE slot_id = " + String.valueOf(timeslotID.getTimeslot_id())
+               + "ORDER BY code ASC";
+         }
+
+
+         PreparedStatement stmt = DatabaseManager.getPreparedStatement(query);
+         CachedRowSet crs = DatabaseManager.executeQuery(stmt);
+         while (crs.next()) {
+            Membership membership = getMembershipByID(crs.getInt("memberships_id"));
+            memberships.add(membership);
+         }
+
+         return memberships;
+      } catch (SQLException ex) {
+         throw new DatabaseException("SQL Error." + ex.getMessage());
+      }
+   }
+
+   public static Membership getMembershipByID(int membershipID) throws DatabaseException {
+      Membership membership = getActiveMembershipByID(membershipID);
+      if (membership == null) {
+         membership = getDeletedMembershipByID(membershipID);
+      }
+      return membership;
+   }
+   public static Membership getDeletedMembershipByID(int membershipID) throws DatabaseException
+   {
+      try {
+         Membership temp = null;
+         String getMembershipByID = "SELECT * FROM deleted_membership_view WHERE memberships_id = ? GROUP BY memberships_id";
+         PreparedStatement stmt;
+
+         stmt = DatabaseManager.getPreparedStatement(getMembershipByID);
+         stmt.setInt(1, membershipID);
+
+         CachedRowSet crs = DatabaseManager.executeQuery(stmt);
+
+         if (crs.next()) {
+            temp = new Membership();
+
+            Classroom r = new Classroom();
+            r.setName(crs.getString("classroom_name"));
+            r.setLocation(getLocation());
+            r.setCapacity(crs.getInt("capacity"));
+            r.setClassroom_id(crs.getInt("classroom_id"));
+            r.setDeleted(false);
+
+            temp.setClassroom(r);
+            temp.setCode(crs.getString("code"));
+            temp.setId(membershipID);
+            temp.setDeleted(true);
+            temp.setDescription(crs.getString("description"));
+            temp.setDuration(crs.getInt("duration"));
+            temp.setRate(crs.getFloat("rate"));
+            temp.setName(crs.getString("name"));
+            temp.setStartDate(crs.getDate("start_date"));
+            temp.setEndDate(crs.getDate("endDate"));
+            temp.setTimeslots(getAllTimeslots(membershipID));
+         }
+         return temp;
+      } catch (SQLException ex) {
+         throw new DatabaseException("SQL Error." + ex.getMessage());
+      }
+   }
+   public static Membership getActiveMembershipByID(int membershipID) throws DatabaseException {
+      try {
+         Membership temp = null;
+         String getMembershipByID = "SELECT * FROM membership_view WHERE memberships_id = ? GROUP BY memberships_id";
+         PreparedStatement stmt;
+
+         stmt = DatabaseManager.getPreparedStatement(getMembershipByID);
+         stmt.setInt(1, membershipID);
+
+         CachedRowSet crs = DatabaseManager.executeQuery(stmt);
+
+         if (crs.next()) {
+            temp = new Membership();
+
+            Classroom r = new Classroom();
+            r.setName(crs.getString("classroom_name"));
+            r.setLocation(getLocation());
+            r.setCapacity(crs.getInt("capacity"));
+            r.setClassroom_id(crs.getInt("classroom_id"));
+            r.setDeleted(false);
+
+            temp.setClassroom(r);
+            temp.setCode(crs.getString("code"));
+            temp.setId(membershipID);
+            temp.setDeleted(false);
+            temp.setDescription(crs.getString("description"));
+            temp.setDuration(crs.getInt("duration"));
+            temp.setRate(crs.getFloat("rate"));
+            temp.setName(crs.getString("name"));
+            temp.setStartDate(crs.getDate("start_date"));
+            temp.setEndDate(crs.getDate("endDate"));
+            temp.setHasTax(crs.getBoolean("hasTax"));
+            temp.setTimeslots(getAllTimeslots(membershipID));
+         }
+         return temp;
+
+
+      } catch (SQLException ex) {
+         throw new DatabaseException("SQL Error." + ex.getMessage());
+      }
+   }
+   
+
+   public static int createMembership(Membership membership) throws DatabaseException {
+      PreparedStatement stmt = insertMembership(membership);
+      int new_id = DatabaseManager.executeGetPK(stmt);
+
+      for (Timeslot t : membership.getTimeslots()) {
+         
+         t = createTimeslot(t.getDayOfWeek(),t.getStart());
+         createMembershipSection(new_id, t.getTimeslot_id());
+      }
+      return new_id;
+   }
+   
+   public static void modifyMembership(Membership membership) throws DatabaseException {
+
+      PreparedStatement stmt = updateMembership(membership);
+      DatabaseManager.executeUpdate(stmt);
+
+   }
+   public static boolean deleteMembership(int membershipID) throws DatabaseException {
+      try {
+         Membership m = getMembershipByID(membershipID);
+         for (Timeslot t : m.getTimeslots())
+         {
+            deleteMembershipSection(m.getId(),t.getTimeslot_id());
+         }
+         String query = "UPDATE membership SET deleted = 1 WHERE memberships_id = ?";
+         PreparedStatement stmt = DatabaseManager.getPreparedStatement(query);
+         stmt.setInt(1, membershipID);
+         int rowChanged = DatabaseManager.executeUpdate(stmt);
+         if (rowChanged < 1) {
+            return false;
+         }
+         return true;
+      } catch (SQLException ex) {
+         throw new DatabaseException("SQL Error." + ex.getMessage());
+      }
+   }
+   
+   public static void createMembershipSection(int membership_id, int timeslot_id) throws DatabaseException {
+      try {
+         String query;
+         if (hasMembershipSection(membership_id, timeslot_id))
+            query = "UPDATE membership_section SET deleted = 0 WHERE slot_id = ? AND membership_id = ?";
+         else
+            query = "INSERT INTO membership_section (slot_id, membership_id) VALUES (?,?)";
+         PreparedStatement stmt = DatabaseManager.getPreparedStatement(query);
+
+         stmt.setInt(1, timeslot_id);
+         stmt.setInt(2, membership_id);
+
+         DatabaseManager.executeUpdate(stmt);
+      } catch (SQLException ex) {
+         throw new DatabaseException(ex.getMessage());
+      }
+   }
+
+   public static void deleteMembershipSection(int membership_id, int timeslot_id) throws DatabaseException {
+      try {
+         String delete = "UPDATE membership_section SET deleted = 1 WHERE membership_id = " + String.valueOf(membership_id)
+            + " AND slot_id = " + String.valueOf(timeslot_id);
+         PreparedStatement stmt = DatabaseManager.getPreparedStatement(delete);
+         DatabaseManager.executeUpdate(stmt);
+      } catch (SQLException ex) {
+         throw new DatabaseException("SQL Error." + ex.getMessage());
+      }
+   }
+   public static boolean hasMembershipSection(int membership_id, int timeslot_id) throws DatabaseException {
+       try {
+         String query = "SELECT * FROM membership_section WHERE membership_id = ? AND slot_id = ?";
+         PreparedStatement stmt = DatabaseManager.getPreparedStatement(query);
+         stmt.setInt(1, membership_id);
+         stmt.setInt(2, timeslot_id);
+         
+         CachedRowSet crs = DatabaseManager.executeQuery(stmt);
+         if (crs.next()){
+            return true;
+         }
+         return false;
+      } catch (SQLException ex) {
+         throw new DatabaseException(ex.getMessage());
+      }
+   }
+   public static List<Project> getAllMembershipProjects(int membership_id) throws DatabaseException
+   {
+      try {
+         List<Project> projects = new ArrayList();
+         String query;
+         if (membership_id > 0)
+            query = "SELECT * FROM club_project WHERE membership_id = ? AND deleted = 0 ORDER BY name ASC";
+         else
+            query = "SELECT * FROM club_project WHERE deleted = 0 ORDER BY name ASC";
+         PreparedStatement stmt = DatabaseManager.getPreparedStatement(query);
+         
+         stmt.setInt(1, membership_id);
+         
+         CachedRowSet crs = DatabaseManager.executeQuery(stmt);
+         
+         while(crs.next())
+         {
+            Project p = new Project();
+            p.setDeleted(false);
+            p.setActivityID(membership_id);
+            p.setName(crs.getString("name"));
+            p.setProject_id(crs.getInt("project_id"));
+            
+            projects.add(p);
+         }
+         return projects;
+      } catch (SQLException ex) {
+         throw new DatabaseException(ex.getMessage());
+      }
+   }
+   
+   public static Project getMembershipProjectByID(int projectID) throws DatabaseException
+   {
+      try {
+         String query = "SELECT * FROM club_project WHERE project_id = ? ";
+         
+         PreparedStatement stmt = DatabaseManager.getPreparedStatement(query);
+         stmt.setInt(1,projectID);
+         CachedRowSet crs = DatabaseManager.executeQuery(stmt);
+         
+         while(crs.next())
+         {
+            Project p = new Project();
+            p.setDeleted(crs.getBoolean("deleted"));
+            p.setActivityID(crs.getInt("membership_id"));
+            p.setName(crs.getString("name"));
+            p.setProject_id(crs.getInt("project_id"));
+            
+            return p;
+         }
+         return null;
+      } catch (SQLException ex) {
+         throw new DatabaseException(ex.getMessage());
+      }
+      
+   }
+   public static void createMembershipProject(int membership_id, String name) throws DatabaseException
+   {
+      String update;
+      if (hasMembershipProject(name,membership_id))
+      {
+         update = "UPDATE club_project SET deleted = 0 WHERE  name = ? AND membership_id = ?";
+      }else
+      {
+         update = "INSERT INTO club_project (name, membership_id) VALUES (?,?)";
+      }
+      
+      try {
+         
+         PreparedStatement stmt = DatabaseManager.getPreparedStatement(update);
+         stmt.setString(1,name);
+         stmt.setInt(2,membership_id);
+         DatabaseManager.executeUpdate(stmt);
+      } catch (SQLException ex) {
+         throw new DatabaseException(ex.getMessage());
+      }
+      
+   }
+   public static void deleteMembershipProject(int project_id) throws DatabaseException
+   {
+      try {
+         String delete = "UPDATE club_project SET deleted = 1 WHERE project_id = ? ";
+         PreparedStatement stmt = DatabaseManager.getPreparedStatement(delete);
+         stmt.setInt(1,project_id);
+         
+         DatabaseManager.executeUpdate(stmt);
+      } catch (SQLException ex) {
+         throw new DatabaseException(ex.getMessage());
+      }
+      
+   }
+   public static boolean hasMembershipProject(String name, int membership_id) throws DatabaseException
+   {
+      try {
+         String query = "SELECT * FROM project WHERE name = ? AND membership_id = ?";
+         PreparedStatement stmt = DatabaseManager.getPreparedStatement(query);
+         stmt.setString(1, name);
+         stmt.setInt(2, membership_id);
+         
+         CachedRowSet crs = DatabaseManager.executeQuery(stmt);
+         if (crs.next()){
+            return true;
+         }
+         return false;
+      } catch (SQLException ex) {
+         throw new DatabaseException(ex.getMessage());
+      }
+   }
+   
    /**
     * Get all courses within a classroom
     * @param cr
@@ -110,6 +452,7 @@ public class SchoolDBM {
       return course;
    }
 
+   
    /**
     * get un-deleted courses by courseID.
     * @param courseID
@@ -157,6 +500,7 @@ public class SchoolDBM {
       }
    }
 
+   
    /**
     * create a new course. Course object must be correctly initialized.
     * @param course
@@ -197,6 +541,11 @@ public class SchoolDBM {
     */
    public static boolean deleteCourse(int courseID) throws DatabaseException {
       try {
+         Course c = getCourseByID(courseID);
+         for (Timeslot t : c.getTimeslots())
+         {
+            deleteCourseSection(c.getId(),t.getTimeslot_id());
+         }
          String query = "UPDATE course SET deleted = 1 WHERE course_id = ?";
          PreparedStatement stmt = DatabaseManager.getPreparedStatement(query);
          stmt.setInt(1, courseID);
@@ -226,6 +575,7 @@ public class SchoolDBM {
          throw new DatabaseException(ex.getMessage());
       }
    }
+   
    public static void createCourseSection(int course_id, int timeslot_id) throws DatabaseException {
       try {
          String query;
@@ -243,7 +593,17 @@ public class SchoolDBM {
          throw new DatabaseException(ex.getMessage());
       }
    }
-
+   
+   public static void deleteCourseSection(int course_id, int timeslot_id) throws DatabaseException {
+      try {
+         String delete = "UPDATE course_section SET deleted = 1 WHERE course_id = " + String.valueOf(course_id)
+            + " AND slot_id = " + String.valueOf(timeslot_id);
+         PreparedStatement stmt = DatabaseManager.getPreparedStatement(delete);
+         DatabaseManager.executeUpdate(stmt);
+      } catch (SQLException ex) {
+         throw new DatabaseException("SQL Error." + ex.getMessage());
+      }
+   }
    /**
     * get all classrooms in database
     * @return ArrayList of Classrooms
@@ -427,7 +787,7 @@ public class SchoolDBM {
       }
    }
    
-   public static Project getProjectByID(int projectID) throws DatabaseException
+   public static Project getCourseProjectByID(int projectID) throws DatabaseException
    {
       try {
          String query = "SELECT * FROM project WHERE project_id = ? ";
@@ -954,16 +1314,7 @@ public class SchoolDBM {
       }
    }
 
-   public static void deleteCourseSection(int course_id, int timeslot_id) throws DatabaseException {
-      try {
-         String delete = "UPDATE course_section SET deleted = 1 WHERE course_id = " + String.valueOf(course_id)
-            + " AND slot_id = " + String.valueOf(timeslot_id);
-         PreparedStatement stmt = DatabaseManager.getPreparedStatement(delete);
-         DatabaseManager.executeUpdate(stmt);
-      } catch (SQLException ex) {
-         throw new DatabaseException("SQL Error." + ex.getMessage());
-      }
-   }
+   
 
    private static PreparedStatement updateCourse(Course course) throws DatabaseException {
       String updateCourse = "UPDATE course SET code = ?, name = ?, description = ?, duration = ?,"
@@ -1257,7 +1608,7 @@ public class SchoolDBM {
    }
 
    
-   public static List<Timeslot> getUniqueActiveTimeslot(DayOfWeek day) throws DatabaseException {
+   public static List<Timeslot> getUniqueActiveCourseTimeslot(DayOfWeek day) throws DatabaseException {
       try {
          List<Timeslot> timeslots = new ArrayList();
          String query = new String();
@@ -1292,6 +1643,54 @@ public class SchoolDBM {
          throw new DatabaseException(ex.getMessage());
       }
       
+   }
+
+   private static PreparedStatement insertMembership(Membership membership) throws DatabaseException {
+      try {
+         String insert = "INSERT INTO membership ( classroom_id, code, name, description, duration, startDate, endDate, rate, deleted, hasTax) "
+            + "VALUES(?,?,?,?,?,?,?,?,?,?)";
+         
+         PreparedStatement stmt = DatabaseManager.getPreparedStatement(insert);
+         
+         stmt.setInt(1,membership.getClassroom().getClassroom_id());
+         stmt.setString(2,membership.getCode());
+         stmt.setString(3,membership.getName());
+         stmt.setString(4,membership.getDescription());
+         stmt.setInt(5,membership.getDuration());
+         stmt.setDate(6,membership.getStartDate());
+         stmt.setDate(7,membership.getEndDate());
+         stmt.setFloat(8,membership.getRate());
+         stmt.setBoolean(9,true);
+         stmt.setBoolean(10, membership.hasTax());
+         return stmt;
+      } catch (SQLException ex) {
+         throw new DatabaseException(ex.getMessage());
+      }
+      
+   }
+
+   
+
+   private static PreparedStatement updateMembership(Membership membership) throws DatabaseException {
+      String updateCourse = "UPDATE membership SET code = ?, name = ?, description = ?, duration = ?,"
+         + "classroom_id = ? ,rate = ? ,hasTax = ?, startDate = ?, endDate = ? WHERE memberships_id = ?";
+      try {
+         PreparedStatement stmt = DatabaseManager.getPreparedStatement(updateCourse);
+         stmt.setString(1, membership.getCode());
+         stmt.setString(2, membership.getName());
+         stmt.setString(3, membership.getDescription());
+         stmt.setInt(4, membership.getDuration());
+         stmt.setInt(5, membership.getClassroom().getClassroom_id());
+         stmt.setFloat(6, membership.getRate());     
+         stmt.setBoolean(7,membership.hasTax());
+         stmt.setDate(8,membership.getStartDate());
+         stmt.setDate(9,membership.getEndDate());
+         stmt.setInt(10, membership.getId());
+
+         return stmt;
+      } catch (SQLException ex) {
+         throw new DatabaseException("SQL Error." + ex.getMessage());
+      }
    }
 
    

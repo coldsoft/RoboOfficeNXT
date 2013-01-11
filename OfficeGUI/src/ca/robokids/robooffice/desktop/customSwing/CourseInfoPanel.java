@@ -330,7 +330,7 @@ public class CourseInfoPanel extends javax.swing.JPanel {
         jLabel12.setText("Rate: $");
 
         jLabel13.setFont(FontsLoader.getStaticLabelFont());
-        jLabel13.setText("Description:");
+        jLabel13.setText("Description (This will show up on payment receipt)");
 
         txtDescription.setColumns(20);
         txtDescription.setFont(FontsLoader.getTextFieldFont());
@@ -511,19 +511,18 @@ public class CourseInfoPanel extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(information, javax.swing.GroupLayout.PREFERRED_SIZE, 335, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(9, 9, 9)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(btnDeleteTime, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnAdd, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                    .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnDeleteTime, javax.swing.GroupLayout.DEFAULT_SIZE, 102, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 2, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnDeleteProject, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 272, Short.MAX_VALUE)
                     .addComponent(btnAddProject, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 274, Short.MAX_VALUE))
-                .addContainerGap())
+                    .addComponent(btnDeleteProject, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -567,7 +566,7 @@ public class CourseInfoPanel extends javax.swing.JPanel {
 
             for (int i = 0; i < projectsModel.getSize(); i++) {
                Project p = projectsModel.get(i);
-               SchoolManager.addProject(course, p);
+               SchoolManager.addCourseProject(course, p);
 
             }
             parent.refresh();
@@ -686,7 +685,7 @@ public class CourseInfoPanel extends javax.swing.JPanel {
 
       if (course != null) {
          try {
-            SchoolManager.addProject(course, p);
+            SchoolManager.addCourseProject(course, p);
          } catch ( DatabaseException | BadFieldException ex) {
             PopupMessage.createErrorPopUp(ex.getMessage(), null);
             projectsModel.removeElement(p);
@@ -701,7 +700,7 @@ public class CourseInfoPanel extends javax.swing.JPanel {
          Project p = projectsModel.remove(index);
          if (course != null) {
             try {
-               SchoolManager.deleteProject(p);
+               SchoolManager.deleteCourseProject(p);
             } catch (DatabaseException ex) {
                PopupMessage.createErrorPopUp(ex.getMessage(), null);
                projectsModel.addElement(p);
@@ -803,7 +802,7 @@ public class CourseInfoPanel extends javax.swing.JPanel {
       }
       projectsModel.clear();
       try {
-         List<Project> projects = SchoolManager.loadAllProject(course);
+         List<Project> projects = SchoolManager.loadAllCourseProject(course);
          for (Project p : projects) {
             projectsModel.addElement(p);
          }

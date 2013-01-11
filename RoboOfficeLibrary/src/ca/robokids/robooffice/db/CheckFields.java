@@ -161,7 +161,19 @@ public class CheckFields {
       checkLength(1,100,s.getAddress(),"Address is empty.","Address is too long");
       checkLength(1,100,s.getMother(),"Mother name is empty.","Mother name is too long");
       checkLength(1,45, s.getEmergency(),"Emergency contact # is empty.","Emergency contact # is too long");
+      checkEmail(s.getEmail());
 
+   }
+
+   public static void checkMembership(Membership c) throws BadFieldException {
+      checkLength(4,40,c.getName(),"Please give the membership a more meaningful name.", "Membership name needs to be less than 40 chars.");
+      checkLength(4,4,c.getCode(), "Membership Code needs to be 4 characters exactly.","Membership Code needs to be 4 characters exactly.");
+      checkLength(1,500,c.getDescription(),"Membership Description cannot be empty.", "Membership Description is too long");
+      checkLength(1,10000,c.getDuration(),"Membership Duration is too short. ", "Membership Duration is too long");
+      checkLength(0,10000,c.getRate(),"Membership rate is negative.", "Too expensive. Consider change your business model.");
+      if (c.getStartDate().after(c.getEndDate()))
+         throw new BadFieldException("Start date is after the end date.");
+      
    }
    
  

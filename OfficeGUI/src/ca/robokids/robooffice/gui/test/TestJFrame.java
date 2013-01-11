@@ -6,10 +6,12 @@
 package ca.robokids.robooffice.gui.test;
 
 import ca.robokids.robooffice.desktop.customSwing.TimeslotDialog;
+import ca.robokids.robooffice.desktop.loaders.FramePropertyLoader;
 import ca.robokids.robooffice.desktop.util.PopupMessage;
 import ca.robokids.robooffice.entity.schoolmetadata.Timeslot;
 import de.javasoft.swing.JYTabbedPane;
 import java.awt.Component;
+import java.awt.Font;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
 
@@ -53,8 +55,8 @@ public class TestJFrame extends javax.swing.JFrame {
 
         btnRemove.setText("remove");
 
-        lblMsg.setFont(new java.awt.Font("DejaVu Sans Mono", 0, 11)); // NOI18N
-        lblMsg.setText("Mon 16:00");
+        lblMsg.setFont(new Font("宋体", Font.PLAIN, 12));
+        lblMsg.setText(FramePropertyLoader.getLoadingMessage());
 
         jButton1.setText("Timeslots");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -68,24 +70,22 @@ public class TestJFrame extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(147, 147, 147)
-                        .addComponent(btnAdd)
-                        .addGap(70, 70, 70)
-                        .addComponent(btnRemove)
-                        .addGap(51, 51, 51)
-                        .addComponent(txtTabname, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton1))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(lblMsg, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(147, 147, 147)
+                .addComponent(btnAdd)
+                .addGap(70, 70, 70)
+                .addComponent(btnRemove)
+                .addGap(51, 51, 51)
+                .addComponent(txtTabname, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jButton1)
                 .addContainerGap(41, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
                 .addComponent(tabPane, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(114, 114, 114))
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(lblMsg, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

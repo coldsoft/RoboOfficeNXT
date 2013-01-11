@@ -18,8 +18,11 @@ import ca.robokids.robooffice.entity.schoolmetadata.ProgressReportType;
 import ca.robokids.robooffice.entity.schoolmetadata.Timeslot;
 import ca.robokids.robooffice.logic.schoolsettings.SchoolManager;
 import java.awt.CardLayout;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 
@@ -33,9 +36,7 @@ public class MembershipInfoPanel extends javax.swing.JPanel {
     * Creates new form MembershipInfoPanel
     */
    DefaultListModel<Timeslot> slots = new DefaultListModel();
-   List<Timeslot> timeslots = new ArrayList();
    DefaultComboBoxModel<Classroom> classroomModel = new DefaultComboBoxModel();
-   DefaultComboBoxModel<ProgressReportType> reportTypeModel = new DefaultComboBoxModel();
    MembershipTab parent;
    Membership membership;
    boolean editable;
@@ -73,7 +74,13 @@ public class MembershipInfoPanel extends javax.swing.JPanel {
       if (!editable) {
          return membership;
       } else {
-         Membership newMembership = getFields();
+         Membership newMembership = null;
+         try {
+            newMembership = getFields();
+         } catch (BadFieldException ex) {
+            lblMsg.setText(ex.getMessage());
+            return null;
+         }
          newMembership.setId(membership.getId());
          return newMembership;
       }
@@ -91,6 +98,8 @@ public class MembershipInfoPanel extends javax.swing.JPanel {
    public void add() {
       membership = null;
       this.reset();
+      this.btnAdd.setEnabled(true);
+      this.btnDeleteTime.setEnabled(true);
       switchTo("edit");
    }
 
@@ -118,9 +127,11 @@ public class MembershipInfoPanel extends javax.swing.JPanel {
         jScrollPane2 = new javax.swing.JScrollPane();
         lblDescription = new javax.swing.JTextArea();
         lblClassroom = new javax.swing.JLabel();
-        lblDays = new javax.swing.JLabel();
+        lblStartDate = new javax.swing.JLabel();
         btnEdit = new javax.swing.JButton();
         btnDelete = new javax.swing.JButton();
+        jLabel6 = new javax.swing.JLabel();
+        lblEndDate = new javax.swing.JLabel();
         edit = new javax.swing.JPanel();
         jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
@@ -139,8 +150,10 @@ public class MembershipInfoPanel extends javax.swing.JPanel {
         btnCancel = new javax.swing.JButton();
         lblMsg = new javax.swing.JLabel();
         txtCode = new ca.robokids.robooffice.desktop.customSwing.PostalCodeJTextField();
-        spinDays = new com.toedter.components.JSpinField();
-        jLabel4 = new javax.swing.JLabel();
+        calStartDate = new com.toedter.calendar.JDateChooser();
+        jLabel11 = new javax.swing.JLabel();
+        calEndDate = new com.toedter.calendar.JDateChooser();
+        jLabel15 = new javax.swing.JLabel();
         jLabel14 = new javax.swing.JLabel();
         jScrollPane4 = new javax.swing.JScrollPane();
         lstTimeslots = new javax.swing.JList();
@@ -155,13 +168,13 @@ public class MembershipInfoPanel extends javax.swing.JPanel {
         jLabel1.setText("Duration(min):");
 
         jLabel5.setFont(FontsLoader.getStaticLabelFont());
-        jLabel5.setText("Days per payment:");
+        jLabel5.setText("Start Date:");
 
         lblDuration.setFont(FontsLoader.getDynamicLabelFont());
         lblDuration.setText("N/A");
 
         jLabel3.setFont(FontsLoader.getStaticLabelFont());
-        jLabel3.setText("Classroom");
+        jLabel3.setText("Classroom:");
 
         lblName.setFont(FontsLoader.getBigStaticLabelFont());
         lblName.setText("Membership Name");
@@ -190,8 +203,8 @@ public class MembershipInfoPanel extends javax.swing.JPanel {
         lblClassroom.setFont(FontsLoader.getDynamicLabelFont());
         lblClassroom.setText("N/A");
 
-        lblDays.setFont(FontsLoader.getDynamicLabelFont());
-        lblDays.setText("N/A");
+        lblStartDate.setFont(FontsLoader.getDynamicLabelFont());
+        lblStartDate.setText("N/A");
 
         btnEdit.setFont(FontsLoader.getButtonFont());
         btnEdit.setText("Edit");
@@ -209,6 +222,11 @@ public class MembershipInfoPanel extends javax.swing.JPanel {
                 btnDeleteActionPerformed(evt);
             }
         });
+
+        jLabel6.setText("End Date:");
+
+        lblEndDate.setFont(FontsLoader.getDynamicLabelFont());
+        lblEndDate.setText("N/A");
 
         javax.swing.GroupLayout displayLayout = new javax.swing.GroupLayout(display);
         display.setLayout(displayLayout);
@@ -233,20 +251,26 @@ public class MembershipInfoPanel extends javax.swing.JPanel {
                             .addComponent(jScrollPane2)
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, displayLayout.createSequentialGroup()
                                 .addGroup(displayLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(lblCode)
-                                    .addComponent(jLabel5)
-                                    .addComponent(jLabel3)
-                                    .addComponent(jLabel2)
-                                    .addComponent(jLabel1))
+                                    .addComponent(jLabel6)
+                                    .addGroup(displayLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(displayLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addComponent(lblCode)
+                                            .addComponent(jLabel3)
+                                            .addComponent(jLabel2)
+                                            .addComponent(jLabel1))
+                                        .addGroup(displayLayout.createSequentialGroup()
+                                            .addGap(31, 31, 31)
+                                            .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE))))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(displayLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(lblName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(lblDays, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(lblName, javax.swing.GroupLayout.DEFAULT_SIZE, 341, Short.MAX_VALUE)
+                                    .addComponent(lblStartDate, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(lblRate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(lblClassroom, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addGroup(displayLayout.createSequentialGroup()
                                         .addComponent(lblDuration, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(0, 215, Short.MAX_VALUE)))))))
+                                        .addGap(0, 0, Short.MAX_VALUE))
+                                    .addComponent(lblEndDate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))))
                 .addContainerGap())
         );
         displayLayout.setVerticalGroup(
@@ -273,42 +297,46 @@ public class MembershipInfoPanel extends javax.swing.JPanel {
                     .addComponent(jLabel3)
                     .addComponent(lblClassroom))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(displayLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(lblStartDate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(displayLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblDays)
-                    .addComponent(jLabel5))
+                    .addComponent(jLabel6)
+                    .addComponent(lblEndDate))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel7)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 283, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 268, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
         information.add(display, "display");
 
         jLabel8.setFont(FontsLoader.getStaticLabelFont());
-        jLabel8.setText(" Duration(min):");
+        jLabel8.setText(" Duration(min)");
 
         jLabel9.setFont(FontsLoader.getStaticLabelFont());
-        jLabel9.setText("Days per Payment:");
+        jLabel9.setText("Start Date");
 
         jLabel10.setFont(FontsLoader.getStaticLabelFont());
         jLabel10.setText("Classroom");
 
         lblName1.setFont(FontsLoader.getStaticLabelFont());
-        lblName1.setText("Membership Name:");
+        lblName1.setText("Membership Name");
 
         lblCode1.setFont(FontsLoader.getStaticLabelFont());
         lblCode1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lblCode1.setText("Membership Code:");
+        lblCode1.setText("Membership Code");
 
         cboClassrooms.setFont(FontsLoader.getComboBoxFont());
         cboClassrooms.setModel(this.classroomModel);
 
         jLabel12.setFont(FontsLoader.getStaticLabelFont());
-        jLabel12.setText("Rate: $");
+        jLabel12.setText("Rate $");
 
         jLabel13.setFont(FontsLoader.getStaticLabelFont());
-        jLabel13.setText("Description:");
+        jLabel13.setText("Description (Note: description will show up on student payment receipt)");
 
         txtDescription.setColumns(20);
         txtDescription.setFont(FontsLoader.getTextFieldFont());
@@ -344,59 +372,62 @@ public class MembershipInfoPanel extends javax.swing.JPanel {
         txtCode.setColumns(4);
         txtCode.setFont(FontsLoader.getTextFieldFont());
 
-        spinDays.setFont(FontsLoader.getTextFieldFont());
-        spinDays.setMaximum(720);
-        spinDays.setMinimum(0);
+        calStartDate.setFont(FontsLoader.getTextFieldFont());
 
-        jLabel4.setText("Days");
+        jLabel11.setFont(FontsLoader.getStaticLabelFont());
+        jLabel11.setText("End Date");
+
+        calEndDate.setFont(FontsLoader.getTextFieldFont());
+
+        jLabel15.setText("/ month (28 days)");
 
         javax.swing.GroupLayout editLayout = new javax.swing.GroupLayout(edit);
         edit.setLayout(editLayout);
         editLayout.setHorizontalGroup(
             editLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(lblMsg, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(editLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(editLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblName1, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(lblCode1, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel12, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel10, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel9, javax.swing.GroupLayout.Alignment.TRAILING))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(editLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtRate, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(editLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(txtCode, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 72, Short.MAX_VALUE)
-                        .addComponent(txtDuration, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(editLayout.createSequentialGroup()
-                        .addComponent(spinDays, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel4))
-                    .addComponent(cboClassrooms, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(0, 0, Short.MAX_VALUE))
-            .addGroup(editLayout.createSequentialGroup()
-                .addGroup(editLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(editLayout.createSequentialGroup()
-                        .addContainerGap()
                         .addComponent(btnSave)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btnCancel))
+                    .addComponent(lblMsg, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(editLayout.createSequentialGroup()
-                        .addGap(10, 10, 10)
-                        .addComponent(jLabel13)
-                        .addGap(0, 342, Short.MAX_VALUE))
-                    .addGroup(editLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jScrollPane3)))
+                        .addGroup(editLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(editLayout.createSequentialGroup()
+                                .addGroup(editLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel11)
+                                    .addComponent(lblName1)
+                                    .addComponent(lblCode1)
+                                    .addComponent(jLabel8)
+                                    .addComponent(jLabel12)
+                                    .addComponent(jLabel10)
+                                    .addComponent(jLabel9))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(editLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(editLayout.createSequentialGroup()
+                                        .addComponent(txtRate, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jLabel15, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                    .addGroup(editLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                        .addComponent(txtCode, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 72, Short.MAX_VALUE)
+                                        .addComponent(txtDuration, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                    .addComponent(cboClassrooms, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(calStartDate, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(calEndDate, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(editLayout.createSequentialGroup()
+                                .addGap(10, 10, 10)
+                                .addComponent(jLabel13)))
+                        .addGap(0, 80, Short.MAX_VALUE))
+                    .addComponent(jScrollPane3))
                 .addContainerGap())
         );
         editLayout.setVerticalGroup(
             editLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(editLayout.createSequentialGroup()
-                .addContainerGap(15, Short.MAX_VALUE)
+                .addGap(12, 12, 12)
                 .addGroup(editLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblName1)
                     .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -411,24 +442,24 @@ public class MembershipInfoPanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(editLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel12)
-                    .addComponent(txtRate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtRate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel15, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(editLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(cboClassrooms)
                     .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(editLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(editLayout.createSequentialGroup()
-                        .addGap(12, 12, 12)
-                        .addComponent(jLabel9))
-                    .addGroup(editLayout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(editLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(spinDays, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                    .addComponent(calStartDate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(editLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(calEndDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel13)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(1, 1, 1)
                 .addComponent(lblMsg, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -460,6 +491,7 @@ public class MembershipInfoPanel extends javax.swing.JPanel {
         btnDeleteTime.setFont(FontsLoader.getButtonFont());
         btnDeleteTime.setForeground(new java.awt.Color(255, 0, 0));
         btnDeleteTime.setText("Delete");
+        btnDeleteTime.setName("membershipSettings");
         btnDeleteTime.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnDeleteTimeActionPerformed(evt);
@@ -472,17 +504,16 @@ public class MembershipInfoPanel extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(information, javax.swing.GroupLayout.PREFERRED_SIZE, 419, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(information, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel14, javax.swing.GroupLayout.DEFAULT_SIZE, 81, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(btnDeleteTime, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btnAdd, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                .addContainerGap())
+                        .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(14, 14, 14)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(btnDeleteTime)
+                            .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -499,18 +530,31 @@ public class MembershipInfoPanel extends javax.swing.JPanel {
                             .addComponent(jLabel14, javax.swing.GroupLayout.Alignment.TRAILING))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 408, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(information, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(information, javax.swing.GroupLayout.DEFAULT_SIZE, 0, Short.MAX_VALUE))
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
 
-      Membership newMembership = getFields();
+      Membership newMembership  = null;
+      try {
+         newMembership = getFields();
+      } catch (BadFieldException ex) {
+         lblMsg.setText(ex.getMessage());
+         return;
+      }
       //if save new Membership
       if (membership == null) {
          try {
-            SchoolManager.createMembership(newMembership);
+            membership = SchoolManager.createMembership(newMembership);
+            for (Timeslot t : newMembership.getTimeslots()) {
+               try {
+                  SchoolManager.addMembershipSection(membership, t.getDayOfWeek(), t.getStart());
+               } catch (DuplicateNameException ex) {
+                  Logger.getLogger(CourseInfoPanel.class.getName()).log(Level.SEVERE, null, ex);
+               }
+            }
             parent.refresh();
          } catch (DatabaseException ex) {
             PopupMessage.createErrorPopUp(ex.getMessage(), null);
@@ -558,10 +602,23 @@ public class MembershipInfoPanel extends javax.swing.JPanel {
          selectTime.setLocationRelativeTo(MainRoboOfficeJFrame.getInstance());
 
          Timeslot newTime = selectTime.getTimeslot();
-         if (newTime == null)
+         if (newTime == null){
+             this.slots.addElement(newTime);
             return;
+         }
+         
+         //check for duplication in list
+         for (int i = 0; i < slots.getSize(); i++) {
+         if (newTime.equals(slots.get(i))) {
+            PopupMessage.createErrorPopUp("There already exists a time: " + newTime, "Sorry");
+            return;
+         }
+         }
+         if (membership == null) // if the current mode is adding
+      {
+         return;
+      }
          SchoolManager.addMembershipSection(membership, newTime.getDayOfWeek(), newTime.getStart());
-         this.timeslots.add(newTime);
          this.slots.addElement(newTime);
       } catch (DuplicateNameException ex) {
          PopupMessage.createErrorPopUp("The new timeslot already existed.", "Sorry");
@@ -579,6 +636,10 @@ public class MembershipInfoPanel extends javax.swing.JPanel {
             return;
          }
          try {
+            if (membership == null) {
+               slots.remove(index);
+               return;
+            }
             Timeslot delete = slots.elementAt(index);
             SchoolManager.deleteMembershipSection(membership, delete);
             membership.getTimeslots().remove(delete);
@@ -601,19 +662,23 @@ public class MembershipInfoPanel extends javax.swing.JPanel {
     private javax.swing.JButton btnDeleteTime;
     private javax.swing.JButton btnEdit;
     private javax.swing.JButton btnSave;
+    private com.toedter.calendar.JDateChooser calEndDate;
+    private com.toedter.calendar.JDateChooser calStartDate;
     private javax.swing.JComboBox cboClassrooms;
     private javax.swing.JPanel display;
     private javax.swing.JPanel edit;
     private javax.swing.JPanel information;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
@@ -623,16 +688,16 @@ public class MembershipInfoPanel extends javax.swing.JPanel {
     private javax.swing.JLabel lblClassroom;
     private javax.swing.JLabel lblCode;
     private javax.swing.JLabel lblCode1;
-    private javax.swing.JLabel lblDays;
     private javax.swing.JTextArea lblDescription;
     private javax.swing.JLabel lblDuration;
+    private javax.swing.JLabel lblEndDate;
     private javax.swing.JLabel lblMsg;
     private javax.swing.JLabel lblName;
     private javax.swing.JLabel lblName1;
     private javax.swing.JLabel lblRate;
+    private javax.swing.JLabel lblStartDate;
     private javax.swing.JList lstTimeslots;
     private ca.robokids.robooffice.desktop.customSwing.PostalCodeJTextField postalCodeJTextField1;
-    private com.toedter.components.JSpinField spinDays;
     private ca.robokids.robooffice.desktop.customSwing.PostalCodeJTextField txtCode;
     private javax.swing.JTextArea txtDescription;
     private ca.robokids.robooffice.desktop.customSwing.IntegerNumberJTextField txtDuration;
@@ -656,7 +721,7 @@ public class MembershipInfoPanel extends javax.swing.JPanel {
       this.txtRate.setText(String.valueOf(membership.getRate()));
       this.txtDuration.setText(String.valueOf(membership.getDuration()));
       this.txtDescription.setText(membership.getDescription());
-      //set Selection of classroom and progress Report Type
+      //set Selection of classroom
       for (int i = 0; i < classroomModel.getSize(); i++) {
          if (membership.getClassroom().getClassroom_id() == classroomModel.getElementAt(i).getClassroom_id()) {
             cboClassrooms.setSelectedIndex(i);
@@ -664,11 +729,11 @@ public class MembershipInfoPanel extends javax.swing.JPanel {
          }
       }
 
-
-      timeslots.clear();
+     
+      this.lblStartDate.setText(membership.getStartDateString());
+      this.lblEndDate.setText(membership.getEndDateString());
       slots.removeAllElements();
       for (Timeslot t : membership.getTimeslots()) {
-         timeslots.add(t);
          slots.addElement(t);
       }
 
@@ -678,7 +743,6 @@ public class MembershipInfoPanel extends javax.swing.JPanel {
    private void loadPanel() {
       try {
          classroomModel.removeAllElements();
-         reportTypeModel.removeAllElements();
 
          List<Classroom> classrooms = SchoolManager.loadAllClassroom();
          List<ProgressReportType> reportTypes = SchoolManager.loadAllProgressReportType();
@@ -692,14 +756,7 @@ public class MembershipInfoPanel extends javax.swing.JPanel {
             TabManager.closeTab(parent.getName());
          }
          cboClassrooms.setSelectedIndex(0);
-         for (ProgressReportType t : reportTypes) {
-            reportTypeModel.addElement(t);
-         }
-         if (reportTypeModel.getSize() < 1) {
-            PopupMessage.createErrorPopUp("There is no Progress Report Template setting in the system.\nYou need to go and create a progress report template first.", "Warning!");
-            TabManager.createTab("progresReportSettings");
-            TabManager.closeTab(parent.getName());
-         }
+         
 
 
       } catch (DatabaseException ex) {
@@ -714,14 +771,33 @@ public class MembershipInfoPanel extends javax.swing.JPanel {
       c.show(information, display);
    }
 
-   private Membership getFields() {
+   private Membership getFields() throws BadFieldException {
       Membership c = new Membership();
       c.setCode(txtCode.getText().trim());
       c.setName(txtName.getText().trim());
       c.setDescription(txtDescription.getText().trim());
-      c.setDuration(Integer.valueOf(txtDuration.getText().trim()));
-      c.setRate(Float.valueOf(txtRate.getText().trim()));
+      if (txtDuration.getText().trim().length() == 0)
+         c.setDuration(0);
+      else
+         c.setDuration(Integer.valueOf(txtDuration.getText().trim()));
+      if (txtRate.getText().trim().length() == 0)
+         c.setRate(0f);
+      else
+         c.setRate(Float.valueOf(txtRate.getText().trim()));
       c.setClassroom(classroomModel.getElementAt(cboClassrooms.getSelectedIndex()));
+      if (calStartDate.getDate() == null)
+         throw new BadFieldException("Start date is empty");
+      Date startDate = new Date(calStartDate.getDate().getTime());
+      if (calEndDate.getDate() == null)
+         throw new BadFieldException("End date is empty");
+      c.setStartDate(startDate);
+      Date endDate = new Date(calEndDate.getDate().getTime());
+      c.setEndDate(endDate);
+      
+      List<Timeslot> timeslots = new ArrayList();
+      for (int i = 0; i < slots.getSize(); i++) {
+         timeslots.add(slots.get(i));
+      }
       c.setTimeslots(timeslots);
 
       return c;
@@ -733,8 +809,8 @@ public class MembershipInfoPanel extends javax.swing.JPanel {
       lblDuration.setText("N/A");
       lblRate.setText("N/A");
       lblClassroom.setText("N/A");
-      this.lblDays.setText("N/A");
-      timeslots.clear();
+      this.lblStartDate.setText("N/A");
+      this.lblEndDate.setText("N/A");
       slots.clear();
 
       this.txtCode.setText("");

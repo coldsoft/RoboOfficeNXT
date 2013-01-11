@@ -94,15 +94,15 @@ public class MembershipTab extends javax.swing.JPanel implements Tab{
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btnAdd))
-                    .addComponent(jScrollPane1))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(pnlMembership, javax.swing.GroupLayout.DEFAULT_SIZE, 626, Short.MAX_VALUE))
+                .addComponent(pnlMembership, javax.swing.GroupLayout.DEFAULT_SIZE, 658, Short.MAX_VALUE))
         );
         centerLayout.setVerticalGroup(
             centerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(centerLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(centerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(centerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnAdd))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -124,6 +124,8 @@ public class MembershipTab extends javax.swing.JPanel implements Tab{
    }//GEN-LAST:event_lstMembershipsValueChanged
 
    private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
+      
+      btnAdd.setEnabled(false);
       membershipPane.add();
 
    }//GEN-LAST:event_btnAddActionPerformed
@@ -161,6 +163,7 @@ public class MembershipTab extends javax.swing.JPanel implements Tab{
             lstMemberships.setSelectedIndex(0);
       }
       membershipPane.setEditable(false);
+      btnAdd.setEnabled(true);
    }
 
    @Override

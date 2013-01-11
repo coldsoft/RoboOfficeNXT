@@ -29,7 +29,7 @@ public class StudentActivity {
         
         //CHECK FOR HOLIDAY~
         
-        return SchoolDBM.getUniqueActiveTimeslot(days[day]);
+        return SchoolDBM.getUniqueActiveCourseTimeslot(days[day]);
         
    }
    
