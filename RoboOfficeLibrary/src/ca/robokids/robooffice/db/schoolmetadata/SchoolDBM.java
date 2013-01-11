@@ -41,7 +41,7 @@ public class SchoolDBM {
          if (cr == null) {
             query = "SELECT DISTINCT memberships_id FROM membership_view ORDER BY code";
          } else {
-            query = "SELECT DISTINCT memberships_id FROM delete_membership_view WHERE classroom_id = " + String.valueOf(cr.getClassroom_id())
+            query = "SELECT DISTINCT memberships_id FROM membership_view WHERE classroom_id = " + String.valueOf(cr.getClassroom_id())
                + " ORDER BY code";
          }
 
@@ -131,7 +131,7 @@ public class SchoolDBM {
             temp.setName(crs.getString("name"));
             temp.setStartDate(crs.getDate("start_date"));
             temp.setEndDate(crs.getDate("endDate"));
-            temp.setTimeslots(getAllTimeslots(membershipID));
+            temp.setTimeslots(getAllMembershipTimeslots(membershipID));
          }
          return temp;
       } catch (SQLException ex) {
@@ -167,10 +167,10 @@ public class SchoolDBM {
             temp.setDuration(crs.getInt("duration"));
             temp.setRate(crs.getFloat("rate"));
             temp.setName(crs.getString("name"));
-            temp.setStartDate(crs.getDate("start_date"));
+            temp.setStartDate(crs.getDate("startDate"));
             temp.setEndDate(crs.getDate("endDate"));
             temp.setHasTax(crs.getBoolean("hasTax"));
-            temp.setTimeslots(getAllTimeslots(membershipID));
+            temp.setTimeslots(getAllMembershipTimeslots(membershipID));
          }
          return temp;
 
@@ -490,7 +490,7 @@ public class SchoolDBM {
             temp.setName(crs.getString("name"));
             temp.setReport_type_id(crs.getInt("report_type_id"));
             temp.setHasTax(crs.getBoolean("hasTax"));
-            temp.setTimeslots(getAllTimeslots(courseID));
+            temp.setTimeslots(getAllCourseTimeslots(courseID));
          }
          return temp;
 
@@ -1286,9 +1286,33 @@ public class SchoolDBM {
          throw new DatabaseException("SQL Error." + ex.getMessage());
       }
    }
-   
+   private static List<Timeslot> getAllMembershipTimeslots(int membership_id) throws DatabaseException {
+      try {
+         List<Timeslot> timeslots = new ArrayList();
 
-   private static List<Timeslot> getAllTimeslots(int course_id) throws DatabaseException {
+         String query;
+         if (membership_id < 1) {
+            query = "SELECT slot_id,day_of_week,start FROM membership_view GROUP BY slot_id ORDER BY day_of_week ASC,start ASC";
+         } else {
+            query = "SELECT slot_id, day_of_week, start FROM membership_view WHERE memberships_id = " + String.valueOf(membership_id) + " ORDER BY day_of_week ASC, start ASC";
+         }
+         PreparedStatement stmt = DatabaseManager.getPreparedStatement(query);
+
+         CachedRowSet crs = DatabaseManager.executeQuery(stmt);
+         while (crs.next()) {
+            Timeslot t = new Timeslot();
+            t.setTimeslot_id(crs.getInt("slot_id"));
+            t.setDayOfWeek(DayOfWeek.valueOf(crs.getString("day_of_week")));
+            t.setStart(crs.getTime("start"));
+            timeslots.add(t);
+         }
+         return timeslots;
+      } catch (SQLException ex) {
+         throw new DatabaseException("SQL Error." + ex.getMessage());
+      }
+   }
+
+   private static List<Timeslot> getAllCourseTimeslots(int course_id) throws DatabaseException {
       try {
          List<Timeslot> timeslots = new ArrayList();
 
@@ -1383,7 +1407,7 @@ public class SchoolDBM {
             temp.setRate(crs.getFloat("rate"));
             temp.setName(crs.getString("name"));
             temp.setReport_type_id(crs.getInt("report_type_id"));
-            temp.setTimeslots(getAllTimeslots(courseID));
+            temp.setTimeslots(getAllCourseTimeslots(courseID));
          }
          return temp;
       } catch (SQLException ex) {
@@ -1660,7 +1684,7 @@ public class SchoolDBM {
          stmt.setDate(6,membership.getStartDate());
          stmt.setDate(7,membership.getEndDate());
          stmt.setFloat(8,membership.getRate());
-         stmt.setBoolean(9,true);
+         stmt.setBoolean(9,false);
          stmt.setBoolean(10, membership.hasTax());
          return stmt;
       } catch (SQLException ex) {

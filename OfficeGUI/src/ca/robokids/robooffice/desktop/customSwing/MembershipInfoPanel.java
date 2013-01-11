@@ -168,12 +168,14 @@ public class MembershipInfoPanel extends javax.swing.JPanel {
         jLabel1.setText("Duration(min):");
 
         jLabel5.setFont(FontsLoader.getStaticLabelFont());
+        jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel5.setText("Start Date:");
 
         lblDuration.setFont(FontsLoader.getDynamicLabelFont());
         lblDuration.setText("N/A");
 
         jLabel3.setFont(FontsLoader.getStaticLabelFont());
+        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel3.setText("Classroom:");
 
         lblName.setFont(FontsLoader.getBigStaticLabelFont());
@@ -187,6 +189,7 @@ public class MembershipInfoPanel extends javax.swing.JPanel {
         lblRate.setText("N/A");
 
         jLabel2.setFont(FontsLoader.getStaticLabelFont());
+        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel2.setText("Rate:");
 
         jLabel7.setFont(FontsLoader.getStaticLabelFont());
@@ -223,6 +226,8 @@ public class MembershipInfoPanel extends javax.swing.JPanel {
             }
         });
 
+        jLabel6.setFont(FontsLoader.getStaticLabelFont());
+        jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel6.setText("End Date:");
 
         lblEndDate.setFont(FontsLoader.getDynamicLabelFont());
@@ -250,17 +255,14 @@ public class MembershipInfoPanel extends javax.swing.JPanel {
                         .addGroup(displayLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jScrollPane2)
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, displayLayout.createSequentialGroup()
-                                .addGroup(displayLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jLabel6)
-                                    .addGroup(displayLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addGroup(displayLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                            .addComponent(lblCode)
-                                            .addComponent(jLabel3)
-                                            .addComponent(jLabel2)
-                                            .addComponent(jLabel1))
-                                        .addGroup(displayLayout.createSequentialGroup()
-                                            .addGap(31, 31, 31)
-                                            .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addGroup(displayLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(displayLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                        .addComponent(lblCode, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(jLabel3)
+                                        .addComponent(jLabel2)
+                                        .addComponent(jLabel1)
+                                        .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(displayLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(lblName, javax.swing.GroupLayout.DEFAULT_SIZE, 341, Short.MAX_VALUE)
@@ -307,7 +309,7 @@ public class MembershipInfoPanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel7)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 268, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 263, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -407,16 +409,16 @@ public class MembershipInfoPanel extends javax.swing.JPanel {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(editLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGroup(editLayout.createSequentialGroup()
-                                        .addComponent(txtRate, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jLabel15, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                    .addGroup(editLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                        .addComponent(txtCode, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 72, Short.MAX_VALUE)
-                                        .addComponent(txtDuration, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                    .addComponent(txtCode, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(cboClassrooms, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(calStartDate, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(calEndDate, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addComponent(calEndDate, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(editLayout.createSequentialGroup()
+                                        .addGroup(editLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                            .addComponent(txtDuration, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(txtRate, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 58, Short.MAX_VALUE))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jLabel15, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                             .addGroup(editLayout.createSequentialGroup()
                                 .addGap(10, 10, 10)
                                 .addComponent(jLabel13)))
@@ -510,9 +512,9 @@ public class MembershipInfoPanel extends javax.swing.JPanel {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(14, 14, 14)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(btnDeleteTime)
-                            .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btnAdd, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnDeleteTime, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
@@ -537,7 +539,7 @@ public class MembershipInfoPanel extends javax.swing.JPanel {
 
    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
 
-      Membership newMembership  = null;
+      Membership newMembership = null;
       try {
          newMembership = getFields();
       } catch (BadFieldException ex) {
@@ -558,8 +560,7 @@ public class MembershipInfoPanel extends javax.swing.JPanel {
             parent.refresh();
          } catch (DatabaseException ex) {
             PopupMessage.createErrorPopUp(ex.getMessage(), null);
-         } catch(BadFieldException ex)
-         {
+         } catch (BadFieldException ex) {
             lblMsg.setText(ex.getMessage());
          }
       } else {
@@ -602,22 +603,22 @@ public class MembershipInfoPanel extends javax.swing.JPanel {
          selectTime.setLocationRelativeTo(MainRoboOfficeJFrame.getInstance());
 
          Timeslot newTime = selectTime.getTimeslot();
-         if (newTime == null){
-             this.slots.addElement(newTime);
+         if (newTime == null) {
             return;
          }
-         
+
          //check for duplication in list
          for (int i = 0; i < slots.getSize(); i++) {
-         if (newTime.equals(slots.get(i))) {
-            PopupMessage.createErrorPopUp("There already exists a time: " + newTime, "Sorry");
+            if (newTime.equals(slots.get(i))) {
+               PopupMessage.createErrorPopUp("There already exists a time: " + newTime, "Sorry");
+               return;
+            }
+         }
+         this.slots.addElement(newTime);
+         if (membership == null) // if the current mode is adding
+         {
             return;
          }
-         }
-         if (membership == null) // if the current mode is adding
-      {
-         return;
-      }
          SchoolManager.addMembershipSection(membership, newTime.getDayOfWeek(), newTime.getStart());
          this.slots.addElement(newTime);
       } catch (DuplicateNameException ex) {
@@ -711,8 +712,8 @@ public class MembershipInfoPanel extends javax.swing.JPanel {
       this.lblName.setText(membership.getName());
       this.lblRate.setText(membership.getRateString());
       this.lblDuration.setText(String.valueOf(membership.getDuration()));
-      
-      
+
+
       this.lblDescription.setText(membership.getDescription());
       this.lblClassroom.setText(membership.getClassroom().toString());
 
@@ -729,9 +730,11 @@ public class MembershipInfoPanel extends javax.swing.JPanel {
          }
       }
 
-     
+
       this.lblStartDate.setText(membership.getStartDateString());
       this.lblEndDate.setText(membership.getEndDateString());
+      this.calStartDate.setDate(membership.getStartDate());
+      this.calEndDate.setDate(membership.getEndDate());
       slots.removeAllElements();
       for (Timeslot t : membership.getTimeslots()) {
          slots.addElement(t);
@@ -756,7 +759,7 @@ public class MembershipInfoPanel extends javax.swing.JPanel {
             TabManager.closeTab(parent.getName());
          }
          cboClassrooms.setSelectedIndex(0);
-         
+
 
 
       } catch (DatabaseException ex) {
@@ -776,24 +779,28 @@ public class MembershipInfoPanel extends javax.swing.JPanel {
       c.setCode(txtCode.getText().trim());
       c.setName(txtName.getText().trim());
       c.setDescription(txtDescription.getText().trim());
-      if (txtDuration.getText().trim().length() == 0)
+      if (txtDuration.getText().trim().length() == 0) {
          c.setDuration(0);
-      else
+      } else {
          c.setDuration(Integer.valueOf(txtDuration.getText().trim()));
-      if (txtRate.getText().trim().length() == 0)
+      }
+      if (txtRate.getText().trim().length() == 0) {
          c.setRate(0f);
-      else
+      } else {
          c.setRate(Float.valueOf(txtRate.getText().trim()));
+      }
       c.setClassroom(classroomModel.getElementAt(cboClassrooms.getSelectedIndex()));
-      if (calStartDate.getDate() == null)
+      if (calStartDate.getDate() == null) {
          throw new BadFieldException("Start date is empty");
+      }
       Date startDate = new Date(calStartDate.getDate().getTime());
-      if (calEndDate.getDate() == null)
+      if (calEndDate.getDate() == null) {
          throw new BadFieldException("End date is empty");
+      }
       c.setStartDate(startDate);
       Date endDate = new Date(calEndDate.getDate().getTime());
       c.setEndDate(endDate);
-      
+
       List<Timeslot> timeslots = new ArrayList();
       for (int i = 0; i < slots.getSize(); i++) {
          timeslots.add(slots.get(i));

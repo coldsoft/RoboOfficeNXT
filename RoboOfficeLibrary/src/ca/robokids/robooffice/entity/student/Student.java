@@ -1,17 +1,15 @@
-
 package ca.robokids.robooffice.entity.student;
 
 import ca.robokids.robooffice.entity.user.PasswordQuestion;
 import ca.robokids.robooffice.entity.user.User;
 import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
-
 
 public class Student {
 
-
-    private int student_id;
-    private String notes;
+   private int student_id;
+   private String notes;
 
    public String getNotes() {
       return notes;
@@ -20,53 +18,32 @@ public class Student {
    public void setNotes(String notes) {
       this.notes = notes;
    }
-    private User created_by;
-
-    private Sex sex;
-
-    private String firstName;
-
-
-    private String lastName;
-
-
-    private boolean deleted;
-
-    private Date createDate;
-
-    private boolean active =true;
-
-    private boolean prospective;
-
-    private Date birthday;
-
-    private String school;
-
-    private String address;
-
-    private String zipcode;
-
-    private String city;
-
-    private String email;
-
-    private String mother;
-
-
-    private String motherPhone;
-    private String father;
-    private String fatherPhone;
-    private String homePhone;
-
-    private String emergency;
-
-    private Date joinDate;
-
-    private String hearFrom;
-    private String password;
-    private String userName;
-    private PasswordQuestion passwordQuestion;
-    private String passwordAnswer;
+   private User created_by;
+   private Sex sex;
+   private String firstName;
+   private String lastName;
+   private boolean deleted;
+   private Date createDate;
+   private boolean active = true;
+   private boolean prospective;
+   private Date birthday;
+   private String school;
+   private String address;
+   private String zipcode;
+   private String city;
+   private String email;
+   private String mother;
+   private String motherPhone;
+   private String father;
+   private String fatherPhone;
+   private String homePhone;
+   private String emergency;
+   private Date joinDate;
+   private String hearFrom;
+   private String password;
+   private String userName;
+   private PasswordQuestion passwordQuestion;
+   private String passwordAnswer;
 
    public boolean isActive() {
       return active;
@@ -84,6 +61,13 @@ public class Student {
       this.address = address;
    }
 
+   public String getBirthdayString()
+   {
+       SimpleDateFormat format = new SimpleDateFormat("dd-MMM-yyyy");
+      if (birthday != null)
+         return format.format(birthday);
+      return "";
+   }
    public Date getBirthday() {
       return birthday;
    }
@@ -236,8 +220,6 @@ public class Student {
       this.passwordQuestion = passwordQuestion;
    }
 
-  
-
    public boolean isProspective() {
       return prospective;
    }
@@ -285,38 +267,36 @@ public class Student {
    public void setZipcode(String zipcode) {
       this.zipcode = zipcode;
    }
-   
-   public String toString()
-   {
+
+   public String toString() {
       return getFirstName() + " " + getLastName();
    }
-   
-   public int getAge()
-   {
+
+   public int getAge() {
       Calendar dob = Calendar.getInstance();
       dob.setTime(birthday);
-      return Student.getAge(dob.get(Calendar.YEAR),dob.get(Calendar.MONTH),dob.get(Calendar.DAY_OF_MONTH));
+      return Student.getAge(dob.get(Calendar.YEAR), dob.get(Calendar.MONTH), dob.get(Calendar.DAY_OF_MONTH));
    }
+
    public static int getAge(int year, int month, int day) {
-    Calendar dob = Calendar.getInstance();
-    Calendar today = Calendar.getInstance();
+      Calendar dob = Calendar.getInstance();
+      Calendar today = Calendar.getInstance();
 
 
-    dob.set(year, month, day);
+      dob.set(year, month, day);
 
-    int age = today.get(Calendar.YEAR) - dob.get(Calendar.YEAR);
-    if (today.get(Calendar.MONTH) < dob.get(Calendar.MONTH)) {
-        age--;
-    } else if(today.get(Calendar.MONTH) == dob.get(Calendar.MONTH)) {
-        if (today.get(Calendar.DAY_OF_MONTH) < dob.get(Calendar.DAY_OF_MONTH)) {
+      int age = today.get(Calendar.YEAR) - dob.get(Calendar.YEAR);
+      if (today.get(Calendar.MONTH) < dob.get(Calendar.MONTH)) {
+         age--;
+      } else if (today.get(Calendar.MONTH) == dob.get(Calendar.MONTH)) {
+         if (today.get(Calendar.DAY_OF_MONTH) < dob.get(Calendar.DAY_OF_MONTH)) {
             age--;
-        }
-    }
+         }
+      }
 
-    Integer ageInt = new Integer(age);
+      Integer ageInt = new Integer(age);
 
-    return ageInt;
+      return ageInt;
 
+   }
 }
-    
- }

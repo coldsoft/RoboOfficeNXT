@@ -218,4 +218,10 @@ public class SchoolManager {
       CheckFields.checkProjects(p);
       SchoolDBM.createCourseProject(c.getId(),p.getName());
    }
+   
+   public static void main(String args[]) throws DatabaseException
+   {
+      System.out.println(loadAllMemberships().size());
+      
+   }
 }
