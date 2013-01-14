@@ -29,10 +29,11 @@ public class ClassroomInfoPanel extends javax.swing.JPanel {
    DefaultListModel<Activity> activityModel = new DefaultListModel();
    Classroom classroom;
    Tab parent;
+
    public ClassroomInfoPanel(Tab parent) {
       initComponents();
       this.parent = parent;
-      
+
    }
 
    /**
@@ -268,18 +269,21 @@ public class ClassroomInfoPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
    private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
-      if (PopupMessage.createDelete(classroom.toString()))
-      {
+      if (PopupMessage.createDelete(classroom.toString())) {
          try {
             List<Activity> list = SchoolManager.deleteClassroom(classroom);
-            if (list != null && PopupMessage.createConfirmPopUp("This classroom contains courses/memberships, it is recommended that you delete those first."
-                  + "\n Do you want to force delete? related courses/memberships will be deleted too.","Warning"))
-            {
-
+            if (list != null) {
+               String activityNames = new String();
+               for (Activity a : list) {
+                  activityNames += a.toString() + "\n";
+               }
+               if (PopupMessage.createConfirmPopUp("This classroom contains following Courses/Memberships, it is recommended that you delete those first."
+                  + "\n\n" + activityNames + "\n Do you want to force delete? Courses/Memberships will be deleted too.", "Warning!")) {
                   SchoolManager.forceDeleteClassroom(classroom);
-               
+               }
+
             }
-            
+
          } catch (DatabaseException ex) {
             errorMsgDisplay(ex.getMessage());
          }
@@ -288,23 +292,22 @@ public class ClassroomInfoPanel extends javax.swing.JPanel {
    }//GEN-LAST:event_btnDeleteActionPerformed
 
    private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
-      CardLayout c = (CardLayout)this.getLayout();
+      CardLayout c = (CardLayout) this.getLayout();
       c.show(this, "display");
       populateFields();
-     
+
    }//GEN-LAST:event_btnCancelActionPerformed
 
    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
       this.btnSave.setEnabled(false);
       Classroom temp = getFields();
-      if (temp != null)
-      {
+      if (temp != null) {
          temp.setClassroom_id(classroom.getClassroom_id());
          temp.setLocation(classroom.getLocation());
          temp.setDeleted(classroom.isDeleted());
          try {
             SchoolManager.modifyClassroom(temp);
-            
+
          } catch (BadFieldException ex) {
             errorMsgEdit(ex.getMessage());
             this.btnSave.setEnabled(true);
@@ -316,22 +319,21 @@ public class ClassroomInfoPanel extends javax.swing.JPanel {
          }
          msgDisplay(classroom + " Saved.");
          classroom = temp;
-         CardLayout c = (CardLayout)this.getLayout();
+         CardLayout c = (CardLayout) this.getLayout();
          c.show(this, "display");
-         
+
          this.parent.refresh();
-         
+
       }
       populateFields();
       this.btnSave.setEnabled(true);
-      
+
    }//GEN-LAST:event_btnSaveActionPerformed
 
    private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
-      CardLayout c = (CardLayout)this.getLayout();
-         c.show(this, "edit");
+      CardLayout c = (CardLayout) this.getLayout();
+      c.show(this, "edit");
    }//GEN-LAST:event_btnEditActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCancel;
     private javax.swing.JButton btnDelete;
@@ -362,50 +364,47 @@ public class ClassroomInfoPanel extends javax.swing.JPanel {
       activityModel.clear();
       try {
          List<Activity> list = SchoolManager.getAllActivityByClassroom(classroom);
-         for (Activity a: list)
-         {
+         for (Activity a : list) {
             activityModel.addElement(a);
          }
       } catch (DatabaseException ex) {
          errorMsgDisplay(ex.getMessage());
       }
-      
-      
+
+
    }
 
    private void errorMsgDisplay(String message) {
-      lblMsgDisplay.setForeground(new Color(255,102,102));
+      lblMsgDisplay.setForeground(new Color(255, 102, 102));
       lblMsgDisplay.setText(message);
    }
-   private void errorMsgEdit(String message)
-   {
-      lblErrorMsgEdit.setForeground(new Color(255,102,102));
+
+   private void errorMsgEdit(String message) {
+      lblErrorMsgEdit.setForeground(new Color(255, 102, 102));
       lblErrorMsgEdit.setText(message);
    }
 
    public void setClassroom(Classroom classroom) {
-      if (classroom == null)
-      {
+      if (classroom == null) {
          btnEdit.setEnabled(false);
          btnDelete.setEnabled(false);
          lblName.setText("No Classroom in system");
          lblCapacity.setText("");
          lblLocation.setText("");
-      }else
-      {
-      this.classroom = classroom;
-      btnEdit.setEnabled(true);
-      btnDelete.setEnabled(true);
-      setActivityModel();
-      populateFields();
-      CardLayout c = (CardLayout)this.getLayout();
+      } else {
+         this.classroom = classroom;
+         btnEdit.setEnabled(true);
+         btnDelete.setEnabled(true);
+         setActivityModel();
+         populateFields();
+         CardLayout c = (CardLayout) this.getLayout();
          c.show(this, "display");
       }
       lblMsgDisplay.setText("");
       lblErrorMsgEdit.setText("");
    }
-   public Classroom getClassroom()
-   {
+
+   public Classroom getClassroom() {
       return classroom;
    }
 
@@ -415,33 +414,30 @@ public class ClassroomInfoPanel extends javax.swing.JPanel {
       lblLocation.setText(classroom.getLocation().toString());
       txtName.setText(classroom.getName());
       spinCapacity.setValue(classroom.getCapacity());
-      
+
    }
 
    private Classroom getFields() {
       Classroom cr = new Classroom();
-      if (txtName.getText().trim().equals(""))
-      {
+      if (txtName.getText().trim().equals("")) {
          errorMsgEdit("Name needs to be filled");
          return null;
-         
+
       }
-      if ((Integer)spinCapacity.getValue() < 3)
-      {
-         if (!PopupMessage.createConfirmPopUp("You entered a very small capacity number.\n Are you sure?", "Hmm..."))
-         {
+      if ((Integer) spinCapacity.getValue() < 3) {
+         if (!PopupMessage.createConfirmPopUp("You entered a very small capacity number.\n Are you sure?", "Hmm...")) {
             return null;
          }
       }
-      
-         
+
+
       cr.setName(txtName.getText().trim());
-      cr.setCapacity((Integer)spinCapacity.getValue());
+      cr.setCapacity((Integer) spinCapacity.getValue());
       return cr;
    }
 
    private void msgDisplay(String message) {
-      lblMsgDisplay.setForeground(new Color(0,204,51));
+      lblMsgDisplay.setForeground(new Color(0, 204, 51));
       lblMsgDisplay.setText(message);
    }
 }

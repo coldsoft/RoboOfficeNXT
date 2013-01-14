@@ -63,7 +63,7 @@ This xml keeps mapping between four things:
     
     <action id = "quickPrintAttendance" menuItem = "Quick Print Today">
         <tabName>Quick-Print Attendance</tabName>
-        <tabClass></tabClass>       
+        <tabClass>student.QuickPrintAttendanceTab</tabClass>       
     </action>
     
     <action id = "printAttendance" menuItem = "Print...">
@@ -75,13 +75,13 @@ This xml keeps mapping between four things:
     <action id = "recordAttendance" menuItem = "Record...">
        <image>recordAttendance.png</image>
         <tabName>Record Attendance</tabName>
-        <tabClass>ListOverduesTab</tabClass>       
+        <tabClass>student.RecordAttendanceTab</tabClass>       
     </action>
     
     <action id = "enterProgressReport" menuItem = "Enter Progress Report">
        <image>progressReport.png</image>
         <tabName>Record Progress Report</tabName>
-        <tabClass>student.ProgressReportTab</tabClass>       
+        <tabClass>student.EnterProgressReportTab</tabClass>       
     </action>
     
     <action id = "newStudent" menuItem = "New Student Registration">
@@ -103,7 +103,7 @@ This xml keeps mapping between four things:
     <action id = "newPayment" menuItem = "New Payment">
        <image>newPayment.png</image>
         <tabName>New Payment</tabName>
-        <tabClass>ViewAllPurchaseRequestsTab</tabClass>       
+        <tabClass>finance.NewPaymentTab</tabClass>    
     </action>
     
     <action id = "viewOverdueStudents" menuItem = "Fee Overdue Students">
@@ -172,17 +172,17 @@ This xml keeps mapping between four things:
     
     <action id = "databaseBackup" menuItem = "Database Backup...">
         <tabName>Database Backup/Restore</tabName>
-        <tabClass>SettingsTab</tabClass>       
+        <tabClass>system.DatabaseBackupTab</tabClass>       
     </action>
     
     <action id = "systemLogs" menuItem = "System Logs">
         <tabName>System Logs</tabName>
-        <tabClass>HelpContentsTab</tabClass>       
+        <tabClass>system.SystemLogsTab</tabClass>       
     </action>
     
     <action id = "systemSettings" menuItem = "System Settings">
         <tabName>System Settings</tabName>
-        <tabClass>WelcomePageTab</tabClass>       
+        <tabClass>system.SystemSettingsTab</tabClass>       
     </action>
     
     <action id = "memoManagement" menuItem = "Memos/Tasks Management">

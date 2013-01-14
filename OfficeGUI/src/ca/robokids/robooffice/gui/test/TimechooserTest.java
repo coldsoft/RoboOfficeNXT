@@ -8,7 +8,6 @@ package ca.robokids.robooffice.gui.test;
 import ca.robokids.robooffice.desktop.customSwing.AttendanceTimeChooserPanel;
 import ca.robokids.robooffice.desktop.loaders.FramePropertyLoader;
 import javax.swing.UIManager;
-
 /**
  *
  * @author Coldsoft
@@ -19,7 +18,6 @@ public class TimechooserTest extends javax.swing.JFrame {
     public TimechooserTest() {
         initComponents();
         this.add(new AttendanceTimeChooserPanel());
-        System.out.println("this is loading mes + " + FramePropertyLoader.getLoadingMessage());
     }
 
     /** This method is called from within the constructor to

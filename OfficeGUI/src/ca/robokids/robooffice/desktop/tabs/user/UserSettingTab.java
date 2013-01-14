@@ -34,7 +34,7 @@ public class UserSettingTab extends javax.swing.JPanel implements Tab{
     * Creates new form UserSettingTab
     */
    List<UserGroup> groups = null;
-   UserInfoPanel userInfo = new UserInfoPanel(this);
+   UserInfoPanel userInfo = new UserInfoPanel(this,true);
    DefaultListModel<User> userModel = new DefaultListModel();
    JYCheckBoxList.CheckBoxSelectionModel checkboxGroupModel;
    DefaultListModel<UserGroup> groupModel = new DefaultListModel();

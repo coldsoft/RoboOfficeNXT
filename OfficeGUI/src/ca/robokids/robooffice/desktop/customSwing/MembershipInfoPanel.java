@@ -550,13 +550,7 @@ public class MembershipInfoPanel extends javax.swing.JPanel {
       if (membership == null) {
          try {
             membership = SchoolManager.createMembership(newMembership);
-            for (Timeslot t : newMembership.getTimeslots()) {
-               try {
-                  SchoolManager.addMembershipSection(membership, t.getDayOfWeek(), t.getStart());
-               } catch (DuplicateNameException ex) {
-                  Logger.getLogger(CourseInfoPanel.class.getName()).log(Level.SEVERE, null, ex);
-               }
-            }
+
             parent.refresh();
          } catch (DatabaseException ex) {
             PopupMessage.createErrorPopUp(ex.getMessage(), null);
@@ -571,6 +565,8 @@ public class MembershipInfoPanel extends javax.swing.JPanel {
             parent.refresh();
          } catch (DatabaseException ex) {
             PopupMessage.createErrorPopUp(ex.getMessage(), null);
+         } catch (BadFieldException ex) {
+            lblMsg.setText(ex.getMessage());
          }
       }
 
@@ -614,13 +610,17 @@ public class MembershipInfoPanel extends javax.swing.JPanel {
                return;
             }
          }
-         this.slots.addElement(newTime);
+         
          if (membership == null) // if the current mode is adding
          {
+            slots.addElement(newTime);
             return;
          }
          SchoolManager.addMembershipSection(membership, newTime.getDayOfWeek(), newTime.getStart());
-         this.slots.addElement(newTime);
+         membership = SchoolManager.getMembershipByID(membership.getId());
+         if (membership != null)
+            populateFields();
+         
       } catch (DuplicateNameException ex) {
          PopupMessage.createErrorPopUp("The new timeslot already existed.", "Sorry");
       } catch (DatabaseException ex) {
@@ -825,7 +825,8 @@ public class MembershipInfoPanel extends javax.swing.JPanel {
       this.txtDuration.setText("");
       this.txtRate.setText("");
       this.txtDescription.setText("");
-
+      this.calStartDate.setDate(null);
+      this.calEndDate.setDate(null);
       lblMsg.setText("");
    }
 }

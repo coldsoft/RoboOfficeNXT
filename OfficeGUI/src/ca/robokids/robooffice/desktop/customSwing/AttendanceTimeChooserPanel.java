@@ -10,7 +10,7 @@ import ca.robokids.robooffice.desktop.util.PopupMessage;
 import ca.robokids.robooffice.entity.schoolmetadata.Classroom;
 import ca.robokids.robooffice.entity.schoolmetadata.Timeslot;
 import ca.robokids.robooffice.logic.schoolsettings.SchoolManager;
-import ca.robokids.robooffice.logic.student.StudentActivity;
+import ca.robokids.robooffice.logic.student.AttendanceManager;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -27,10 +27,10 @@ public class AttendanceTimeChooserPanel extends javax.swing.JPanel {
    DefaultListModel<Classroom> classroomsModel = new DefaultListModel();
    
    List<Timeslot> timeslots;
+   boolean loading;
    public AttendanceTimeChooserPanel() {
       initComponents();
       loadTimeslot();
-      loadClassroom();
    }
 
    /**
@@ -49,6 +49,8 @@ public class AttendanceTimeChooserPanel extends javax.swing.JPanel {
         jLabel2 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         lstTimeslot = new javax.swing.JList();
+
+        setMaximumSize(new java.awt.Dimension(460, 350));
 
         calDate.setBackground(new java.awt.Color(204, 204, 255));
         calDate.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
@@ -72,6 +74,11 @@ public class AttendanceTimeChooserPanel extends javax.swing.JPanel {
 
         lstTimeslot.setFont(FontsLoader.getBigListFont());
         lstTimeslot.setModel(timeslotsModel);
+        lstTimeslot.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                lstTimeslotValueChanged(evt);
+            }
+        });
         jScrollPane2.setViewportView(lstTimeslot);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -83,12 +90,12 @@ public class AttendanceTimeChooserPanel extends javax.swing.JPanel {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane1))
-                    .addComponent(calDate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                    .addComponent(calDate, javax.swing.GroupLayout.DEFAULT_SIZE, 293, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jScrollPane2)
-                    .addComponent(lblDate, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblDate, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -101,6 +108,7 @@ public class AttendanceTimeChooserPanel extends javax.swing.JPanel {
                         .addGap(113, 119, Short.MAX_VALUE))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
             .addGroup(layout.createSequentialGroup()
+                .addGap(5, 5, 5)
                 .addComponent(lblDate)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane2))
@@ -111,6 +119,20 @@ public class AttendanceTimeChooserPanel extends javax.swing.JPanel {
       loadTimeslot();
 
    }//GEN-LAST:event_calDatePropertyChange
+
+   private void lstTimeslotValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_lstTimeslotValueChanged
+      System.out.println("in property change");
+      if (!loading)
+      {
+         
+         int index = lstTimeslot.getSelectedIndex();
+         if (index > -1)
+         {
+            Timeslot t = timeslotsModel.get(index);
+            loadClassroom(t);
+         }
+      }
+   }//GEN-LAST:event_lstTimeslotValueChanged
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private com.toedter.calendar.JCalendar calDate;
@@ -129,16 +151,21 @@ public class AttendanceTimeChooserPanel extends javax.swing.JPanel {
     }
 
    private void loadTimeslot() {
+      loading = true;
       Calendar c =  Calendar.getInstance();
         c.setTime(calDate.getDate());
         SimpleDateFormat f = new SimpleDateFormat("dd-MMM-yyyy");
         lblDate.setText(f.format(calDate.getDate()));
       try {
-         List<Timeslot> slots = StudentActivity.getTimeslotByDate(calDate.getDate());
+         List<Timeslot> slots = AttendanceManager.getTimeslotByDate(calDate.getDate());
          timeslotsModel.clear();
          for (Timeslot t : slots)
             timeslotsModel.addElement(t);
          timeslots = slots;
+         //tell the lstTimeslot listener, can fire propertyChange
+         loading = false;
+         if (timeslotsModel.size() > 0)
+            lstTimeslot.setSelectedIndex(0);
       } catch (DatabaseException ex) {
          PopupMessage.createErrorPopUp(ex.getMessage(), null);
       }
@@ -146,9 +173,10 @@ public class AttendanceTimeChooserPanel extends javax.swing.JPanel {
         
    }
 
-   private void loadClassroom() {
+   private void loadClassroom(Timeslot t) {
       try {
-         List<Classroom> classrooms = SchoolManager.loadAllClassroom();
+         System.out.println("loadClassroom " + t);
+         List<Classroom> classrooms = AttendanceManager.getClassroomByTimeslot(t);
          classroomsModel.clear();
          for (Classroom c : classrooms)
             classroomsModel.addElement(c);
@@ -164,6 +192,7 @@ public class AttendanceTimeChooserPanel extends javax.swing.JPanel {
          PopupMessage.createErrorPopUp(ex.getMessage(), null);
       }
    }
+
    
    
 }

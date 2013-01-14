@@ -47,7 +47,7 @@ public class UserAccountTab extends javax.swing.JPanel implements Tab{
       gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
         
-      userPane = new UserInfoPanel(this);
+      userPane = new UserInfoPanel(this,false);
       add(userPane,gridBagConstraints);      
       refresh();
    }

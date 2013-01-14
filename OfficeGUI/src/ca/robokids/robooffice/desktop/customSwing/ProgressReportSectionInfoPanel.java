@@ -18,10 +18,10 @@ import javax.swing.border.TitledBorder;
  *
  * @author Coldsoft
  */
-public class ReportSectionPanel extends javax.swing.JPanel {
+public class ProgressReportSectionInfoPanel extends javax.swing.JPanel {
 
    /**
-    * Creates new form ReportSectionPanel
+    * Creates new form ProgressReportSectionInfoPanel
     */
    private ProgressReportTypeTab parent;
    private DefaultListModel<String> observationModel = new DefaultListModel();
@@ -32,7 +32,7 @@ public class ReportSectionPanel extends javax.swing.JPanel {
    private String section;
    private boolean editable;
    
-   public ReportSectionPanel(ProgressReportTypeTab parent) {
+   public ProgressReportSectionInfoPanel(ProgressReportTypeTab parent) {
       initComponents();
       this.parent = parent;
    }
@@ -465,7 +465,7 @@ public class ReportSectionPanel extends javax.swing.JPanel {
          recommendationModel.addElement(s);
       }
       
-      
+      this.revalidate();
       
    }
 

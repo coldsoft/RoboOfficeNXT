@@ -583,6 +583,8 @@ public class CourseInfoPanel extends javax.swing.JPanel {
             parent.refresh();
          } catch (DatabaseException ex) {
             PopupMessage.createErrorPopUp(ex.getMessage(), null);
+         } catch (BadFieldException ex) {
+            lblMsg.setText(ex.getMessage());
          }
       }
 
@@ -626,14 +628,19 @@ public class CourseInfoPanel extends javax.swing.JPanel {
             return;
          }
       }
-      this.slots.addElement(newTime);
+      
       if (course == null) // if the current mode is adding
       {
+         this.slots.addElement(newTime);
          return;
+         
       }
 
       try {
          SchoolManager.addCourseSection(course, newTime.getDayOfWeek(), newTime.getStart());
+         course = SchoolManager.getCourseByID(course.getId());
+         if (course != null)
+            populateFields();
       } catch (DuplicateNameException ex) {
          PopupMessage.createErrorPopUp("The new timeslot already existed.", "Sorry");
       } catch (DatabaseException ex) {
@@ -686,7 +693,7 @@ public class CourseInfoPanel extends javax.swing.JPanel {
       if (course != null) {
          try {
             SchoolManager.addCourseProject(course, p);
-         } catch ( DatabaseException | BadFieldException ex) {
+         } catch (DatabaseException | BadFieldException ex) {
             PopupMessage.createErrorPopUp(ex.getMessage(), null);
             projectsModel.removeElement(p);
          }
@@ -894,7 +901,6 @@ public class CourseInfoPanel extends javax.swing.JPanel {
       this.txtDuration.setText("");
       this.txtRate.setText("");
       this.txtDescription.setText("");
-
       lblMsg.setText("");
    }
 

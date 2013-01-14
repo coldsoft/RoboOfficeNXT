@@ -85,6 +85,9 @@
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="viewAllStudentMenuItem">
               <Properties>
+                <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
+                  <KeyStroke key="Ctrl+V"/>
+                </Property>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                   <Connection code="FontsLoader.getMenuItemFont()" type="code"/>
                 </Property>
@@ -111,6 +114,9 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="weeklyScheduleMenuItem">
               <Properties>
+                <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
+                  <KeyStroke key="Ctrl+K"/>
+                </Property>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                   <Connection code="FontsLoader.getMenuItemFont()" type="code"/>
                 </Property>
@@ -163,6 +169,9 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="newStudentMenuItem">
               <Properties>
+                <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
+                  <KeyStroke key="Ctrl+N"/>
+                </Property>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                   <Connection code="FontsLoader.getMenuItemFont()" type="code"/>
                 </Property>
@@ -206,7 +215,7 @@
             <MenuItem class="javax.swing.JMenuItem" name="newPaymentMenuItem">
               <Properties>
                 <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
-                  <KeyStroke key="Ctrl+N"/>
+                  <KeyStroke key="Ctrl+P"/>
                 </Property>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                   <Connection code="FontsLoader.getMenuItemFont()" type="code"/>
@@ -253,9 +262,6 @@
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="payrollMenuItem">
               <Properties>
-                <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
-                  <KeyStroke key="Ctrl+P"/>
-                </Property>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                   <Connection code="FontsLoader.getMenuItemFont()" type="code"/>
                 </Property>
@@ -291,6 +297,9 @@
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="courseSettingMenuItem">
               <Properties>
+                <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
+                  <KeyStroke key="Ctrl+C"/>
+                </Property>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                   <Connection code="FontsLoader.getMenuItemFont()" type="code"/>
                 </Property>
@@ -299,6 +308,9 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="membershipSettingMenuItem">
               <Properties>
+                <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
+                  <KeyStroke key="Ctrl+M"/>
+                </Property>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                   <Connection code="FontsLoader.getMenuItemFont()" type="code"/>
                 </Property>
@@ -317,6 +329,9 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="holidayMenuItem">
               <Properties>
+                <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
+                  <KeyStroke key="Ctrl+H"/>
+                </Property>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                   <Connection code="FontsLoader.getMenuItemFont()" type="code"/>
                 </Property>
@@ -325,6 +340,9 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="classroomMenuItem">
               <Properties>
+                <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
+                  <KeyStroke key="Ctrl+L"/>
+                </Property>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                   <Connection code="FontsLoader.getMenuItemFont()" type="code"/>
                 </Property>
@@ -333,6 +351,9 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="financeSettingMenuItem">
               <Properties>
+                <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
+                  <KeyStroke key="Ctrl+F"/>
+                </Property>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                   <Connection code="FontsLoader.getMenuItemFont()" type="code"/>
                 </Property>
@@ -341,6 +362,9 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="userAccountMenuItem">
               <Properties>
+                <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
+                  <KeyStroke key="Ctrl+U"/>
+                </Property>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                   <Connection code="FontsLoader.getMenuItemFont()" type="code"/>
                 </Property>

@@ -30,25 +30,29 @@ public class UserInfoPanel extends javax.swing.JPanel {
    User user;
    DefaultComboBoxModel<PasswordQuestion> model = new DefaultComboBoxModel();
    Tab parent;
-   public UserInfoPanel(Tab parent) {
+   boolean admin;
+
+   public UserInfoPanel(Tab parent, boolean admin) {
       initComponents();
+      this.admin = admin;
+      setPasswordControl();
       this.parent = parent;
+
       initPasswordQuestionComboBox();
-      CardLayout c = (CardLayout)this.getLayout();
-         c.show(this, "display");
+      CardLayout c = (CardLayout) this.getLayout();
+      c.show(this, "display");
    }
 
    public User getUser() {
-      
+
       return user;
    }
 
    public void setUser(User user) {
       this.user = user;
       populateFields();
-      
+
    }
-   
 
    /**
     * This method is called from within the constructor to initialize the form.
@@ -81,10 +85,10 @@ public class UserInfoPanel extends javax.swing.JPanel {
         jLabel8 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
-        jLabel13 = new javax.swing.JLabel();
+        labelPassword = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         jLabel14 = new javax.swing.JLabel();
-        jLabel15 = new javax.swing.JLabel();
+        labelReenter = new javax.swing.JLabel();
         txtFirstName = new javax.swing.JTextField();
         txtLastName = new javax.swing.JTextField();
         txtEmail = new javax.swing.JTextField();
@@ -240,8 +244,8 @@ public class UserInfoPanel extends javax.swing.JPanel {
         jLabel12.setFont(FontsLoader.getStaticLabelFont());
         jLabel12.setText("username:");
 
-        jLabel13.setFont(FontsLoader.getStaticLabelFont());
-        jLabel13.setText("password:");
+        labelPassword.setFont(FontsLoader.getStaticLabelFont());
+        labelPassword.setText("password:");
 
         jLabel1.setFont(FontsLoader.getStaticLabelFont());
         jLabel1.setText("First Name:");
@@ -249,8 +253,8 @@ public class UserInfoPanel extends javax.swing.JPanel {
         jLabel14.setFont(FontsLoader.getStaticLabelFont());
         jLabel14.setText("Last Name:");
 
-        jLabel15.setFont(FontsLoader.getStaticLabelFont());
-        jLabel15.setText("re-enter:");
+        labelReenter.setFont(FontsLoader.getStaticLabelFont());
+        labelReenter.setText("re-enter:");
 
         txtFirstName.setFont(FontsLoader.getTextFieldFont());
 
@@ -331,8 +335,8 @@ public class UserInfoPanel extends javax.swing.JPanel {
                         .addGap(107, 107, 107))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel15, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel13, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(labelReenter, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(labelPassword, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel12, javax.swing.GroupLayout.Alignment.TRAILING))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -383,11 +387,11 @@ public class UserInfoPanel extends javax.swing.JPanel {
                     .addComponent(txtUsername, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel13)
+                    .addComponent(labelPassword)
                     .addComponent(txtPass1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel15)
+                    .addComponent(labelReenter)
                     .addComponent(txtPass2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cboQuestion, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -410,22 +414,20 @@ public class UserInfoPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
    private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
-      CardLayout c = (CardLayout)this.getLayout();
+      CardLayout c = (CardLayout) this.getLayout();
       c.show(this, "edit");
    }//GEN-LAST:event_btnEditActionPerformed
 
    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
       this.btnSave.setEnabled(false);
       User temp = getFields();
-      if (temp != null)
-      {
+      if (temp != null) {
          temp.setUser_id(user.getUser_id());
          temp.setUserGroups(user.getUserGroups());
          temp.setDeleted(user.isDeleted());
          try {
             UserManager.modifyUser(temp);
-            if (temp.equals(UserActivity.loginUser))
-            {
+            if (temp.equals(UserActivity.loginUser)) {
                MainRoboOfficeJFrame.getInstance().setUserMenu(temp);
                UserActivity.loginUser = temp;
             }
@@ -438,24 +440,23 @@ public class UserInfoPanel extends javax.swing.JPanel {
             this.btnSave.setEnabled(true);
             return;
          }
-         
+
          user = temp;
-         CardLayout c = (CardLayout)this.getLayout();
+         CardLayout c = (CardLayout) this.getLayout();
          c.show(this, "display");
-         
+
       }
       populateFields();
       this.parent.refresh();
       this.btnSave.setEnabled(true);
-      
+
    }//GEN-LAST:event_btnSaveActionPerformed
 
    private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
-      CardLayout c = (CardLayout)this.getLayout();
+      CardLayout c = (CardLayout) this.getLayout();
       c.show(this, "display");
       populateFields();
    }//GEN-LAST:event_btnCancelActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCancel;
     private javax.swing.JButton btnEdit;
@@ -465,9 +466,7 @@ public class UserInfoPanel extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
-    private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
-    private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -482,6 +481,8 @@ public class UserInfoPanel extends javax.swing.JPanel {
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator3;
+    private javax.swing.JLabel labelPassword;
+    private javax.swing.JLabel labelReenter;
     private javax.swing.JLabel lblAddress;
     private javax.swing.JLabel lblEmail;
     private javax.swing.JLabel lblErrorMsg;
@@ -504,13 +505,13 @@ public class UserInfoPanel extends javax.swing.JPanel {
 
    private void populateFields() {
       //display card fields
-      lblName.setText(user.getFirstName()+ " " + user.getLastName());
+      lblName.setText(user.getFirstName() + " " + user.getLastName());
       lblEmail.setText(user.getEmail());
       lblAddress.setText(user.getAddress());
       this.lblPhone.setText(user.getPhone());
       this.lblUsername.setText(user.getUserName());
       this.lblSIN.setText(user.getSIN());
-      
+
       //editing card fields
       txtFirstName.setText(user.getFirstName());
       txtLastName.setText(user.getLastName());
@@ -523,18 +524,20 @@ public class UserInfoPanel extends javax.swing.JPanel {
       txtPass2.setText(user.getPassword());
       txtAnswer.setText(user.getPasswordAnswer());
       int index = model.getIndexOf(user.getPasswordQuestion());
-      if (index > -1)
+      if (index > -1) {
          cboQuestion.setSelectedIndex(index);
-      
+      }
+
    }
 
    private User getFields() {
-      if (txtPass1.getText().equals(""))
+      if (txtPass1.getText().equals("")) {
          return null;
-      if (txtPass2.getText().equals(""))
+      }
+      if (txtPass2.getText().equals("")) {
          return null;
-      if (!txtPass1.getText().equals(txtPass2.getText()))
-      {
+      }
+      if (!txtPass1.getText().equals(txtPass2.getText())) {
          lblErrorMsg.setText("New Passwords don't match.");
          return null;
       }
@@ -553,7 +556,7 @@ public class UserInfoPanel extends javax.swing.JPanel {
    }
 
    private void initPasswordQuestionComboBox() {
-       try {
+      try {
          model.removeAllElements();
          List<PasswordQuestion> questions = UserManager.loadAllQuestion();
          for (PasswordQuestion q : questions) {
@@ -563,5 +566,13 @@ public class UserInfoPanel extends javax.swing.JPanel {
       } catch (DatabaseException ex) {
          System.out.println(ex.getMessage());
       }
+   }
+
+   private void setPasswordControl() {
+      labelPassword.setVisible(admin);
+      labelReenter.setVisible(admin);
+      txtPass1.setVisible(admin);
+      txtPass2.setVisible(admin);
+      
    }
 }

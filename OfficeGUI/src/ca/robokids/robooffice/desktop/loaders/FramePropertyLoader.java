@@ -39,7 +39,6 @@ public class FramePropertyLoader {
        if (getBundle() != null)
        {
           String loading = getBundle().getString("systemBusyMessage");
-          System.out.println(loading);
           return loading;
        }
         return "Loading";

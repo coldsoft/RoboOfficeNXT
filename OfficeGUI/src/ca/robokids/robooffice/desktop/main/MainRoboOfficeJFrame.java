@@ -8,6 +8,7 @@ import ca.robokids.exception.DatabaseException;
 import ca.robokids.robooffice.desktop.loaders.ActionMappingLoader;
 import ca.robokids.robooffice.desktop.loaders.FontsLoader;
 import ca.robokids.robooffice.desktop.loaders.FramePropertyLoader;
+import ca.robokids.robooffice.desktop.tabs.system.SystemSettingsTab;
 import ca.robokids.robooffice.desktop.util.PopupMessage;
 import ca.robokids.robooffice.entity.user.User;
 import ca.robokids.robooffice.logic.usermanagement.UserActivity;
@@ -20,6 +21,12 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.*;
 import javax.swing.JToolBar.Separator;
 
@@ -197,6 +204,7 @@ public class MainRoboOfficeJFrame extends javax.swing.JFrame {
         studentsMenu.setText("Students");
         studentsMenu.setFont(FontsLoader.getMenuFont());
 
+        viewAllStudentMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_V, java.awt.event.InputEvent.CTRL_MASK));
         viewAllStudentMenuItem.setFont(FontsLoader.getMenuItemFont());
         viewAllStudentMenuItem.setText("View All Students");
         studentsMenu.add(viewAllStudentMenuItem);
@@ -210,6 +218,7 @@ public class MainRoboOfficeJFrame extends javax.swing.JFrame {
         studentsMenu.add(reportAbsentMenuItem);
         studentsMenu.add(jSeparator5);
 
+        weeklyScheduleMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_K, java.awt.event.InputEvent.CTRL_MASK));
         weeklyScheduleMenuItem.setFont(FontsLoader.getMenuItemFont());
         weeklyScheduleMenuItem.setText("Weekly Schedule");
         studentsMenu.add(weeklyScheduleMenuItem);
@@ -236,6 +245,7 @@ public class MainRoboOfficeJFrame extends javax.swing.JFrame {
         studentsMenu.add(enterProgressMenuItem);
         studentsMenu.add(jSeparator3);
 
+        newStudentMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N, java.awt.event.InputEvent.CTRL_MASK));
         newStudentMenuItem.setFont(FontsLoader.getMenuItemFont());
         newStudentMenuItem.setText("New Student Registration");
         studentsMenu.add(newStudentMenuItem);
@@ -258,7 +268,7 @@ public class MainRoboOfficeJFrame extends javax.swing.JFrame {
         financeMenu.setText("Finance");
         financeMenu.setFont(FontsLoader.getMenuFont());
 
-        newPaymentMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N, java.awt.event.InputEvent.CTRL_MASK));
+        newPaymentMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_P, java.awt.event.InputEvent.CTRL_MASK));
         newPaymentMenuItem.setFont(FontsLoader.getMenuItemFont());
         newPaymentMenuItem.setText("New Payment");
         financeMenu.add(newPaymentMenuItem);
@@ -282,7 +292,6 @@ public class MainRoboOfficeJFrame extends javax.swing.JFrame {
         hrMenu.setText("Human resources");
         hrMenu.setFont(FontsLoader.getMenuFont());
 
-        payrollMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_P, java.awt.event.InputEvent.CTRL_MASK));
         payrollMenuItem.setFont(FontsLoader.getMenuItemFont());
         payrollMenuItem.setText("Payroll");
         hrMenu.add(payrollMenuItem);
@@ -301,10 +310,12 @@ public class MainRoboOfficeJFrame extends javax.swing.JFrame {
         schoolMenu.setText("School administration");
         schoolMenu.setFont(FontsLoader.getMenuFont());
 
+        courseSettingMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_C, java.awt.event.InputEvent.CTRL_MASK));
         courseSettingMenuItem.setFont(FontsLoader.getMenuItemFont());
         courseSettingMenuItem.setText("Courses...");
         schoolMenu.add(courseSettingMenuItem);
 
+        membershipSettingMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_M, java.awt.event.InputEvent.CTRL_MASK));
         membershipSettingMenuItem.setFont(FontsLoader.getMenuItemFont());
         membershipSettingMenuItem.setText("Memberships...");
         schoolMenu.add(membershipSettingMenuItem);
@@ -314,18 +325,22 @@ public class MainRoboOfficeJFrame extends javax.swing.JFrame {
         schoolMenu.add(projectSettingMenuItem);
         schoolMenu.add(jSeparator7);
 
+        holidayMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_H, java.awt.event.InputEvent.CTRL_MASK));
         holidayMenuItem.setFont(FontsLoader.getMenuItemFont());
         holidayMenuItem.setText("Holiday Setting");
         schoolMenu.add(holidayMenuItem);
 
+        classroomMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_L, java.awt.event.InputEvent.CTRL_MASK));
         classroomMenuItem.setFont(FontsLoader.getMenuItemFont());
         classroomMenuItem.setText("Classroom Setting");
         schoolMenu.add(classroomMenuItem);
 
+        financeSettingMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F, java.awt.event.InputEvent.CTRL_MASK));
         financeSettingMenuItem.setFont(FontsLoader.getMenuItemFont());
         financeSettingMenuItem.setText("Finance Settings");
         schoolMenu.add(financeSettingMenuItem);
 
+        userAccountMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_U, java.awt.event.InputEvent.CTRL_MASK));
         userAccountMenuItem.setFont(FontsLoader.getMenuItemFont());
         userAccountMenuItem.setText("User Account Settings");
         schoolMenu.add(userAccountMenuItem);
@@ -654,6 +669,33 @@ public class MainRoboOfficeJFrame extends javax.swing.JFrame {
          self.glassPane.removeMouseListener(mouseAdapter);
          self.glassPane.setVisible(false);
 
+      }
+   }
+      public void restart() {
+      try {
+         final String javaBin = System.getProperty("java.home") + File.separator + "bin" + File.separator + "java";
+         final File currentJar = new File(MainRoboOfficeJFrame.class.getProtectionDomain().getCodeSource().getLocation().toURI());
+
+         /*
+          * is it a jar file?
+          */
+         if (!currentJar.getName().endsWith(".jar")) {
+            return;
+         }
+
+         /*
+          * Build command: java -jar application.jar
+          */
+         final ArrayList<String> command = new ArrayList<String>();
+         command.add(javaBin);
+         command.add("-jar");
+         command.add(currentJar.getPath());
+
+         final ProcessBuilder builder = new ProcessBuilder(command);
+         builder.start();
+         exit();
+      } catch (URISyntaxException | IOException ex) {
+         Logger.getLogger(SystemSettingsTab.class.getName()).log(Level.SEVERE, null, ex);
       }
    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
