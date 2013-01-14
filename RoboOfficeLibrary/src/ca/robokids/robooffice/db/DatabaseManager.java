@@ -23,7 +23,7 @@ public class DatabaseManager {
 
    public static Connection getConnection() {
 
-     
+
       if (conn != null) {
          try {
             //if connection is not closed, return connection
@@ -120,7 +120,7 @@ public class DatabaseManager {
                throw new DatabaseException("Resultset Close Error.");
             }
          }
-         
+
          //closeConnection();
       }
       return crs;
@@ -147,4 +147,79 @@ public class DatabaseManager {
          e.printStackTrace();
       }
    }
+
+   public static void databaseRestore(String path)
+   {
+      
+   }
+   public static void databaseBackup(String path) throws DatabaseException
+   {
+      Properties dbProperties = new Properties();
+      try {
+         dbProperties = DatabaseConfig.getConfig();
+      } catch (IOException ex) {
+         ex.printStackTrace();
+      }
+
+      String host = dbProperties.getProperty("host");
+      String port = dbProperties.getProperty("port");
+      String database = dbProperties.getProperty("database");
+      String userName = dbProperties.getProperty("username");
+      String password = dbProperties.getProperty("password");
+      String mySQLdump = dbProperties.getProperty("mysql_dump");
+      if (!DatabaseManager.backupDB(mySQLdump, database, host, port, userName, password, path))
+         throw new DatabaseException("Can't create backup.");
+   }
+   private static boolean backupDB(String mySQLdump,String dbName, String host, String port, String dbUserName, String dbPassword, String path) throws DatabaseException {
+      
+      String executeCmd = mySQLdump + " -P " + port + " -h " + host+ " -u " + dbUserName + " -p" + dbPassword + " --add-drop-database -B " + dbName + " -r " + path;
+      Process runtimeProcess;
+      try {
+         System.out.println("Start to backup.");
+         
+         runtimeProcess = Runtime.getRuntime().exec(executeCmd);
+         int processComplete = runtimeProcess.waitFor();
+         if (processComplete == 0) {
+            System.out.println("Backup created successfully in " + path);
+            return true;
+         } else {
+            System.out.println("Could not create the backup");
+         }
+      } catch (IOException | InterruptedException ex) {
+         ex.printStackTrace();
+         throw new DatabaseException(ex.getMessage());
+      }
+      return false;
+   }
+   
+   public static boolean restoreDB(String dbName, String dbUserName, String dbPassword, String source) {
+
+        String[] executeCmd = new String[]{"mysql", "--user=" + dbUserName, "--password=" + dbPassword, dbName,"-e", "source "+source};
+
+        Process runtimeProcess;
+        try {
+
+            runtimeProcess = Runtime.getRuntime().exec(executeCmd);
+            int processComplete = runtimeProcess.waitFor();
+
+            if (processComplete == 0) {
+                System.out.println("Backup restored successfully");
+                return true;
+            } else {
+                System.out.println("Could not restore the backup");
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        return false;
+    }
+
+   public static void main(String args[]) throws DatabaseException
+   {
+      databaseBackup("\"C:/table.sql\"");
+   }
+   
+   
+   
 }

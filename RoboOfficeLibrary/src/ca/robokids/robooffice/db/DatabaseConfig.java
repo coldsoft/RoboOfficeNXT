@@ -17,38 +17,61 @@ public class DatabaseConfig {
    
    public static Properties getConfig() throws IOException
    {
-      pro.load(new FileInputStream("database.properties"));
+      if (pro.isEmpty()) {
+         pro.load(new FileInputStream("database.properties"));
+      }
       return pro;
    }
-   public static void setUser(String user,String comment) throws IOException
+   
+   public static void saveConfig(String comment) throws IOException
    {
-      pro.load(new FileInputStream("database.properties"));
-      pro.setProperty("user", user);
-      pro.store(new FileOutputStream("database.properties"), comment);
+      pro.store(new FileOutputStream("database.properties"),comment);
+   }
+   public static String getUsername() throws IOException
+   {
+      return getConfig().getProperty("username");     
+   }
+   public static void setUsername(String user,String comment) throws IOException
+   {
+      getConfig().setProperty("username", user);
+      saveConfig(comment);
    }
    public static void setHost(String host,String comment) throws IOException
    {
-      pro.load(new FileInputStream("database.properties"));
-      pro.setProperty("host", host);
-      pro.store(new FileOutputStream("database.properties"), comment);
+      getConfig().setProperty("host", host);
+      saveConfig(comment);
+   }
+   public static String getHost() throws IOException
+   {
+      return getConfig().getProperty("host");     
    }
    public static void setPort(String port,String comment) throws IOException
    {
-      pro.load(new FileInputStream("database.properties"));
-      pro.setProperty("host", port);
-      pro.store(new FileOutputStream("database.properties"), comment);
+      getConfig().setProperty("port", port);
+      saveConfig(comment);
+      
+   }
+   public static String getPort() throws IOException
+   {
+      return getConfig().getProperty("port");     
    }
    public static void setDatabase(String database,String comment) throws IOException
    {
-      pro.load(new FileInputStream("database.properties"));
-      pro.setProperty("host", database);
-      pro.store(new FileOutputStream("database.properties"), comment);
+      getConfig().setProperty("database", database);
+      saveConfig(comment);
+   }
+   public static String getDatabase() throws IOException
+   {
+      return getConfig().getProperty("database");     
    }
    public static void setPassword(String password,String comment) throws IOException
    {
-      pro.load(new FileInputStream("database.properties"));
-      pro.setProperty("host", password);
-      pro.store(new FileOutputStream("database.properties"), comment);
+      getConfig().setProperty("password", password);
+      saveConfig(comment);
+   }
+   public static String getPassword() throws IOException
+   {
+      return getConfig().getProperty("password");     
    }
    
 }

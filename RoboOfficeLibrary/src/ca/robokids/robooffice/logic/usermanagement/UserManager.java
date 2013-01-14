@@ -9,10 +9,12 @@ import ca.robokids.exception.DatabaseException;
 import ca.robokids.exception.DoesNotExistException;
 import ca.robokids.robooffice.db.CheckFields;
 import ca.robokids.robooffice.db.usermanagement.UserDBM;
+import ca.robokids.robooffice.entity.system.Operation;
 import ca.robokids.robooffice.entity.user.Action;
 import ca.robokids.robooffice.entity.user.PasswordQuestion;
 import ca.robokids.robooffice.entity.user.User;
 import ca.robokids.robooffice.entity.user.UserGroup;
+import ca.robokids.robooffice.logic.system.SystemLog;
 import java.util.List;
 
 /**
@@ -23,15 +25,21 @@ public class UserManager {
    
    public static void createUser(User user) throws BadFieldException, DatabaseException
    {
-      CheckFields.checkUser(user);
+      CheckFields.checkUser(user);      
+      user.setUser_id(UserDBM.createUser(user));
       
-      UserDBM.createUser(user);
+      //Event Logging
+      String details = "New user  " + user.toString() + " created.";
+      SystemLog.createUserLog(Operation.USER_SETTING, details, user.getUser_id());
    }
    
    public static void modifyUser(User user) throws BadFieldException, DatabaseException
    {
       CheckFields.checkUser(user);
       UserDBM.modifyUser(user);
+      //Event Logging
+      String details = "User " + user.toString() + " was modified";
+      SystemLog.createUserLog(Operation.USER_SETTING, details, user.getUser_id());
    }
    public static void deleteUser(User user) throws DatabaseException, DoesNotExistException 
    {
@@ -40,6 +48,9 @@ public class UserManager {
          throw new DoesNotExistException("Error: User not found in database; user ID " + user.getUser_id()+ " no match.");
       
       UserDBM.deleteUser(user.getUser_id());
+      //Event Logging
+      String details = "Deleted user " + user.toString();
+      SystemLog.createUserLog(Operation.USER_SETTING, details, user.getUser_id());
    }
    
    public static void createUserGroup(UserGroup group) throws BadFieldException, DatabaseException
@@ -47,6 +58,10 @@ public class UserManager {
       CheckFields.checkGroup(group);
       
       UserDBM.createUserGroup(group);
+      
+      //Event Logging
+      String details = "New Usergroup " + group.getGroupName() + "was created.";
+      SystemLog.createUserLog(Operation.USER_GROUP_SETTING, details, group.getGroup_id());
    }
    
    public static void deleteUserGroup(UserGroup group) throws DatabaseException, DoesNotExistException
@@ -56,12 +71,21 @@ public class UserManager {
          throw new DoesNotExistException("Error: Usergroup not found in database; group ID " + group.getGroup_id()+ " no match.");
       
       UserDBM.deleteGroup(group.getGroup_id());
+      
+      //Event Logging
+      String details = "Deleted usergroup " + group.getGroupName() + "";
+      SystemLog.createUserLog(Operation.USER_GROUP_SETTING, details, group.getGroup_id());
    }
    public static void modifyUserGroup(UserGroup group) throws DatabaseException, BadFieldException
    {
       CheckFields.checkGroup(group);
       UserDBM.modifyGroup(group);
+      //Event Logging
+      String details = "Modified Usergroup " + group.getGroupName();
+      SystemLog.createUserLog(Operation.USER_GROUP_SETTING, details, group.getGroup_id());
    }
+      
+   
    
    public static List<User> loadAllUsers() throws DatabaseException
    {

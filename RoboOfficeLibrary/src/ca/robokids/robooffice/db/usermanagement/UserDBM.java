@@ -29,9 +29,10 @@ public class UserDBM {
     * User object needs to be completely filled, with List of UserGroup Objects
     *
     * @param user
+    * @return newly created User_id
     * @throws DatabaseException
     */
-   public static void createUser(User user) throws DatabaseException {
+   public static int createUser(User user) throws DatabaseException {
       List<UserGroup> groups = user.getUserGroups();
 
       //create a new user row in table USER
@@ -42,6 +43,7 @@ public class UserDBM {
       for (UserGroup g : groups) {
          createUserGroupMapping(newUserID,g.getGroup_id());
       }     
+      return newUserID;
    }
    
    public static void modifyUser(User user) throws DatabaseException

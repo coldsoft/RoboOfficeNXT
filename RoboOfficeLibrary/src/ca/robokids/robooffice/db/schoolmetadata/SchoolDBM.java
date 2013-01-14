@@ -75,7 +75,7 @@ public class SchoolDBM {
             query = "SELECT DISTINCT memberships_id FROM membership_view ORDER BY code ASC";
          } else {
             query = "SELECT DISTINCT memberships_id FROM membership_view WHERE slot_id = " + String.valueOf(timeslotID.getTimeslot_id())
-               + "ORDER BY code ASC";
+               + " ORDER BY code ASC";
          }
 
 
@@ -421,7 +421,7 @@ public class SchoolDBM {
             query = "SELECT DISTINCT course_id FROM course_view ORDER BY code ASC";
          } else {
             query = "SELECT DISTINCT course_id FROM course_view WHERE slot_id = " + String.valueOf(timeslotID.getTimeslot_id())
-               + "ORDER BY code ASC";
+               + " ORDER BY code ASC";
          }
 
 
@@ -1631,17 +1631,16 @@ public class SchoolDBM {
       createTimeslot(DayOfWeek.Wed,new Time(12,0,0));
    }
 
-   
-   public static List<Timeslot> getUniqueActiveCourseTimeslot(DayOfWeek day) throws DatabaseException {
+   public static List<Timeslot> getUniqueActivitiesTimeslot(DayOfWeek day) throws DatabaseException {
       try {
          List<Timeslot> timeslots = new ArrayList();
          String query = new String();
          if (day == null)
          {
-            query = "SELECT slot_id, day_of_week, start FROM test_roboofficenxt.course_view GROUP BY slot_id ORDER BY day_of_week, start";
+            query = "SELECT slot_id, day_of_week, start FROM course_view GROUP BY slot_id ORDER BY day_of_week, start";
          }else
          {
-            query = "SELECT slot_id, day_of_week, start FROM test_roboofficenxt.course_view WHERE day_of_week = ? GROUP BY slot_id ORDER BY start";     
+            query = "SELECT slot_id, day_of_week, start FROM course_view WHERE day_of_week = ? GROUP BY slot_id ORDER BY start";     
          }
          
          PreparedStatement stmt = DatabaseManager.getPreparedStatement(query);
@@ -1659,9 +1658,40 @@ public class SchoolDBM {
             
             timeslots.add(t);
          }
-            
-            
          
+         //Memberships
+         List<Timeslot> membershipTime = new ArrayList();
+         if (day == null)
+         {
+            query = "SELECT slot_id, day_of_week, start FROM membership_view GROUP BY slot_id ORDER BY day_of_week, start";
+         }else
+         {
+            query = "SELECT slot_id, day_of_week, start FROM membership_view WHERE day_of_week = ? GROUP BY slot_id ORDER BY start";     
+         }
+         
+         stmt = DatabaseManager.getPreparedStatement(query);
+         
+         if (day != null)
+            stmt.setString(1,day.toString());
+         crs = DatabaseManager.executeQuery(stmt);
+         
+         while(crs.next())
+         {
+            Timeslot t = new Timeslot();
+            boolean dup = false;
+            t.setTimeslot_id(crs.getInt("slot_id"));
+            t.setStart(crs.getTime("start"));
+            t.setDayOfWeek(DayOfWeek.valueOf(crs.getString("day_of_week")));
+            
+            for (Timeslot exist : timeslots)
+            {
+               if (exist.getTimeslot_id() == t.getTimeslot_id())
+                  dup = true;
+            }
+            if (!dup)
+               membershipTime.add(t);
+         }
+         timeslots.addAll(membershipTime);        
          return timeslots;
       } catch (SQLException ex) {
          throw new DatabaseException(ex.getMessage());

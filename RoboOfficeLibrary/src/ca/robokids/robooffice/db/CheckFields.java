@@ -8,6 +8,8 @@ import ca.robokids.robooffice.entity.finance.Fee;
 import ca.robokids.exception.BadFieldException;
 import ca.robokids.robooffice.entity.schoolmetadata.*;
 import ca.robokids.robooffice.entity.student.Student;
+import ca.robokids.robooffice.entity.system.Log;
+import ca.robokids.robooffice.entity.system.Operation;
 import ca.robokids.robooffice.entity.user.Action;
 import ca.robokids.robooffice.entity.user.User;
 import ca.robokids.robooffice.entity.user.UserGroup;
@@ -174,6 +176,12 @@ public class CheckFields {
       if (c.getStartDate().after(c.getEndDate()))
          throw new BadFieldException("Start date is after the end date.");
       
+   }
+
+   public static void checkLog(Log log) throws BadFieldException {
+      checkLength(0,500,log.getDetail(),"","Log Detail is too long");
+      if (Operation.UNKNOWN == log.getOperation())
+         throw new BadFieldException("Log operation unknown.");
    }
    
  
