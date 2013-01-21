@@ -57,10 +57,15 @@ public class LoginTab extends javax.swing.JPanel {
         jLabel1.setText("Username:");
 
         txtUsername.setFont(FontsLoader.getTextFieldFont());
-        txtUsername.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        txtUsername.setHorizontalAlignment(javax.swing.JTextField.LEFT);
         txtUsername.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtUsernameActionPerformed(evt);
+            }
+        });
+        txtUsername.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                txtUsernameFocusGained(evt);
             }
         });
 
@@ -68,10 +73,15 @@ public class LoginTab extends javax.swing.JPanel {
         jLabel2.setText("Password:");
 
         txtPassword.setFont(FontsLoader.getTextFieldFont());
-        txtPassword.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        txtPassword.setHorizontalAlignment(javax.swing.JTextField.LEFT);
         txtPassword.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtPasswordActionPerformed(evt);
+            }
+        });
+        txtPassword.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                txtPasswordFocusGained(evt);
             }
         });
 
@@ -203,12 +213,22 @@ public class LoginTab extends javax.swing.JPanel {
          PopupMessage.createInfo("Your password: " + user.getPassword(), "Please remember");
          return;
       }else{
-         PopupMessage.createErrorPopUp("Sorry, Wrong Answer.\nTry again or contact Store Manager/IT department.", answer);
+         PopupMessage.createErrorPopUp("Sorry, Wrong Answer.\nTry again or contact Robokids IT department.", answer);
       }
       
       
       
    }//GEN-LAST:event_btnForgotPasswordActionPerformed
+
+   private void txtUsernameFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtUsernameFocusGained
+      txtUsername.setSelectionStart(0);
+      txtUsername.setSelectionEnd(txtUsername.getText().length());    
+   }//GEN-LAST:event_txtUsernameFocusGained
+
+   private void txtPasswordFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPasswordFocusGained
+      txtPassword.setSelectionStart(0);
+      txtPassword.setSelectionEnd(txtPassword.getText().length());    
+   }//GEN-LAST:event_txtPasswordFocusGained
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnForgotPassword;

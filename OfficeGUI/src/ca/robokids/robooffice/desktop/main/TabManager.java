@@ -28,7 +28,7 @@ public class TabManager implements ActionListener {
 
    public static void setContainer(JYTabbedPane container) {
       TabManager.container = container;
-      
+
    }
 
    public static void resizeTab(int parentWidth) {
@@ -48,9 +48,26 @@ public class TabManager implements ActionListener {
       }
    }
 
-   public static void createTab(String action) {
-      if (noTabs(action))
-      {
+   public static void createTab(final String action) {
+      Thread t = new Thread() {
+
+         public void run() {
+            MainRoboOfficeJFrame.setBusy(true);
+            try {
+               TabManager.openTabThreaded(action);
+            } catch (Exception e) {
+               e.printStackTrace();
+            }
+            MainRoboOfficeJFrame.setBusy(false);
+         }
+      };
+
+      t.start();
+
+   }
+
+   public static void openTabThreaded(String action) {
+      if (noTabs(action)) {
          return;
       }
       String tabName = ActionMappingLoader.getTabName(action);
@@ -64,6 +81,8 @@ public class TabManager implements ActionListener {
 
          JPanel panel = (JPanel) Class.forName(tabClass).newInstance();
          addTab(tabName, panel);
+
+
       } catch (ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
          Logger.getLogger(TabManager.class.getName()).log(Level.SEVERE, null, ex);
       }
@@ -90,12 +109,20 @@ public class TabManager implements ActionListener {
       }
    }
 
-   public static void closeTab(String tabName)
+   public static void closeTab(String tabName) {
+      int index = container.indexOfTab(tabName);
+      if (index > -1) {
+         container.removeTabAt(index);
+      }
+   }
+   public static void changeTabName(String tabName, String newName)
    {
       int index = container.indexOfTab(tabName);
-      if (index > -1)
-         container.removeTabAt(index);
+      if (index > -1) {
+         container.setTitleAt(index, newName);
+      }
    }
+
    private static void addTab(String tabName, JPanel panel) {
       container.addTab(tabName, panel);
       panel.setName(tabName);
@@ -110,32 +137,25 @@ public class TabManager implements ActionListener {
    }
 
    private static boolean noTabs(String action) {
-      if (action.equals("logOut")){
-          MainRoboOfficeJFrame.getInstance().logout();
-          return true;
-      }else if (action.equals("exit"))
-      {
+      if (action.equals("logOut")) {
+         MainRoboOfficeJFrame.getInstance().logout();
+         return true;
+      } else if (action.equals("exit")) {
          MainRoboOfficeJFrame.getInstance().exit();
          return true;
       }
-        return false;
-      
+      return false;
+
    }
 
    @Override
    public void actionPerformed(ActionEvent e) {
+
       final JComponent source = (JComponent) e.getSource();
-      Thread t = new Thread(){
-         public void run(){
-            MainRoboOfficeJFrame.setBusy(true);
-            TabManager.createTab(source.getName());
-            MainRoboOfficeJFrame.setBusy(false);
-      }
-      };
-      
-      t.start();
-      
-      
+
+      TabManager.createTab(source.getName());
+
+
+
    }
-   
 }

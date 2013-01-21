@@ -5,7 +5,7 @@
 package ca.robokids.robooffice.desktop.tabs.school;
 
 import ca.robokids.exception.DatabaseException;
-import ca.robokids.robooffice.desktop.customSwing.CourseInfoPanel;
+import ca.robokids.robooffice.desktop.tabs.school.components.CourseSettingPanel;
 import ca.robokids.robooffice.desktop.loaders.FontsLoader;
 import ca.robokids.robooffice.desktop.main.TabManager;
 import ca.robokids.robooffice.desktop.tabs.Tab;
@@ -31,7 +31,7 @@ public class CourseTab extends javax.swing.JPanel implements Tab{
    /**
     * Creates new form CourseTab
     */
-   CourseInfoPanel coursePane;
+   CourseSettingPanel coursePane;
    Course current;
    DefaultListModel<Course> courseModel = new DefaultListModel();
    int index;  
@@ -40,10 +40,10 @@ public class CourseTab extends javax.swing.JPanel implements Tab{
    
    public CourseTab() {
       initComponents();
-      coursePane = new CourseInfoPanel(this);
+      coursePane = new CourseSettingPanel(this);
       try {
          coursePane.checkPrivilege();
-         addCoursePrivilege = UserActivity.hasPrivilege("courseSettings");
+         addCoursePrivilege = UserActivity.loginUserHasPrivilege("courseSettings");
          btnAdd.setEnabled(addCoursePrivilege);
       } catch (DatabaseException ex) {
          Logger.getLogger(CourseTab.class.getName()).log(Level.SEVERE, null, ex);
@@ -102,7 +102,6 @@ public class CourseTab extends javax.swing.JPanel implements Tab{
             }
         });
 
-        pnlCourse.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
         pnlCourse.setLayout(new javax.swing.BoxLayout(pnlCourse, javax.swing.BoxLayout.LINE_AXIS));
 
         javax.swing.GroupLayout centerLayout = new javax.swing.GroupLayout(center);

@@ -5,7 +5,7 @@
 
 package ca.robokids.robooffice.gui.test;
 
-import ca.robokids.robooffice.desktop.customSwing.AttendanceTimeChooserPanel;
+import ca.robokids.robooffice.desktop.tabs.students.components.AttendanceTimeChooserPanel;
 import ca.robokids.robooffice.desktop.loaders.FramePropertyLoader;
 import javax.swing.UIManager;
 /**

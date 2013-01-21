@@ -54,14 +54,14 @@ public class DatabaseBackupTab extends javax.swing.JPanel implements Tab {
         txtUsername = new javax.swing.JTextField();
         txtPassword = new javax.swing.JTextField();
         txtDatabase = new javax.swing.JTextField();
-        txtIP1 = new ca.robokids.robooffice.desktop.customSwing.IntegerNumberJTextField();
+        txtIP1 = new ca.robokids.robooffice.desktop.tabs.components.IntegerNumberJTextField();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
-        txtIP2 = new ca.robokids.robooffice.desktop.customSwing.IntegerNumberJTextField();
+        txtIP2 = new ca.robokids.robooffice.desktop.tabs.components.IntegerNumberJTextField();
         jLabel8 = new javax.swing.JLabel();
-        txtIP3 = new ca.robokids.robooffice.desktop.customSwing.IntegerNumberJTextField();
+        txtIP3 = new ca.robokids.robooffice.desktop.tabs.components.IntegerNumberJTextField();
         jLabel9 = new javax.swing.JLabel();
-        txtIP4 = new ca.robokids.robooffice.desktop.customSwing.IntegerNumberJTextField();
+        txtIP4 = new ca.robokids.robooffice.desktop.tabs.components.IntegerNumberJTextField();
         spinPort = new com.toedter.components.JSpinField();
 
         jTextField1.setText("jTextField1");
@@ -305,10 +305,10 @@ public class DatabaseBackupTab extends javax.swing.JPanel implements Tab {
     private javax.swing.JLabel lblMsg;
     private com.toedter.components.JSpinField spinPort;
     private javax.swing.JTextField txtDatabase;
-    private ca.robokids.robooffice.desktop.customSwing.IntegerNumberJTextField txtIP1;
-    private ca.robokids.robooffice.desktop.customSwing.IntegerNumberJTextField txtIP2;
-    private ca.robokids.robooffice.desktop.customSwing.IntegerNumberJTextField txtIP3;
-    private ca.robokids.robooffice.desktop.customSwing.IntegerNumberJTextField txtIP4;
+    private ca.robokids.robooffice.desktop.tabs.components.IntegerNumberJTextField txtIP1;
+    private ca.robokids.robooffice.desktop.tabs.components.IntegerNumberJTextField txtIP2;
+    private ca.robokids.robooffice.desktop.tabs.components.IntegerNumberJTextField txtIP3;
+    private ca.robokids.robooffice.desktop.tabs.components.IntegerNumberJTextField txtIP4;
     private javax.swing.JTextField txtPassword;
     private javax.swing.JTextField txtPath;
     private javax.swing.JTextField txtUsername;
@@ -320,6 +320,7 @@ public class DatabaseBackupTab extends javax.swing.JPanel implements Tab {
       txtIP2.setLimit(3);
       txtIP3.setLimit(3);
       txtIP4.setLimit(3);
+      this.txtPath.setText(SystemManager.getDefaultBackupLocation());
       refresh();
    }
 

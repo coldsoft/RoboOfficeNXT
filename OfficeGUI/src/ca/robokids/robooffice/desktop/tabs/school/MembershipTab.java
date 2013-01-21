@@ -5,8 +5,8 @@
 package ca.robokids.robooffice.desktop.tabs.school;
 
 import ca.robokids.exception.DatabaseException;
-import ca.robokids.robooffice.desktop.customSwing.MembershipInfoPanel;
-import ca.robokids.robooffice.desktop.customSwing.MembershipInfoPanel;
+import ca.robokids.robooffice.desktop.tabs.school.components.MembershipSettingPanel;
+import ca.robokids.robooffice.desktop.tabs.school.components.MembershipSettingPanel;
 import ca.robokids.robooffice.desktop.loaders.FontsLoader;
 import ca.robokids.robooffice.desktop.main.TabManager;
 import ca.robokids.robooffice.desktop.tabs.Tab;
@@ -30,14 +30,14 @@ public class MembershipTab extends javax.swing.JPanel implements Tab{
    /**
     * Creates new form MembershipTab
     */
-   MembershipInfoPanel membershipPane;
+   MembershipSettingPanel membershipPane;
    Membership current;
    DefaultListModel<Membership> membershipModel = new DefaultListModel();
    int index;
    
    public MembershipTab() {
       initComponents();
-      membershipPane = new MembershipInfoPanel(this);
+      membershipPane = new MembershipSettingPanel(this);
       pnlMembership.add(membershipPane);
       initialize();
 

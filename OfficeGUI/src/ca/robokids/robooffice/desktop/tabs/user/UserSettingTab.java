@@ -7,7 +7,7 @@ package ca.robokids.robooffice.desktop.tabs.user;
 import ca.robokids.exception.BadFieldException;
 import ca.robokids.exception.DatabaseException;
 import ca.robokids.exception.DoesNotExistException;
-import ca.robokids.robooffice.desktop.customSwing.UserInfoPanel;
+import ca.robokids.robooffice.desktop.tabs.user.components.UserInfoPanel;
 import ca.robokids.robooffice.desktop.loaders.FontsLoader;
 import ca.robokids.robooffice.desktop.tabs.Tab;
 import ca.robokids.robooffice.desktop.util.PopupMessage;
@@ -17,7 +17,6 @@ import ca.robokids.robooffice.entity.user.UserGroup;
 import ca.robokids.robooffice.logic.usermanagement.UserActivity;
 import ca.robokids.robooffice.logic.usermanagement.UserManager;
 import de.javasoft.swing.JYCheckBoxList;
-import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -28,36 +27,32 @@ import javax.swing.DefaultListModel;
  *
  * @author Coldsoft
  */
-public class UserSettingTab extends javax.swing.JPanel implements Tab{
+public class UserSettingTab extends javax.swing.JPanel implements Tab {
 
    /**
     * Creates new form UserSettingTab
     */
    List<UserGroup> groups = null;
-   UserInfoPanel userInfo = new UserInfoPanel(this,true);
+   UserInfoPanel userInfo = new UserInfoPanel(this, true);
    DefaultListModel<User> userModel = new DefaultListModel();
    JYCheckBoxList.CheckBoxSelectionModel checkboxGroupModel;
    DefaultListModel<UserGroup> groupModel = new DefaultListModel();
-   
    JYCheckBoxList.CheckBoxSelectionModel checkboxActionModel;
    DefaultListModel<Action> actionModel = new DefaultListModel();
-   
    User current;
    UserGroup currentGroup;
-   
-   private final String EDIT = "Edit";
-   private final String SAVE = "Save";
-   
+   private int lastUserIndex = 0;
+   private int lastGroupIndex = 0;
+   boolean refresh;
+
    public UserSettingTab() {
       initComponents();
-      try {
-           this.tabbedPane.setEnabledAt(1,(UserActivity.hasPrivilege(pnlUserGroupManagement.getName())));
-      } catch (DatabaseException ex) {
-         Logger.getLogger(UserSettingTab.class.getName()).log(Level.SEVERE, null, ex);
-      }
+
+         this.tabbedPane.setEnabledAt(1, (UserActivity.loginUserHasPrivilege(pnlUserGroupManagement.getName())));
+      
       this.pnlUserInfo.add(userInfo);
       initialize();
-      
+
    }
 
    /**
@@ -81,7 +76,6 @@ public class UserSettingTab extends javax.swing.JPanel implements Tab{
         jScrollPane2 = new javax.swing.JScrollPane();
         listGroups = new de.javasoft.swing.JYCheckBoxList();
         jLabel2 = new javax.swing.JLabel();
-        btnEdit = new javax.swing.JButton();
         lblErrorMsg = new javax.swing.JLabel();
         btnDeleteUser = new javax.swing.JButton();
         pnlUserGroupManagement = new javax.swing.JPanel();
@@ -127,18 +121,15 @@ public class UserSettingTab extends javax.swing.JPanel implements Tab{
         });
         listGroups.setCheckBoxSelectableByItemClick(true);
         listGroups.setFont(FontsLoader.getDynamicLabelFont());
+        listGroups.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                listGroupsMouseClicked(evt);
+            }
+        });
         jScrollPane2.setViewportView(listGroups);
 
         jLabel2.setFont(FontsLoader.getStaticLabelFont());
         jLabel2.setText("User Groups:");
-
-        btnEdit.setFont(FontsLoader.getButtonFont());
-        btnEdit.setText(EDIT);
-        btnEdit.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnEditActionPerformed(evt);
-            }
-        });
 
         lblErrorMsg.setFont(new java.awt.Font("Segoe UI", 1, 10)); // NOI18N
         lblErrorMsg.setForeground(new java.awt.Color(255, 51, 51));
@@ -162,8 +153,7 @@ public class UserSettingTab extends javax.swing.JPanel implements Tab{
                     .addGroup(pnlPrivilegeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                         .addGroup(pnlPrivilegeLayout.createSequentialGroup()
                             .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(btnEdit))
+                            .addGap(103, 103, 103))
                         .addComponent(jScrollPane2)
                         .addComponent(lblErrorMsg, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(btnDeleteUser))
@@ -174,11 +164,7 @@ public class UserSettingTab extends javax.swing.JPanel implements Tab{
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlPrivilegeLayout.createSequentialGroup()
                 .addComponent(lblErrorMsg, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(pnlPrivilegeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(pnlPrivilegeLayout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(btnEdit)))
+                .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 23, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 354, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -396,38 +382,26 @@ public class UserSettingTab extends javax.swing.JPanel implements Tab{
     }// </editor-fold>//GEN-END:initComponents
 
    private void lstUsersValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_lstUsersValueChanged
-      
-      int index = lstUsers.getSelectedIndex();
-      if (index > -1)
-      {
-      current = userModel.getElementAt(index);
-      userInfo.setUser(current);
-      setUserGroupList(current);
+
+      if (refresh) {
+         return;
+      }
+      lastUserIndex = lstUsers.getSelectedIndex();
+      if (lastUserIndex > -1) {
+         lblErrorMsg.setText("");
+         current = userModel.getElementAt(lastUserIndex);
+         userInfo.setUser(current);
+         setUserGroupList(current);
       }
    }//GEN-LAST:event_lstUsersValueChanged
 
-   private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
-      if (btnEdit.getText().equals(EDIT))
-      {
-         setGroupEditable(true);
-      }else if (btnEdit.getText().equals(SAVE)){
-         this.btnEdit.setEnabled(false);
-         this.btnEdit.repaint();
-         if (saveUserGroup())
-         {
-            setGroupEditable(false);
-            userInfo.setUser(current);
-            lblErrorMsg.setText(current.toString() + " Updated.");
-         }
-         this.btnEdit.setEnabled(true);
-      }
-   }//GEN-LAST:event_btnEditActionPerformed
-
    private void lstGroupsValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_lstGroupsValueChanged
-      int index = lstGroups.getSelectedIndex();
-      if (index > -1)
-      {
-         currentGroup = groupModel.getElementAt(index);
+      if (refresh) {
+         return;
+      }
+      int lastGroupIndex = lstGroups.getSelectedIndex();
+      if (lastGroupIndex > -1) {
+         currentGroup = groupModel.getElementAt(lastGroupIndex);
          txtGroupName.setText(currentGroup.getGroupName());
          setActionList();
       }
@@ -440,8 +414,8 @@ public class UserSettingTab extends javax.swing.JPanel implements Tab{
       currentGroup.setActions(saveAction(currentGroup));
       try {
          UserManager.modifyUserGroup(currentGroup);
-         
-      } catch (BadFieldException ex) {        
+
+      } catch (BadFieldException ex) {
          lblErrorMsgActions.setText(ex.getMessage());
          refresh();
          return;
@@ -449,7 +423,7 @@ public class UserSettingTab extends javax.swing.JPanel implements Tab{
          PopupMessage.createErrorPopUp(ex.getMessage(), null);
          refresh();
          return;
-     }
+      }
       lblErrorMsgActions.setText(currentGroup.toString() + " Updated.");
       this.txtGroupName.setEnabled(true);
    }//GEN-LAST:event_btnSaveGroupActionPerformed
@@ -468,16 +442,14 @@ public class UserSettingTab extends javax.swing.JPanel implements Tab{
          PopupMessage.createErrorPopUp(ex.getMessage(), null);
       }
       this.btnAddGroup.setEnabled(true);
-      
+
    }//GEN-LAST:event_btnAddGroupActionPerformed
 
    private void btnDeleteGroupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteGroupActionPerformed
       int index = lstGroups.getSelectedIndex();
-      if (index > -1)
-      {
+      if (index > -1) {
          UserGroup toBeDeleted = groupModel.getElementAt(index);
-         if (PopupMessage.createDelete(toBeDeleted.toString()))
-         {
+         if (PopupMessage.createDelete(toBeDeleted.toString())) {
             try {
                UserManager.deleteUserGroup(toBeDeleted);
             } catch (DatabaseException ex) {
@@ -492,20 +464,17 @@ public class UserSettingTab extends javax.swing.JPanel implements Tab{
 
    private void btnDeleteUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteUserActionPerformed
       int index = lstUsers.getSelectedIndex();
-      if (index > -1)
-      {
+      if (index > -1) {
          User toBeDeleted = userModel.getElementAt(index);
-         if (toBeDeleted.equals(UserActivity.loginUser))
-         {
+         if (toBeDeleted.equals(UserActivity.loginUser)) {
             PopupMessage.createErrorPopUp("You cannot delete yourself.", "Sorry");
             return;
          }
-         if (PopupMessage.createDelete(toBeDeleted.toString()))
-         {
+         if (PopupMessage.createDelete(toBeDeleted.toString())) {
             try {
                UserManager.deleteUser(toBeDeleted);
                PopupMessage.createInfo("User Deleted.", null);
-            } catch (    DatabaseException | DoesNotExistException ex) {
+            } catch (DatabaseException | DoesNotExistException ex) {
                PopupMessage.createErrorPopUp(ex.getMessage(), null);
             }
          }
@@ -517,12 +486,24 @@ public class UserSettingTab extends javax.swing.JPanel implements Tab{
       lstActions.clearCheckBoxSelection();
    }//GEN-LAST:event_btnClearAllActionPerformed
 
+   private void listGroupsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_listGroupsMouseClicked
+      if (refresh) {
+         return;
+      }
+
+      int index = listGroups.locationToIndex(evt.getPoint());
+      System.out.println(index);
+      if (this.saveUserGroup(index)) {
+         this.setUserGroupList(current);
+         lblErrorMsg.setText(current + " privileges updated");
+      }
+   }//GEN-LAST:event_listGroupsMouseClicked
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAddGroup;
     private javax.swing.JButton btnClearAll;
     private javax.swing.JButton btnDeleteGroup;
     private javax.swing.JButton btnDeleteUser;
-    private javax.swing.JButton btnEdit;
     private javax.swing.JButton btnSaveGroup;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -551,16 +532,17 @@ public class UserSettingTab extends javax.swing.JPanel implements Tab{
 
    @Override
    public void initialize() {
-      
+
       refresh();
-      setGroupEditable(false);
-      
-      
+
+
+
    }
 
    @Override
    public void refresh() {
-     
+
+      refresh = true;
       lblErrorMsgActions.setText("");
       try {
          //load usergroup information
@@ -581,91 +563,86 @@ public class UserSettingTab extends javax.swing.JPanel implements Tab{
          userModel.clear();
          //Load User information
          List<User> users = UserManager.loadAllUsers();
-         for (User u : users)
+         for (User u : users) {
             userModel.addElement(u);
+         }
       } catch (DatabaseException ex) {
          System.out.println(ex.getMessage());
       }
-      
+
       actionModel.clear();
       //Load action information    
       try {
          List<Action> actions;
          actions = UserManager.loadAllActions();
-         for(Action a : actions)
-         actionModel.addElement(a);
+         for (Action a : actions) {
+            actionModel.addElement(a);
+         }
       } catch (DatabaseException ex) {
          System.out.println(ex.getMessage());
       }
-      
-      if (groupModel.size()> 0)
-      {
-         lstGroups.setSelectedIndex(0);
+
+      refresh = false;
+
+      if (groupModel.size() > 0) {
+         if (lastGroupIndex > -1 && lastGroupIndex < groupModel.size()) {
+            lstGroups.setSelectedIndex(lastGroupIndex);
+         } else {
+            lstGroups.setSelectedIndex(0);
+         }
       }
-      //point list at index 0
-      if (userModel.size()>0)
-      {
-         lstUsers.setSelectedIndex(0);
+
+      if (userModel.size() > 0) {
+         if (lastUserIndex > -1 && lastUserIndex < userModel.size()) {
+            lstUsers.setSelectedIndex(lastUserIndex);
+         } else {
+            lstUsers.setSelectedIndex(0);
+         }
       }
-      
-      
-         
+
+
+
 
    }
 
    @Override
    public void setFocus() {
-      
    }
 
    private void setUserGroupList(User user) {
+      refresh = true;
       listGroups.clearCheckBoxSelection();
       //tickle the user's group in usergroup checkboxes
       List<Integer> indice = new ArrayList();
       List<UserGroup> usergroups = user.getUserGroups();
-      for (UserGroup g : usergroups)      
-      {       
+      for (UserGroup g : usergroups) {
          int index = groupModel.indexOf(g);
-         if (index > -1)
-         {
+         if (index > -1) {
             indice.add(index);
          }
       }
       //Convert arraylist to int[], very dirty way. but checkboxlist api sucks, so.
       Integer selected[] = indice.toArray(new Integer[0]);
       int checked[] = new int[selected.length];
-      for (int i=0; i < selected.length; i++)
-      {
+      for (int i = 0; i < selected.length; i++) {
          checked[i] = selected[i];
       }
       listGroups.setSelectedCheckBoxIndices(checked);
-
+      refresh = false;
    }
 
-   private void setGroupEditable(boolean editable) {
-      System.out.println(editable);
-      if(editable)
-      {
-         
-         this.btnEdit.setText(SAVE);
-         this.listGroups.setEnabled(true);
-         this.listGroups.setBackground(new Color(204,204,204));
-      }else
-      {
-         this.btnEdit.setText(EDIT);
-         this.listGroups.setEnabled(false);
-         this.listGroups.setBackground(this.getBackground());
-      }
-   }
-
-   private boolean saveUserGroup() {
-      int selected[] = listGroups.getSelectedCheckBoxIndices();
+   private boolean saveUserGroup(int index) {
       List<UserGroup> newGroups = new ArrayList();
-      for (int i = 0; i < selected.length; i++)
-      {
+
+      int selected[] = listGroups.getSelectedCheckBoxIndices();
+
+      for (int i = 0; i < selected.length; i++) {
          newGroups.add(groupModel.getElementAt(selected[i]));
+         System.out.println(groupModel.getElementAt(selected[i]) + " ");
       }
-      
+      System.out.println("\n");
+
+
       List<UserGroup> oldGroups = current.getUserGroups();
       current.setUserGroups(newGroups);
       try {
@@ -680,7 +657,7 @@ public class UserSettingTab extends javax.swing.JPanel implements Tab{
          PopupMessage.createErrorPopUp(ex.getMessage(), null);
          return false;
       }
-      
+
    }
 
    private void setActionList() {
@@ -688,19 +665,16 @@ public class UserSettingTab extends javax.swing.JPanel implements Tab{
       lstActions.clearCheckBoxSelection();
       List<Integer> indice = new ArrayList();
       List<Action> actions = currentGroup.getActions();
-      for (Action a : actions)      
-      {       
+      for (Action a : actions) {
          int index = actionModel.indexOf(a);
-         if (index > -1)
-         {
+         if (index > -1) {
             indice.add(index);
          }
       }
       //Convert arraylist to int[], very dirty way. but checkboxlist api sucks, so.
       Integer selected[] = indice.toArray(new Integer[0]);
       int checked[] = new int[selected.length];
-      for (int i=0; i < selected.length; i++)
-      {
+      for (int i = 0; i < selected.length; i++) {
          checked[i] = selected[i];
       }
       lstActions.setSelectedCheckBoxIndices(checked);
@@ -709,13 +683,10 @@ public class UserSettingTab extends javax.swing.JPanel implements Tab{
    private List<Action> saveAction(UserGroup group) {
       int selected[] = lstActions.getSelectedCheckBoxIndices();
       List<Action> newAction = new ArrayList();
-      for (int i = 0; i < selected.length; i++)
-      {
+      for (int i = 0; i < selected.length; i++) {
          newAction.add(actionModel.getElementAt(selected[i]));
       }
       return newAction;
-      
+
    }
-
-
 }

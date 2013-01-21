@@ -59,12 +59,12 @@ public class AddStaffTab extends javax.swing.JPanel implements Tab {
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
-        pnlPhone = new ca.robokids.robooffice.desktop.customSwing.PhoneNumberPanel();
+        pnlPhone = new ca.robokids.robooffice.desktop.tabs.components.PhoneNumberPanel();
         txtFirstname = new javax.swing.JTextField();
         txtLastname = new javax.swing.JTextField();
         txtEmail = new javax.swing.JTextField();
         txtAddress = new javax.swing.JTextField();
-        txtSIN = new ca.robokids.robooffice.desktop.customSwing.IntegerNumberJTextField();
+        txtSIN = new ca.robokids.robooffice.desktop.tabs.components.IntegerNumberJTextField();
         pnlUserAccount = new javax.swing.JPanel();
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
@@ -142,7 +142,7 @@ public class AddStaffTab extends javax.swing.JPanel implements Tab {
                     .addGroup(pnlPersonalLayout.createSequentialGroup()
                         .addGroup(pnlPersonalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(pnlPhone, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtSIN, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(txtSIN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(0, 125, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -210,6 +210,8 @@ public class AddStaffTab extends javax.swing.JPanel implements Tab {
 
         jLabel11.setFont(FontsLoader.getStaticLabelFont());
         jLabel11.setText("Password Answer:");
+
+        txtAnswer.setFont(FontsLoader.getTextFieldFont());
 
         javax.swing.GroupLayout pnlUserAccountLayout = new javax.swing.GroupLayout(pnlUserAccount);
         pnlUserAccount.setLayout(pnlUserAccountLayout);
@@ -287,13 +289,14 @@ public class AddStaffTab extends javax.swing.JPanel implements Tab {
                 .addContainerGap()
                 .addGroup(centreLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(pnlPersonal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblErrorMsg, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(centreLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(centreLayout.createSequentialGroup()
                         .addComponent(btnAddStaff)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jButton2))
-                    .addComponent(lblErrorMsg, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(pnlUserAccount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(pnlUserAccount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
         centreLayout.setVerticalGroup(
@@ -304,13 +307,13 @@ public class AddStaffTab extends javax.swing.JPanel implements Tab {
                     .addGroup(centreLayout.createSequentialGroup()
                         .addComponent(pnlPersonal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(centreLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btnAddStaff)
-                            .addComponent(jButton2))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lblErrorMsg, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(lblErrorMsg, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(pnlUserAccount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(centreLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton2)
+                    .addComponent(btnAddStaff))
+                .addContainerGap())
         );
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -367,7 +370,7 @@ public class AddStaffTab extends javax.swing.JPanel implements Tab {
     private javax.swing.JLabel lblErrorMsg;
     private de.javasoft.swing.JYCheckBoxList listGroups;
     private javax.swing.JPanel pnlPersonal;
-    private ca.robokids.robooffice.desktop.customSwing.PhoneNumberPanel pnlPhone;
+    private ca.robokids.robooffice.desktop.tabs.components.PhoneNumberPanel pnlPhone;
     private javax.swing.JPanel pnlUserAccount;
     private javax.swing.JTextField txtAddress;
     private javax.swing.JTextField txtAnswer;
@@ -376,7 +379,7 @@ public class AddStaffTab extends javax.swing.JPanel implements Tab {
     private javax.swing.JTextField txtLastname;
     private javax.swing.JPasswordField txtPass1;
     private javax.swing.JPasswordField txtPass2;
-    private ca.robokids.robooffice.desktop.customSwing.IntegerNumberJTextField txtSIN;
+    private ca.robokids.robooffice.desktop.tabs.components.IntegerNumberJTextField txtSIN;
     private javax.swing.JTextField txtUsername;
     // End of variables declaration//GEN-END:variables
 

@@ -4,7 +4,7 @@
  */
 package ca.robokids.robooffice.desktop.tabs.students;
 
-import ca.robokids.robooffice.desktop.customSwing.ProgressReportPanel;
+import ca.robokids.robooffice.desktop.tabs.students.components.ProgressReportPanel;
 import ca.robokids.robooffice.desktop.loaders.FontsLoader;
 import ca.robokids.robooffice.desktop.tabs.Tab;
 import ca.robokids.robooffice.entity.student.Progress;

@@ -4,7 +4,7 @@
  */
 package ca.robokids.robooffice.desktop.tabs.user;
 
-import ca.robokids.robooffice.desktop.customSwing.UserInfoPanel;
+import ca.robokids.robooffice.desktop.tabs.user.components.UserInfoPanel;
 import ca.robokids.robooffice.desktop.main.MainRoboOfficeJFrame;
 import ca.robokids.robooffice.desktop.tabs.Tab;
 import ca.robokids.robooffice.logic.usermanagement.UserActivity;

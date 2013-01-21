@@ -7,7 +7,7 @@ package ca.robokids.robooffice.gui.test;
 
 import ca.robokids.exception.DatabaseException;
 import ca.robokids.robooffice.db.schoolmetadata.SchoolDBM;
-import ca.robokids.robooffice.desktop.customSwing.ProgressReportPanel;
+import ca.robokids.robooffice.desktop.tabs.students.components.ProgressReportPanel;
 import ca.robokids.robooffice.entity.schoolmetadata.ProgressReportType;
 import ca.robokids.robooffice.entity.student.ProgressReport;
 import java.util.logging.Level;

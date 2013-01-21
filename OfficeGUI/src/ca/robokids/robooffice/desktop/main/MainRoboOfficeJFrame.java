@@ -11,6 +11,7 @@ import ca.robokids.robooffice.desktop.loaders.FramePropertyLoader;
 import ca.robokids.robooffice.desktop.tabs.system.SystemSettingsTab;
 import ca.robokids.robooffice.desktop.util.PopupMessage;
 import ca.robokids.robooffice.entity.user.User;
+import ca.robokids.robooffice.logic.system.SystemManager;
 import ca.robokids.robooffice.logic.usermanagement.UserActivity;
 import de.javasoft.swing.JYTabbedPane;
 import java.awt.*;
@@ -429,19 +430,13 @@ public class MainRoboOfficeJFrame extends javax.swing.JFrame {
     * @param args the command line arguments
     */
    public static void main(String args[]) {
-      /*
-       * Set the Nimbus look and feel
-       */
-      //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /*
-       * If Nimbus (introduced in Java SE 6) is not available, stay with the
-       * default look and feel. For details see
-       * http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
-       */
+      
+      SystemManager.startup();
       try {
          UIManager.put("Synthetica.rootPane.titlePane.title.center", Boolean.TRUE);
          UIManager.put("Synthetica.tabbedPane.tab.selected.bold", Boolean.TRUE);
          UIManager.put("Synthetica.rootPane.titlePane.dropShadow", Boolean.TRUE);
+         UIManager.put("DropDownButton.arrowIconGap", 0);
          UIManager.put("Synthetica.rootPane.titlePane.gap", 5);
          javax.swing.UIManager.setLookAndFeel(FramePropertyLoader.getLookAndFeel());
       } catch (ClassNotFoundException ex) {
@@ -453,7 +448,6 @@ public class MainRoboOfficeJFrame extends javax.swing.JFrame {
       } catch (javax.swing.UnsupportedLookAndFeelException ex) {
          java.util.logging.Logger.getLogger(MainRoboOfficeJFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
       }
-      //</editor-fold>
 
       /*
        * Create and display the form
@@ -773,7 +767,7 @@ public class MainRoboOfficeJFrame extends javax.swing.JFrame {
             JComponent component = menu.getItem(j);
             if (component instanceof JMenuItem) {
                JMenuItem item = (JMenuItem) component;
-               item.setEnabled(UserActivity.hasPrivilege(item.getName()));
+               item.setEnabled(UserActivity.loginUserHasPrivilege(item.getName()));
                disabled |= item.isEnabled();
             }
             //or search sub menu for more menu items
@@ -784,7 +778,7 @@ public class MainRoboOfficeJFrame extends javax.swing.JFrame {
                   JComponent submenuitem = submenu.getItem(k);
                   if (component instanceof JMenuItem) {
                      JMenuItem item = (JMenuItem) submenuitem;
-                     item.setEnabled(UserActivity.hasPrivilege(item.getName()));
+                     item.setEnabled(UserActivity.loginUserHasPrivilege(item.getName()));
                   }
 
                }
@@ -804,7 +798,7 @@ public class MainRoboOfficeJFrame extends javax.swing.JFrame {
          if (action.equals("quickPrintAttendance") || action.equals("printAttendance") || action.equals("recordAttendance")) {
             action = "attendance";
          }
-         buttons[i].setEnabled(UserActivity.hasPrivilege(action));
+         buttons[i].setEnabled(UserActivity.loginUserHasPrivilege(action));
       }
    }
 

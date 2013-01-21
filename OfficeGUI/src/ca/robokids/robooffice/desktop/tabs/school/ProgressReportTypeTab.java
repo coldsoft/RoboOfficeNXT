@@ -6,7 +6,7 @@ package ca.robokids.robooffice.desktop.tabs.school;
 
 import ca.robokids.exception.BadFieldException;
 import ca.robokids.exception.DatabaseException;
-import ca.robokids.robooffice.desktop.customSwing.ProgressReportSectionInfoPanel;
+import ca.robokids.robooffice.desktop.tabs.school.components.ProgressReportSectionSettingPanel;
 import ca.robokids.robooffice.desktop.loaders.FontsLoader;
 import ca.robokids.robooffice.desktop.tabs.Tab;
 import ca.robokids.robooffice.desktop.util.PopupMessage;
@@ -34,10 +34,10 @@ public class ProgressReportTypeTab extends javax.swing.JPanel implements Tab{
     */
    
    DefaultListModel<ProgressReportType> reportTypeModel = new DefaultListModel();
-   ProgressReportSectionInfoPanel section1;
-   ProgressReportSectionInfoPanel section2;
-   ProgressReportSectionInfoPanel section3;
-   ProgressReportSectionInfoPanel section4;
+   ProgressReportSectionSettingPanel section1;
+   ProgressReportSectionSettingPanel section2;
+   ProgressReportSectionSettingPanel section3;
+   ProgressReportSectionSettingPanel section4;
    
    ProgressReportType current;
    int index;
@@ -353,6 +353,8 @@ public class ProgressReportTypeTab extends javax.swing.JPanel implements Tab{
 
    private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
       String name  = PopupMessage.createInput("Please Enter the Report Type name:", "New report type");
+      if (name == null)
+         return;
       ProgressReportType t = getNewReportType(name);
       try {
          SchoolManager.createProgressReportType(t);
@@ -401,10 +403,10 @@ public class ProgressReportTypeTab extends javax.swing.JPanel implements Tab{
    public void initialize() {
       sectionsPanel.removeAll();
       
-      section1 = new ProgressReportSectionInfoPanel(this);
-      section2 = new ProgressReportSectionInfoPanel(this);
-      section3 = new ProgressReportSectionInfoPanel(this);
-      section4 = new ProgressReportSectionInfoPanel(this);
+      section1 = new ProgressReportSectionSettingPanel(this);
+      section2 = new ProgressReportSectionSettingPanel(this);
+      section3 = new ProgressReportSectionSettingPanel(this);
+      section4 = new ProgressReportSectionSettingPanel(this);
       addSectionElement(0,section1);
       addSectionElement(1,section2);
       addSectionElement(2,section3);

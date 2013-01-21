@@ -12,12 +12,9 @@ import ca.robokids.robooffice.desktop.tabs.Tab;
 import ca.robokids.robooffice.desktop.util.PopupMessage;
 import ca.robokids.robooffice.entity.student.Sex;
 import ca.robokids.robooffice.entity.student.Student;
-import ca.robokids.robooffice.entity.user.PasswordQuestion;
 import ca.robokids.robooffice.logic.student.StudentManager;
-import ca.robokids.robooffice.logic.usermanagement.UserActivity;
+import ca.robokids.robooffice.logic.usermanagement.UserManager;
 import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -60,7 +57,7 @@ public class NewStudentTab extends javax.swing.JPanel implements Tab {
         jLabel6 = new javax.swing.JLabel();
         cboCity = new javax.swing.JComboBox();
         jLabel7 = new javax.swing.JLabel();
-        txtZipcode = new ca.robokids.robooffice.desktop.customSwing.PostalCodeJTextField();
+        txtZipcode = new ca.robokids.robooffice.desktop.tabs.components.PostalCodeJTextField();
         txtAddress = new javax.swing.JTextField();
         jSeparator1 = new javax.swing.JSeparator();
         jLabel8 = new javax.swing.JLabel();
@@ -69,10 +66,10 @@ public class NewStudentTab extends javax.swing.JPanel implements Tab {
         jLabel11 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
         jLabel13 = new javax.swing.JLabel();
-        phoneMother = new ca.robokids.robooffice.desktop.customSwing.PhoneNumberPanel();
-        phoneFather = new ca.robokids.robooffice.desktop.customSwing.PhoneNumberPanel();
-        phoneHome = new ca.robokids.robooffice.desktop.customSwing.PhoneNumberPanel();
-        phoneEmergency = new ca.robokids.robooffice.desktop.customSwing.PhoneNumberPanel();
+        phoneMother = new ca.robokids.robooffice.desktop.tabs.components.PhoneNumberPanel();
+        phoneFather = new ca.robokids.robooffice.desktop.tabs.components.PhoneNumberPanel();
+        phoneHome = new ca.robokids.robooffice.desktop.tabs.components.PhoneNumberPanel();
+        phoneEmergency = new ca.robokids.robooffice.desktop.tabs.components.PhoneNumberPanel();
         txtMother = new javax.swing.JTextField();
         txtFather = new javax.swing.JTextField();
         jLabel14 = new javax.swing.JLabel();
@@ -142,7 +139,7 @@ public class NewStudentTab extends javax.swing.JPanel implements Tab {
 
         cboCity.setEditable(true);
         cboCity.setFont(FontsLoader.getComboBoxFont());
-        cboCity.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Richmond", "Vancouver", "West Vancouver", "North Vancouver", "Burnaby", "Coquitlam", "Port Coquitlam", "Delta", "Surrey", "Port Moody", "Langley", " " }));
+        cboCity.setModel(new javax.swing.DefaultComboBoxModel(UserManager.CITIES));
 
         jLabel7.setFont(FontsLoader.getStaticLabelFont());
         jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
@@ -495,21 +492,20 @@ public class NewStudentTab extends javax.swing.JPanel implements Tab {
 
    private void btnSavePayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSavePayActionPerformed
 
-      if (save())
-      {
+      if (save()) {
          TabManager.closeTab(this.getName());
          //OPEN PAYMENT TAB;
       }
 
-      
-      
+
+
    }//GEN-LAST:event_btnSavePayActionPerformed
 
    private void btnSaveOnlyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveOnlyActionPerformed
 
-         if (save()){
-            TabManager.closeTab(this.getName());
-         }
+      if (save()) {
+         TabManager.closeTab(this.getName());
+      }
 
    }//GEN-LAST:event_btnSaveOnlyActionPerformed
 
@@ -518,16 +514,13 @@ public class NewStudentTab extends javax.swing.JPanel implements Tab {
    }//GEN-LAST:event_btnCancelActionPerformed
 
    private void rdoOtherStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_rdoOtherStateChanged
-      if (rdoOther.isSelected())
-      {
+      if (rdoOther.isSelected()) {
          txtOther.setEnabled(true);
-      }else
-      {
+      } else {
          txtOther.setText("");
          txtOther.setEnabled(false);
       }
    }//GEN-LAST:event_rdoOtherStateChanged
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCancel;
     private javax.swing.JButton btnSaveOnly;
@@ -559,10 +552,10 @@ public class NewStudentTab extends javax.swing.JPanel implements Tab {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JLabel lblMsg;
-    private ca.robokids.robooffice.desktop.customSwing.PhoneNumberPanel phoneEmergency;
-    private ca.robokids.robooffice.desktop.customSwing.PhoneNumberPanel phoneFather;
-    private ca.robokids.robooffice.desktop.customSwing.PhoneNumberPanel phoneHome;
-    private ca.robokids.robooffice.desktop.customSwing.PhoneNumberPanel phoneMother;
+    private ca.robokids.robooffice.desktop.tabs.components.PhoneNumberPanel phoneEmergency;
+    private ca.robokids.robooffice.desktop.tabs.components.PhoneNumberPanel phoneFather;
+    private ca.robokids.robooffice.desktop.tabs.components.PhoneNumberPanel phoneHome;
+    private ca.robokids.robooffice.desktop.tabs.components.PhoneNumberPanel phoneMother;
     private javax.swing.JRadioButton rdoBoy;
     private javax.swing.JRadioButton rdoFriends;
     private javax.swing.JRadioButton rdoGirl;
@@ -578,7 +571,7 @@ public class NewStudentTab extends javax.swing.JPanel implements Tab {
     private javax.swing.JTextArea txtNotes;
     private javax.swing.JTextField txtOther;
     private javax.swing.JTextField txtSchool;
-    private ca.robokids.robooffice.desktop.customSwing.PostalCodeJTextField txtZipcode;
+    private ca.robokids.robooffice.desktop.tabs.components.PostalCodeJTextField txtZipcode;
     // End of variables declaration//GEN-END:variables
 
    @Override
@@ -604,8 +597,8 @@ public class NewStudentTab extends javax.swing.JPanel implements Tab {
       this.txtSchool.setText("");
       this.rdoBoy.setSelected(true);
       this.rdoNewspaper.setSelected(true);
-      
-      
+
+
    }
 
    @Override
@@ -617,103 +610,95 @@ public class NewStudentTab extends javax.swing.JPanel implements Tab {
       try {
          Student s;
 
-            s = getStudentFields();
-         
-         s.setActive(true);
-         s.setDeleted(false);
-         s.setCreateDate(new java.sql.Date(new Date().getTime()));
-         s.setCreated_by(UserActivity.loginUser);
-         s.setJoinDate(s.getCreateDate());
-         s.setPassword("robokids");
-         s.setUserName("robokids");
-         s.setPasswordAnswer("robokids");
-         PasswordQuestion p = new PasswordQuestion();
-         p.setPassword_qestion_id(1);
-         s.setPasswordQuestion(p);
-         s.setProspective(true);
-         
+         s = getStudentFields();
+
          StudentManager.addStudent(s);
          return true;
       } catch (BadFieldException ex) {
-          lblMsg.setText(ex.getMessage());
-          return false;
-      }catch (DatabaseException ex) {
-          PopupMessage.createErrorPopUp(ex.getMessage(), null);
-          return false;
+         lblMsg.setText(ex.getMessage());
+         return false;
+      } catch (DatabaseException ex) {
+         PopupMessage.createErrorPopUp(ex.getMessage(), null);
+         return false;
       }
-      
+
    }
 
    private Student getStudentFields() throws BadFieldException {
       Student s = new Student();
       s.setFirstName(txtFirstname.getText().trim());
       s.setLastName(txtLastname.getText().trim());
-      if (rdoBoy.isSelected())
-      {
+      if (rdoBoy.isSelected()) {
          s.setSex(Sex.BOY);
-         
-      }else
-      {
+
+      } else {
          s.setSex(Sex.GIRL);
       }
       Date date = calBirthday.getDate();
-      if (date == null)
+      if (date == null) {
          throw new BadFieldException("Birthday is incorrectly filled.");
-      
+      }
+
       java.sql.Date birthday = new java.sql.Date(date.getTime());
       s.setBirthday(birthday);
       s.setAddress(txtAddress.getText().trim());
-      String city = (String)cboCity.getSelectedItem();
+      String city = (String) cboCity.getSelectedItem();
       s.setCity(city);
       s.setZipcode(txtZipcode.getText().trim());
       s.setSchool(txtSchool.getText().trim());
       //Contacts
       s.setMother(txtMother.getText().trim());
       s.setFather(txtFather.getText().trim());
-      
+
       String txtPhone = this.phoneMother.getPhone();
-      if (txtPhone == null && !this.phoneMother.isEmpty())
+      if (txtPhone == null && !this.phoneMother.isEmpty()) {
          throw new BadFieldException("Mother's phone number format incorrect");
+      }
       s.setMotherPhone(txtPhone);
-        
+
       txtPhone = this.phoneFather.getPhone();
-      if (txtPhone == null && !this.phoneFather.isEmpty())
+      if (txtPhone == null && !this.phoneFather.isEmpty()) {
          throw new BadFieldException("Father's phone number format incorrect");
+      }
       s.setFatherPhone(txtPhone);
-      
+
       txtPhone = this.phoneHome.getPhone();
-      if (txtPhone == null && !this.phoneHome.isEmpty())
+      if (txtPhone == null && !this.phoneHome.isEmpty()) {
          throw new BadFieldException("Home phone number format incorrect");
+      }
       s.setHomePhone(txtPhone);
-      
+
       txtPhone = this.phoneEmergency.getPhone();
-      if (txtPhone == null && !this.phoneEmergency.isEmpty())
+      if (txtPhone == null && !this.phoneEmergency.isEmpty()) {
          throw new BadFieldException("Emergency phone number format incorrect");
+      }
       s.setEmergency(txtPhone);
-      
+
       s.setEmail(txtEmail.getText().trim());
-      
+
       s.setHearFrom(getHearFrom());
-      
+
       s.setNotes(txtNotes.getText().trim());
-      
+
       return s;
    }
 
    private String getHearFrom() {
-      if (rdoNewspaper.isSelected())
+      if (rdoNewspaper.isSelected()) {
          return "Newspaper";
-      if (rdoWebsite.isSelected())
+      }
+      if (rdoWebsite.isSelected()) {
          return "Website";
-      if (rdoFriends.isSelected())
+      }
+      if (rdoFriends.isSelected()) {
          return "Friends";
-      if (rdoOther.isSelected())
-      {
-         if (txtOther.getText().trim().length() < 1)
+      }
+      if (rdoOther.isSelected()) {
+         if (txtOther.getText().trim().length() < 1) {
             return "Other";
+         }
          return txtOther.getText().trim();
       }
       return "Other";
    }
-   
 }

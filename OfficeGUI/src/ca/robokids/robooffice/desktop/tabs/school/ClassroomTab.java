@@ -6,7 +6,7 @@ package ca.robokids.robooffice.desktop.tabs.school;
 
 import ca.robokids.exception.BadFieldException;
 import ca.robokids.exception.DatabaseException;
-import ca.robokids.robooffice.desktop.customSwing.ClassroomInfoPanel;
+import ca.robokids.robooffice.desktop.tabs.school.components.ClassroomSettingPanel;
 import ca.robokids.robooffice.desktop.loaders.FontsLoader;
 import ca.robokids.robooffice.desktop.tabs.Tab;
 import ca.robokids.robooffice.desktop.util.PopupMessage;
@@ -27,7 +27,7 @@ public class ClassroomTab extends javax.swing.JPanel implements Tab {
     * Creates new form ClassroomTab
     */
    DefaultListModel<Classroom> classroomModel = new DefaultListModel();
-   ClassroomInfoPanel panelClassroom;
+   ClassroomSettingPanel panelClassroom;
    Classroom classroom;
    int selection = 0;
 
@@ -35,7 +35,7 @@ public class ClassroomTab extends javax.swing.JPanel implements Tab {
 
       initComponents();
       switchCard("existing");
-      panelClassroom = new ClassroomInfoPanel(this);
+      panelClassroom = new ClassroomSettingPanel(this);
       panelClassroom.setClassroom(null);
       pnlclassroom.add(panelClassroom);
       initialize();

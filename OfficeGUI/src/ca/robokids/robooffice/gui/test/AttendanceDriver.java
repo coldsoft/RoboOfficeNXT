@@ -4,8 +4,8 @@
  */
 package ca.robokids.robooffice.gui.test;
 
-import ca.robokids.robooffice.desktop.customSwing.AttendancePanel;
-import ca.robokids.robooffice.desktop.customSwing.ClassroomPanel;
+import ca.robokids.robooffice.desktop.tabs.students.components.AttendancePanel;
+import ca.robokids.robooffice.desktop.tabs.students.components.ClassroomPanel;
 import ca.robokids.robooffice.entity.schoolmetadata.Classroom;
 import ca.robokids.robooffice.entity.schoolmetadata.Course;
 import ca.robokids.robooffice.entity.schoolmetadata.CourseSection;

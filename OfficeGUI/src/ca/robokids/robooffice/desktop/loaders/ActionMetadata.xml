@@ -10,7 +10,7 @@ This xml keeps mapping between four things:
 <roboOffice>
     <action id = "myInbox" menuItem = "My Inbox">
         <tabName>My Inbox</tabName>
-        <tabClass>user.InboxTab</tabClass>       
+        <tabClass>students.StudentTab</tabClass>       
     </action>
     
     <action id = "myAccount" menuItem = "My Account">

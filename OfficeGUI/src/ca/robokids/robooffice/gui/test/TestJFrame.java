@@ -5,26 +5,39 @@
 
 package ca.robokids.robooffice.gui.test;
 
-import ca.robokids.robooffice.desktop.customSwing.TimeslotDialog;
+import ca.robokids.robooffice.desktop.tabs.school.components.TimeslotDialog;
 import ca.robokids.robooffice.desktop.loaders.FramePropertyLoader;
-import ca.robokids.robooffice.desktop.util.PopupMessage;
 import ca.robokids.robooffice.entity.schoolmetadata.Timeslot;
-import de.javasoft.swing.JYTabbedPane;
-import java.awt.Component;
+import de.javasoft.swing.JYSearchField;
+import de.javasoft.swing.plaf.jysearchfield.SearchActionEvent;
+import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
-import javax.swing.JPanel;
+import java.awt.event.ActionEvent;
+import javax.swing.Action;
 import javax.swing.UIManager;
 
 /**
  *
  * @author Coldsoft
  */
-public class TestJFrame extends javax.swing.JFrame {
-
+public class TestJFrame extends javax.swing.JFrame implements Action{
+JYSearchField field = new JYSearchField();
     /** Creates new form TestJFrame */
     public TestJFrame() {
         initComponents();
-        tabPane.setCloseButtonStrategy(JYTabbedPane.CloseButtonStrategy.ALL_TABS);
+         btnRemove.setOpaque(true);
+        lblMsg.setText("<html><center>1st line<br>2nd linesssssssss<br>3rd line</center></html>");
+        field.setMaximumSize(new Dimension(200,25));
+        field.setPromptText("Search Student");
+        field.setSearchControlsPosition(JYSearchField.SearchControlsPosition.CLEAR_LEADING_SEARCH_TRAILING);
+        field.setSearchMode(JYSearchField.SearchMode.AUTO);
+        field.setSearchAction(this);
+        field.setSearchDelay(200);
+        
+        searchPanel.add(field);
+        
+        //tabPane.setCloseButtonStrategy(JYTabbedPane.CloseButtonStrategy.ALL_TABS);
 
     }
 
@@ -37,23 +50,21 @@ public class TestJFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        btnAdd = new javax.swing.JButton();
         btnRemove = new javax.swing.JButton();
         txtTabname = new javax.swing.JTextField();
         lblMsg = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
-        tabPane = new de.javasoft.swing.JYTabbedPane();
+        searchPanel = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        btnAdd.setText("add");
-        btnAdd.addActionListener(new java.awt.event.ActionListener() {
+        btnRemove.setBackground(new java.awt.Color(255, 51, 102));
+        btnRemove.setText("<html><center>1st line<br>2nd linesssssssss<br>3rd line</center></html>");
+        btnRemove.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAddActionPerformed(evt);
+                btnRemoveActionPerformed(evt);
             }
         });
-
-        btnRemove.setText("remove");
 
         lblMsg.setFont(new Font("宋体", Font.PLAIN, 12));
         lblMsg.setText(FramePropertyLoader.getLoadingMessage());
@@ -65,62 +76,46 @@ public class TestJFrame extends javax.swing.JFrame {
             }
         });
 
+        searchPanel.setLayout(new javax.swing.BoxLayout(searchPanel, javax.swing.BoxLayout.LINE_AXIS));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(147, 147, 147)
-                .addComponent(btnAdd)
-                .addGap(70, 70, 70)
-                .addComponent(btnRemove)
-                .addGap(51, 51, 51)
-                .addComponent(txtTabname, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton1)
-                .addContainerGap(41, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(tabPane, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(114, 114, 114))
-            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(lblMsg, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(268, 268, 268)
+                        .addComponent(btnRemove, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(51, 51, 51)
+                        .addComponent(txtTabname, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jButton1))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(73, 73, 73)
+                        .addComponent(searchPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 380, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(21, 21, 21)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnAdd)
-                    .addComponent(btnRemove)
+                    .addComponent(btnRemove, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtTabname, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton1))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 34, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 134, Short.MAX_VALUE)
                 .addComponent(lblMsg)
-                .addGap(195, 195, 195)
-                .addComponent(tabPane, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(65, 65, 65))
+                .addGap(55, 55, 55)
+                .addComponent(searchPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(79, 79, 79))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-   private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
-      JPanel newpanel = new JPanel();
-      newpanel.setName(txtTabname.getText());
-      tabPane.addTab(txtTabname.getText(), new JPanel());
-      JPanel content = tabPane.getContentPanel();
-      Component[] coms = content.getComponents();
-      String s = null;
-      for (Component c : coms)
-      {
-         
-         s += ((JPanel)c).getName();
-      }
-      lblMsg.setText(s);
-              System.out.println(PopupMessage.createConfirmPopUp(null, null));
-   }//GEN-LAST:event_btnAddActionPerformed
 
    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
       TimeslotDialog time = new TimeslotDialog(this,true);
@@ -135,6 +130,10 @@ public class TestJFrame extends javax.swing.JFrame {
       }
       
    }//GEN-LAST:event_jButton1ActionPerformed
+
+   private void btnRemoveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoveActionPerformed
+      // TODO add your handling code here:
+   }//GEN-LAST:event_btnRemoveActionPerformed
 
     /**
      * @param args the command line arguments
@@ -171,12 +170,28 @@ public class TestJFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnAdd;
     private javax.swing.JButton btnRemove;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel lblMsg;
-    private de.javasoft.swing.JYTabbedPane tabPane;
+    private javax.swing.JPanel searchPanel;
     private javax.swing.JTextField txtTabname;
     // End of variables declaration//GEN-END:variables
+
+   @Override
+   public Object getValue(String key) {
+      return null;
+   }
+
+   @Override
+   public void putValue(String key, Object value) {
+      
+   }
+
+   @Override
+   public void actionPerformed(ActionEvent e) {
+      SearchActionEvent s = (SearchActionEvent)e;
+      
+         System.out.println(field.getText());
+   }
 
 }

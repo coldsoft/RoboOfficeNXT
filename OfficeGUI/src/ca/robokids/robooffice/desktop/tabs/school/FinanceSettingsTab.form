@@ -137,7 +137,7 @@
                 <Property name="text" type="java.lang.String" value="Tax(%)"/>
               </Properties>
             </Component>
-            <Component class="ca.robokids.robooffice.desktop.customSwing.CurrencyJTextField" name="txtTax">
+            <Component class="ca.robokids.robooffice.desktop.tabs.components.CurrencyJTextField" name="txtTax">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                   <Connection code="FontsLoader.getTextFieldFont()" type="code"/>
@@ -338,7 +338,7 @@
                     </Property>
                   </Properties>
                 </Component>
-                <Component class="ca.robokids.robooffice.desktop.customSwing.CurrencyJTextField" name="txtRate">
+                <Component class="ca.robokids.robooffice.desktop.tabs.components.CurrencyJTextField" name="txtRate">
                   <Properties>
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                       <Connection code="FontsLoader.getTextFieldFont()" type="code"/>
@@ -526,7 +526,7 @@
                     </Property>
                   </Properties>
                 </Component>
-                <Component class="ca.robokids.robooffice.desktop.customSwing.CurrencyJTextField" name="txtRateAdd">
+                <Component class="ca.robokids.robooffice.desktop.tabs.components.CurrencyJTextField" name="txtRateAdd">
                   <Properties>
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                       <Connection code="FontsLoader.getTextFieldFont()" type="code"/>

@@ -49,7 +49,7 @@ public class FinanceSettingsTab extends javax.swing.JPanel implements Tab{
         center = new javax.swing.JPanel();
         pnlFinanceSetting = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        txtTax = new ca.robokids.robooffice.desktop.customSwing.CurrencyJTextField();
+        txtTax = new ca.robokids.robooffice.desktop.tabs.components.CurrencyJTextField();
         btnSaveTax = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         lstFees = new javax.swing.JList();
@@ -63,7 +63,7 @@ public class FinanceSettingsTab extends javax.swing.JPanel implements Tab{
         jScrollPane3 = new javax.swing.JScrollPane();
         txtDescription = new javax.swing.JTextArea();
         txtName = new javax.swing.JTextField();
-        txtRate = new ca.robokids.robooffice.desktop.customSwing.CurrencyJTextField();
+        txtRate = new ca.robokids.robooffice.desktop.tabs.components.CurrencyJTextField();
         jLabel3 = new javax.swing.JLabel();
         btnSave = new javax.swing.JButton();
         btnCancel = new javax.swing.JButton();
@@ -75,7 +75,7 @@ public class FinanceSettingsTab extends javax.swing.JPanel implements Tab{
         jScrollPane4 = new javax.swing.JScrollPane();
         txtDescriptionAdd = new javax.swing.JTextArea();
         txtNameAdd = new javax.swing.JTextField();
-        txtRateAdd = new ca.robokids.robooffice.desktop.customSwing.CurrencyJTextField();
+        txtRateAdd = new ca.robokids.robooffice.desktop.tabs.components.CurrencyJTextField();
         jLabel15 = new javax.swing.JLabel();
         btnSaveAdd = new javax.swing.JButton();
         btnCancelAdd = new javax.swing.JButton();
@@ -723,9 +723,9 @@ public class FinanceSettingsTab extends javax.swing.JPanel implements Tab{
     private javax.swing.JTextArea txtDescriptionAdd;
     private javax.swing.JTextField txtName;
     private javax.swing.JTextField txtNameAdd;
-    private ca.robokids.robooffice.desktop.customSwing.CurrencyJTextField txtRate;
-    private ca.robokids.robooffice.desktop.customSwing.CurrencyJTextField txtRateAdd;
-    private ca.robokids.robooffice.desktop.customSwing.CurrencyJTextField txtTax;
+    private ca.robokids.robooffice.desktop.tabs.components.CurrencyJTextField txtRate;
+    private ca.robokids.robooffice.desktop.tabs.components.CurrencyJTextField txtRateAdd;
+    private ca.robokids.robooffice.desktop.tabs.components.CurrencyJTextField txtTax;
     // End of variables declaration//GEN-END:variables
 
    @Override
