@@ -23,7 +23,7 @@ public class Student {
    private String firstName;
    private String lastName;
    private boolean deleted;
-   private Date createDate;
+   private Date modifiedDate;
    private boolean active = true;
    private boolean prospective;
    private Date birthday;
@@ -84,12 +84,21 @@ public class Student {
       this.city = city;
    }
 
-   public Date getCreateDate() {
-      return createDate;
+   public String getModifiedDateString() {
+      SimpleDateFormat format = new SimpleDateFormat("dd-MMM-yyyy");
+      if (modifiedDate != null)
+         return format.format(modifiedDate);
+      return "";
+
+   }
+   
+   public Date getModifiedDate()
+   {
+         return modifiedDate;
    }
 
-   public void setCreateDate(Date createDate) {
-      this.createDate = createDate;
+   public void setModifiedDate(Date createDate) {
+      this.modifiedDate = createDate;
    }
 
    public User getCreated_by() {
@@ -168,6 +177,28 @@ public class Student {
       return joinDate;
    }
 
+   public String getJoinDateString(){
+      if (joinDate == null) {
+         return "";
+      }
+      
+      SimpleDateFormat format;
+      Date today = new Date(System.currentTimeMillis());
+      if ((joinDate.getYear() == today.getYear()))
+      {
+         format = new SimpleDateFormat("MMM dd");
+         return "this year on " + format.format(joinDate);
+      }
+      if ((joinDate.getYear() == (today.getYear()-1)))
+      {
+         format = new SimpleDateFormat("MMM dd");
+         return "last year on " + format.format(joinDate);
+      }else{
+         format =  new SimpleDateFormat("yyyy.MMM.dd");
+         return format.format(joinDate);
+      }
+      
+   }
    public void setJoinDate(Date joinDate) {
       this.joinDate = joinDate;
    }
@@ -298,5 +329,12 @@ public class Student {
 
       return ageInt;
 
+   }
+   
+   public static void main(String args[])
+   {
+      Student student = new Student();
+      student.setJoinDate(new Date(112,3,8));
+      System.out.println(student.getJoinDateString());
    }
 }

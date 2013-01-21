@@ -22,6 +22,9 @@ public class Timeslot implements Comparable {
    public Time getStart() {
       return start;
    }
+   public String getStartString() {
+      return start.toString().substring(0, 5);
+   }
 
    public void setStart(Time start) {
       this.start = start;

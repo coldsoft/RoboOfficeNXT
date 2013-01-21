@@ -37,11 +37,12 @@ public class SystemDBM {
                                              String affecting_lastName,
                                              String performing_firstName,
                                              String performing_lastName,
+                                             String detail,
                                              Timestamp rangeStart, 
                                              Timestamp rangeEnd) throws DatabaseException
    {      
-      List<Log> userLog = SystemDBM.getAllLogs("user_system_log_view",operation,affecting_firstName,affecting_lastName,performing_firstName,performing_lastName,rangeStart,rangeEnd);
-      List<Log> studentLog = SystemDBM.getAllLogs("student_system_log_view",operation,affecting_firstName,affecting_lastName,performing_firstName,performing_lastName,rangeStart,rangeEnd);
+      List<Log> userLog = SystemDBM.getAllLogs("user_system_log_view",operation,affecting_firstName,affecting_lastName,performing_firstName,performing_lastName,detail, rangeStart,rangeEnd);
+      List<Log> studentLog = SystemDBM.getAllLogs("student_system_log_view",operation,affecting_firstName,affecting_lastName,performing_firstName,performing_lastName,detail, rangeStart,rangeEnd);
    
       if (userLog.size() > studentLog.size()){
          userLog.addAll(studentLog);
@@ -57,6 +58,7 @@ public class SystemDBM {
                                              String affecting_lastName,
                                              String performing_firstName,
                                              String performing_lastName,
+                                             String detail,
                                              Timestamp rangeStart, 
                                              Timestamp rangeEnd) throws DatabaseException
    {
@@ -84,6 +86,10 @@ public class SystemDBM {
          if (performing_lastName != null)
          {
             query += " performing_lname = '" + performing_lastName + "' AND ";
+         }
+         if (detail != null)
+         {
+            query += " detail LIKE  '" + detail + "' AND ";
          }
          
          query += " date_created >= ? AND date_created <= ? ORDER BY date_created DESC";
@@ -141,6 +147,6 @@ public class SystemDBM {
       Date start = new Date(100,1,1);
       Date end = new Date(200,1,1);
 
-      System.out.println(SystemDBM.getAllLogs(Operation.LOGIN, "James", null, null, null, new Timestamp(start.getTime()), new Timestamp(end.getTime())).size());
+      System.out.println(SystemDBM.getAllLogs(Operation.LOGIN, null, null, null, null, "", new Timestamp(start.getTime()), new Timestamp(end.getTime())).size());
    }
 }

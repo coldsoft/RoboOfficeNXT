@@ -11,12 +11,36 @@ import ca.robokids.robooffice.entity.schoolmetadata.Project;
  *
  * @author Coldsoft
  */
-public class ClassRecord extends Record{
-   
+public class ClassRecord extends Record {
+
    private CourseSection section;
    private Project project;
    private boolean complete;
    private boolean test;
+   private boolean makeupClass;
+   private boolean overdue;
+
+   public boolean isMakeupClass() {
+      return makeupClass;
+   }
+
+   public void setMakeupClass(boolean makeupClass) {
+      this.makeupClass = makeupClass;
+   }
+
+   public boolean isOverdue() {
+      return overdue;
+   }
+
+   public void setOverdue(boolean overdue) {
+      this.overdue = overdue;
+   }
+
+   
+   
+
+   
+   
 
    public boolean isComplete() {
       return complete;
@@ -49,5 +73,6 @@ public class ClassRecord extends Record{
    public void setTest(boolean test) {
       this.test = test;
    }
-   
+
+
 }

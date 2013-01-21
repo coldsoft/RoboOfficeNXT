@@ -36,7 +36,7 @@ public class StudentDBM {
             s.setSex(Sex.valueOf(crs.getString("sex")));
             s.setFirstName(crs.getString("first_name"));
             s.setLastName(crs.getString("last_name"));
-            s.setCreateDate(crs.getDate("created_date"));
+            s.setModifiedDate(crs.getDate("modified_date"));
             s.setActive(crs.getBoolean("active"));
             s.setProspective(crs.getBoolean("prospective"));
             s.setBirthday(crs.getDate("birthday"));
@@ -94,7 +94,7 @@ public class StudentDBM {
 
    private static PreparedStatement insertStudent(Student student) throws DatabaseException {
       try {
-         String query = "INSERT INTO student(created_by,sex,first_name,last_name,created_date,active,prospective,birthday,"
+         String query = "INSERT INTO student(created_by,sex,first_name,last_name,modified_date,active,prospective,birthday,"
             + "school,address,zipcode,city,email,mother,mother_phone,father,father_phone,home_phone,emergency,join_date,hear_from,password,userName,password_question_id,passwordAnswer,notes) "
             + "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
@@ -103,7 +103,7 @@ public class StudentDBM {
          stmt.setString(2, student.getSex().toString());
          stmt.setString(3, student.getFirstName());
          stmt.setString(4, student.getLastName());
-         stmt.setDate(5, student.getCreateDate());
+         stmt.setDate(5, student.getModifiedDate());
          stmt.setBoolean(6, student.isActive());
          stmt.setBoolean(7, student.isProspective());
          stmt.setDate(8, student.getBirthday());
@@ -133,7 +133,7 @@ public class StudentDBM {
 
    private static PreparedStatement updateStudent(Student student) throws DatabaseException {
       try {
-         String update = "UPDATE student SET created_by = ?,  sex = ?,  first_name = ?,  last_name = ?,  created_date = ?,  active = ?,  prospective = ?,  birthday = ?,"
+         String update = "UPDATE student SET created_by = ?,  sex = ?,  first_name = ?,  last_name = ?,  modified_date = ?,  active = ?,  prospective = ?,  birthday = ?,"
             + "  school = ?,  address = ?,  zipcode = ?,  city = ?,  email = ?,  mother = ?,  mother_phone = ?,  father = ?,  father_phone = ?,"
             + "  home_phone = ?,  emergency = ?,  join_date = ?,  hear_from = ?,  password = ?,  userName = ?,  password_question_id = ?,  passwordAnswer = ? , notes = ? WHERE student_id = ?";
 
@@ -142,7 +142,7 @@ public class StudentDBM {
          stmt.setString(2, student.getSex().toString());
          stmt.setString(3, student.getFirstName());
          stmt.setString(4, student.getLastName());
-         stmt.setDate(5, student.getCreateDate());
+         stmt.setDate(5, student.getModifiedDate());
          stmt.setBoolean(6, student.isActive());
          stmt.setBoolean(7, student.isProspective());
          stmt.setDate(8, student.getBirthday());
@@ -178,38 +178,18 @@ public class StudentDBM {
       System.out.println(s.getAge());
    }
 
-   private static Student getSampleStudent() throws DatabaseException {
+   public static void modifyStudentStatus(int studentID, boolean newStatus) throws DatabaseException {
+      try {
+         String update = "UPDATE student SET active = ? WHERE student_id = ?";
+         PreparedStatement stmt = DatabaseManager.getPreparedStatement(update);
+         stmt.setBoolean(1, newStatus);
+         stmt.setInt(2, studentID);
 
-      Student s = new Student();
-      s.setStudent_id(1);
-      s.setCreated_by(UserDBM.getUserByID(4));
-      s.setSex(Sex.GIRL);
-      s.setFirstName("Sam");
-      s.setLastName("Zhang");
-      s.setCreateDate(new Date(70, 1, 1));
-      s.setActive(true);
-      s.setProspective(true);
-      s.setBirthday(new Date(70, 1, 1));
-      s.setSchool("Centennial");
-      s.setAddress("123 ontario str");
-      s.setZipcode("V2D2S3");
-      s.setCity("Coquitlam");
-      s.setEmail("s@a.com");
-      s.setMother("Jane");
-      s.setMotherPhone("403-433-3242");
-      s.setFather("Frank");
-      s.setFatherPhone("123-123-1232");
-      s.setHomePhone("123-321-2322");
-      s.setEmergency("123-321-2322");
-      s.setJoinDate(new Date(70, 1, 1));
-      s.setHearFrom("Newpaper");
-      s.setPassword("sam");
-      s.setUserName("sam");
-      PasswordQuestion p = new PasswordQuestion();
-      p.setPassword_qestion_id(2);
-
-      s.setPasswordQuestion(p);
-      s.setPasswordAnswer("same");
-      return s;
+         DatabaseManager.executeUpdate(stmt);
+      } catch (SQLException ex) {
+         throw new DatabaseException(ex.getMessage());
+      }
    }
+
+   
 }

@@ -148,10 +148,7 @@ public class DatabaseManager {
       }
    }
 
-   public static void databaseRestore(String path)
-   {
-      
-   }
+   
    public static void databaseBackup(String path) throws DatabaseException
    {
       Properties dbProperties = new Properties();
@@ -168,6 +165,24 @@ public class DatabaseManager {
       String password = dbProperties.getProperty("password");
       String mySQLdump = dbProperties.getProperty("mysql_dump");
       if (!DatabaseManager.backupDB(mySQLdump, database, host, port, userName, password, path))
+         throw new DatabaseException("Can't create backup.");
+   }
+   
+   public static void databaseRestore(String path) throws DatabaseException
+   {
+      Properties dbProperties = new Properties();
+      try {
+         dbProperties = DatabaseConfig.getConfig();
+      } catch (IOException ex) {
+         ex.printStackTrace();
+      }
+
+
+      String database = dbProperties.getProperty("database");
+      String userName = dbProperties.getProperty("username");
+      String password = dbProperties.getProperty("password");
+      String mySQL = dbProperties.getProperty("mysql");
+      if (!DatabaseManager.restoreDB(mySQL, database, userName, password, path))
          throw new DatabaseException("Can't create backup.");
    }
    private static boolean backupDB(String mySQLdump,String dbName, String host, String port, String dbUserName, String dbPassword, String path) throws DatabaseException {
@@ -192,9 +207,9 @@ public class DatabaseManager {
       return false;
    }
    
-   public static boolean restoreDB(String dbName, String dbUserName, String dbPassword, String source) {
+   public static boolean restoreDB(String mysql, String dbName, String dbUserName, String dbPassword, String source) throws DatabaseException {
 
-        String[] executeCmd = new String[]{"mysql", "--user=" + dbUserName, "--password=" + dbPassword, dbName,"-e", "source "+source};
+        String[] executeCmd = new String[]{mysql, " --user=" + dbUserName, " --password=" + dbPassword, dbName," -e", " source "+source};
 
         Process runtimeProcess;
         try {
@@ -208,16 +223,35 @@ public class DatabaseManager {
             } else {
                 System.out.println("Could not restore the backup");
             }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+        } catch (IOException | InterruptedException ex) {
+         ex.printStackTrace();
+         throw new DatabaseException(ex.getMessage());
+      }
 
         return false;
     }
 
-   public static void main(String args[]) throws DatabaseException
+   public static void main(String args[]) 
    {
-      databaseBackup("\"C:/table.sql\"");
+
+      Properties dbProperties = new Properties();
+      try {
+         dbProperties = DatabaseConfig.getConfig();
+      } catch (IOException ex) {
+         ex.printStackTrace();
+      }
+
+
+      String userName = dbProperties.getProperty("username");
+      String password = dbProperties.getProperty("password");
+      String mySQL = dbProperties.getProperty("mysql");
+      try {
+         DatabaseManager.restoreDB(mySQL, "new_database", userName, password, "\"C:/table.sql\"");
+      } catch (DatabaseException ex) {
+         Logger.getLogger(DatabaseManager.class.getName()).log(Level.SEVERE, null, ex);
+      }
+       
+      
    }
    
    

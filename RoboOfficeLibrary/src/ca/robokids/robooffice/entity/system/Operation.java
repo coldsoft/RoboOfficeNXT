@@ -21,6 +21,7 @@ public enum Operation {
    USER_GROUP_SETTING("Usergroup settings"),
    FORGOTPASSWORD("Forgot password"),
    NEW_STUDENT("New Student Registration"),
+   STUDENT("Student infomation and records"),
    UNKNOWN("");
    
    private String value;

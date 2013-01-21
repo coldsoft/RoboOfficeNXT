@@ -23,8 +23,14 @@ import java.util.logging.Logger;
  *
  * @author Coldsoft
  */
+
+
 public class SchoolManager {
 
+   private static List<ProgressReportType> reportTypes;
+   private static List<Course> courses;
+   private static List<Membership> memberships;
+      
    public static List<Classroom> loadAllClassroom() throws DatabaseException {
       return SchoolDBM.getAllClassroom();
    }
@@ -91,15 +97,30 @@ public class SchoolManager {
 
    public static List<ProgressReportType> loadAllProgressReportType() throws DatabaseException {
 
-      List<ProgressReportType> reportTypes = SchoolDBM.getAllProgressReportType();
+      if (reportTypes == null) {
+         reloadAllProgressReportType();
+      }
       return reportTypes;
 
    }
 
+   public static void reloadAllProgressReportType() throws DatabaseException
+   {
+      System.out.println("reload All ProgressReportType");
+      reportTypes = SchoolDBM.getAllProgressReportType();
+   }
+   
    public static void deleteProgressReportType(ProgressReportType t) throws DatabaseException {
 
       SchoolDBM.deleteProgressReportType(t.getReport_type_id());
 
+      for (ProgressReportType old : reportTypes)
+      {
+         if (old.getReport_type_id()==t.getReport_type_id())
+         {
+            reportTypes.remove(old);
+         }
+      }
       //Event Logging
       String details = " deleted progress report type:  " + t.getName();
       SystemLog.createEventLog(Operation.COURSE_SETTING, details);
@@ -110,6 +131,14 @@ public class SchoolManager {
       CheckFields.checkProgressReportType(t);
       SchoolDBM.modifyProgressReportType(t);
 
+      for (ProgressReportType old : reportTypes)
+      {
+         if (old.getReport_type_id()==t.getReport_type_id())
+         {
+            reportTypes.set(reportTypes.indexOf(old),t);
+         }
+      }
+      
       //Event Logging
       String details = " modified progress report type:  " + t.getName();
       SystemLog.createEventLog(Operation.COURSE_SETTING, details);
@@ -195,11 +224,27 @@ public class SchoolManager {
    }
 
    public static List<Course> loadAllCourses() throws DatabaseException {
-      return SchoolDBM.getAllCoursesByClassroom(null);
+      if (courses == null)
+         reloadAllCourses();
+      return courses;
+   }
+   
+   public static void reloadAllCourses() throws DatabaseException
+   {
+      System.out.println("reload All Courses");
+      courses = SchoolDBM.getAllCoursesByClassroom(null);
    }
 
    public static boolean deleteCourse(Course course) throws DatabaseException {
       if (SchoolDBM.deleteCourse(course.getId())) {
+         
+         for (Course old : courses)
+      {
+         if (old.getId()==course.getId())
+         {
+            courses.remove(old);
+         }
+      }
          //Event Logging
          String details = "deleted " + course.toString();
          SystemLog.createEventLog(Operation.COURSE_SETTING, details);
@@ -211,6 +256,14 @@ public class SchoolManager {
    public static void modifyCourse(Course course) throws DatabaseException, BadFieldException {
       CheckFields.checkCourse(course);
       SchoolDBM.modifyCourse(course);
+      
+      for (Course old : courses)
+      {
+         if (old.getId()==course.getId())
+         {
+            courses.set(courses.indexOf(old), course);
+         }
+      }
       //Event Logging
       String details = "modified " + course.toString();
       SystemLog.createEventLog(Operation.COURSE_SETTING, details);
@@ -223,6 +276,8 @@ public class SchoolManager {
       CheckFields.checkCourse(newCourse);
       int newID = SchoolDBM.createCourse(newCourse);
       newCourse.setId(newID);
+      
+      courses.add(newCourse);
       //Event Logging
       String details = "added " + newCourse.toString();
       SystemLog.createEventLog(Operation.COURSE_SETTING, details);
@@ -235,7 +290,9 @@ public class SchoolManager {
       }
       CheckFields.checkMembership(newMembership);
       int newID = SchoolDBM.createMembership(newMembership);
-
+      newMembership.setId(newID);
+      
+      memberships.add(newMembership);
       //Event Logging
       String details = "added " + newMembership.toString();
       SystemLog.createEventLog(Operation.MEMBERSHIP_SETTING, details);
@@ -248,6 +305,14 @@ public class SchoolManager {
       CheckFields.checkMembership(newMembership);
       SchoolDBM.modifyMembership(newMembership);
 
+      for (Membership old : memberships)
+      {
+         if (old.getId()==newMembership.getId())
+         {
+            memberships.set(memberships.indexOf(old), newMembership);
+         }
+      }
+      
       String details = "modified " + newMembership.toString();
       SystemLog.createEventLog(Operation.MEMBERSHIP_SETTING, details);
 
@@ -258,6 +323,14 @@ public class SchoolManager {
 
 
       if (SchoolDBM.deleteMembership(membership.getId())) {
+         
+         for (Membership old : memberships)
+      {
+         if (old.getId()==membership.getId())
+         {
+            memberships.remove(old);
+         }
+      }
          //Event Logging
          String details = "deleted " + membership.toString();
          SystemLog.createEventLog(Operation.MEMBERSHIP_SETTING, details);
@@ -267,7 +340,14 @@ public class SchoolManager {
    }
 
    public static List<Membership> loadAllMemberships() throws DatabaseException {
-      return SchoolDBM.getAllMembershipsByClassroom(null);
+      if (memberships == null)
+         reloadAllMemberships();
+      return memberships;
+   }
+   public static void reloadAllMemberships() throws DatabaseException
+   {
+      System.out.println("reload All Memberships");
+      memberships = SchoolDBM.getAllMembershipsByClassroom(null);
    }
 
    public static List<Project> loadAllMembershipProject(Membership membership) throws DatabaseException {

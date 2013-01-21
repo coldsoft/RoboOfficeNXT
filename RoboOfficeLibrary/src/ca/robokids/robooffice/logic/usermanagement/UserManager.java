@@ -23,11 +23,18 @@ import java.util.List;
  */
 public class UserManager {
    
+   public static String[] CITIES = {"Richmond", "Vancouver", "West Vancouver", "North Vancouver", "Burnaby", "Coquitlam", "Port Coquitlam", "Delta", "Surrey", "Port Moody", "Langley"};
+
+   private static List<User> users;
+   private static List<UserGroup> usergroups;
+   private static List<Action> actions;
+   
    public static void createUser(User user) throws BadFieldException, DatabaseException
    {
-      CheckFields.checkUser(user);      
+      CheckFields.checkUser(user);
       user.setUser_id(UserDBM.createUser(user));
       
+      users.add(user);
       //Event Logging
       String details = "New user  " + user.toString() + " created.";
       SystemLog.createUserLog(Operation.USER_SETTING, details, user.getUser_id());
@@ -37,6 +44,14 @@ public class UserManager {
    {
       CheckFields.checkUser(user);
       UserDBM.modifyUser(user);
+      //Modify the copy in application 
+      for (User old : users)
+      {
+         if (old.getUser_id() == user.getUser_id())
+         {
+            users.set(users.indexOf(old),user);
+         }
+      }
       //Event Logging
       String details = "User " + user.toString() + " was modified";
       SystemLog.createUserLog(Operation.USER_SETTING, details, user.getUser_id());
@@ -48,6 +63,14 @@ public class UserManager {
          throw new DoesNotExistException("Error: User not found in database; user ID " + user.getUser_id()+ " no match.");
       
       UserDBM.deleteUser(user.getUser_id());
+      //Delete the copy in application
+      for (User old : users)
+      {
+         if (old.getUser_id() == user.getUser_id())
+         {
+            users.remove(old);
+         }
+      }
       //Event Logging
       String details = "Deleted user " + user.toString();
       SystemLog.createUserLog(Operation.USER_SETTING, details, user.getUser_id());
@@ -57,10 +80,12 @@ public class UserManager {
    {
       CheckFields.checkGroup(group);
       
-      UserDBM.createUserGroup(group);
+      group.setGroup_id(UserDBM.createUserGroup(group));
+      
+      usergroups.add(group);
       
       //Event Logging
-      String details = "New Usergroup " + group.getGroupName() + "was created.";
+      String details = "New Usergroup " + group.getGroupName() + " was created.";
       SystemLog.createUserLog(Operation.USER_GROUP_SETTING, details, group.getGroup_id());
    }
    
@@ -72,6 +97,11 @@ public class UserManager {
       
       UserDBM.deleteGroup(group.getGroup_id());
       
+      for(UserGroup old : usergroups)
+      {
+         if (old.getGroup_id() == group.getGroup_id())
+            usergroups.remove(old);
+      }
       //Event Logging
       String details = "Deleted usergroup " + group.getGroupName() + "";
       SystemLog.createUserLog(Operation.USER_GROUP_SETTING, details, group.getGroup_id());
@@ -80,6 +110,12 @@ public class UserManager {
    {
       CheckFields.checkGroup(group);
       UserDBM.modifyGroup(group);
+      
+      for(UserGroup old : usergroups)
+      {
+         if (old.getGroup_id() == group.getGroup_id())
+            usergroups.set(usergroups.indexOf(old),group);
+      }
       //Event Logging
       String details = "Modified Usergroup " + group.getGroupName();
       SystemLog.createUserLog(Operation.USER_GROUP_SETTING, details, group.getGroup_id());
@@ -89,7 +125,9 @@ public class UserManager {
    
    public static List<User> loadAllUsers() throws DatabaseException
    {
-      return UserDBM.getAllUsers(-1);
+      if (users == null)
+         reloadAllUsers();
+      return users;
    }
    public static List<User> loadAllUsersOfGroup(int groupID) throws DatabaseException
    {
@@ -98,7 +136,9 @@ public class UserManager {
    
    public static List<UserGroup> loadAllUserGroup() throws DatabaseException
    {
-      return UserDBM.getAllUserGroups(-1);
+      if (usergroups == null)
+         reloadAllUsergroup();
+      return usergroups;
    }
    
    
@@ -109,7 +149,9 @@ public class UserManager {
    
    public static List<Action> loadAllActions() throws DatabaseException
    {
-      return UserDBM.getAllActions(-1);
+      if (actions == null) 
+         reloadAllActions();
+      return actions;
    }
    
    public static List<Action> loadAllActionsOfGroup(int groupID) throws DatabaseException 
@@ -121,7 +163,20 @@ public class UserManager {
    {
       return UserDBM.getAllPasswordQuestion();
    }
-   
-   
-   
+
+   public static void reloadAllUsers() throws DatabaseException
+   {
+      System.out.println("reload All Users");
+      users = UserDBM.getAllUsers(-1);
+   }
+
+   public static void reloadAllUsergroup() throws DatabaseException {
+      System.out.println("reload All usergroup");
+      usergroups = UserDBM.getAllUserGroups(-1);   
+   }
+   public static void reloadAllActions() throws DatabaseException
+   {
+      System.out.println("reload All actions");
+      actions = UserDBM.getAllActions(-1);
+   }
 }

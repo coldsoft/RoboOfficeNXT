@@ -27,10 +27,11 @@ public class SystemLog {
                                              String affecting_lastName,
                                              String performing_firstName,
                                              String performing_lastName,
+                                             String detail,
                                              Timestamp rangeStart, 
                                              Timestamp rangeEnd) throws DatabaseException
    {
-      return SystemDBM.getAllLogs(operation, affecting_firstName, affecting_lastName, performing_firstName, performing_lastName, rangeStart, rangeEnd);
+      return SystemDBM.getAllLogs(operation, affecting_firstName, affecting_lastName, performing_firstName, performing_lastName, detail, rangeStart, rangeEnd);
    }
    
    public static void createEventLog(Operation operation,
@@ -69,9 +70,11 @@ public class SystemLog {
          Logger.getLogger(SystemLog.class.getName()).log(Level.SEVERE, null, ex);
       }
    }
+   
+   
 
    
-   private static void createLog(
+   public static void createLog(
       boolean affecting_student,
       int performing_user_id,
       Operation operation,

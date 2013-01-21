@@ -216,7 +216,7 @@ public class UserDBM {
     * @param group
     * @throws DatabaseException
     */
-   public static void createUserGroup(UserGroup group) throws DatabaseException {
+   public static int createUserGroup(UserGroup group) throws DatabaseException {
       List<Action> actions = group.getActions();
       //create a new group row in table user_group
       PreparedStatement stmt = insertUserGroup(group);
@@ -226,6 +226,7 @@ public class UserDBM {
       for (Action a : actions) {
          createGroupActionMapping(newGroupID,a.getAction_id());
       }
+      return newGroupID;
    }
    
    

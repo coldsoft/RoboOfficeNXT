@@ -16,6 +16,7 @@ import ca.robokids.robooffice.entity.user.Action;
 import ca.robokids.robooffice.entity.user.User;
 import ca.robokids.robooffice.entity.user.UserGroup;
 import ca.robokids.robooffice.logic.system.SystemLog;
+import ca.robokids.robooffice.logic.system.SystemManager;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.logging.Level;
@@ -39,24 +40,31 @@ public class UserActivity {
          throw new BadPasswordException("Password incorrect, please try again.");
       }
        //Event Logging
-      String details = "log off.";
-      SystemLog.createEventLog(Operation.LOGIN, details);
-
+      String details = "log in.";
       loginUser = user;
+      SystemLog.createEventLog(Operation.LOGIN, details);
+      
+      
       return user;
 
    }
 
-   public static boolean hasPrivilege(String action) throws DatabaseException {
+   
+   public static boolean loginUserHasPrivilege(String action) {
+      if (loginUser == null) {
+         return false;
+      }
       if (loginUser.getUserName().equals("root")) {
          return true;
       }
-      List<Action> actions = UserDBM.getAllActions(-1);
-      if (!contains(actions, action)) {
-         return true;
+      List<Action> actions = null;
+      try {
+         actions = UserManager.loadAllActions();
+      } catch (DatabaseException ex) {
+         Logger.getLogger(UserActivity.class.getName()).log(Level.SEVERE, null, ex);
       }
-
-      if (loginUser == null) {
+      if (!contains(actions, action)) {
+         System.out.println("Action: " + action + " unknown");
          return true;
       }
 
@@ -119,12 +127,12 @@ public class UserActivity {
       if (user == null) {
          throw new BadUsernameException("User name not found.");
       }
-
+     
+      loginUser = user;
+      
        //Event Logging
       String details = "clicked forgot password.";
       SystemLog.createEventLog(Operation.FORGOTPASSWORD, details);
-
-      loginUser = user;
       return user;
    }
 }
