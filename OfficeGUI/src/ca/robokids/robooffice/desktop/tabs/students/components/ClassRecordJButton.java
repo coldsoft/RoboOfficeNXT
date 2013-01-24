@@ -6,7 +6,7 @@ package ca.robokids.robooffice.desktop.tabs.students.components;
 
 import ca.robokids.robooffice.desktop.loaders.FontsLoader;
 import ca.robokids.robooffice.entity.student.ClassRecord;
-import ca.robokids.robooffice.logic.student.ProgressManager;
+import ca.robokids.robooffice.logic.student.StudentProgressManager;
 import java.awt.Color;
 import java.text.SimpleDateFormat;
 import javax.swing.JMenuItem;
@@ -40,7 +40,7 @@ public class ClassRecordJButton extends javax.swing.JButton {
       setToolTipText(getTooltipText());
       initPopup();
       this.setOpaque(true);
-      this.setBackground(ProgressManager.getClassRecordColor(classRecord));
+      this.setBackground(StudentProgressManager.getClassRecordColor(classRecord));
    }
    public ClassRecord getClassRecord()
    {

@@ -11,23 +11,42 @@ import java.sql.Date;
  *
  * @author Coldsoft
  */
-public class Progress {
+public abstract class Progress {
    
    private int progressID;
    private Student student;
    private Date startDate;
    private Date endDate;
-   private PaymentRecord record;
-   private boolean action;
+   private int payment_record_id;
+   private boolean active;
+   private int modifiedBy;
+   private Date modifiedDate;
 
-   public boolean isAction() {
-      return action;
+   public boolean isActive() {
+      return active;
    }
 
-   public void setAction(boolean action) {
-      this.action = action;
+   public void setActive(boolean active) {
+      this.active = active;
    }
 
+   public int getModifiedBy() {
+      return modifiedBy;
+   }
+
+   public void setModifiedBy(int modifiedBy) {
+      this.modifiedBy = modifiedBy;
+   }
+
+   public Date getModifiedDate() {
+      return modifiedDate;
+   }
+
+   public void setModifiedDate(Date modifiedDate) {
+      this.modifiedDate = modifiedDate;
+   }
+
+   
    public Date getEndDate() {
       return endDate;
    }
@@ -44,13 +63,16 @@ public class Progress {
       this.progressID = progressID;
    }
 
-   public PaymentRecord getRecord() {
-      return record;
+   public int getPayment_record_id() {
+      return payment_record_id;
    }
 
-   public void setRecord(PaymentRecord record) {
-      this.record = record;
+   public void setPayment_record_id(int payment_record_id) {
+      this.payment_record_id = payment_record_id;
    }
+
+
+   
 
    public Date getStartDate() {
       return startDate;

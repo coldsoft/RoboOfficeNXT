@@ -9,7 +9,7 @@ import ca.robokids.robooffice.db.studentmanagement.StudentDBM;
 import ca.robokids.robooffice.desktop.loaders.FontsLoader;
 import ca.robokids.robooffice.desktop.main.TabManager;
 import ca.robokids.robooffice.desktop.tabs.Tab;
-import ca.robokids.robooffice.desktop.tabs.students.components.CurrentProgressPanel;
+import ca.robokids.robooffice.desktop.tabs.students.components.ActiveProgressesPanel;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JPanel;
@@ -23,7 +23,7 @@ public class StudentTab extends javax.swing.JPanel implements Tab{
    /**
     * Creates new form StudentTab
     */
-   CurrentProgressPanel currentProgress = new CurrentProgressPanel(this);
+   ActiveProgressesPanel currentProgress = new ActiveProgressesPanel(this);
    public StudentTab() {
       initComponents();
       try {

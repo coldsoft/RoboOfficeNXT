@@ -28,6 +28,7 @@ public class TabManager implements ActionListener {
 
    public static void setContainer(JYTabbedPane container) {
       TabManager.container = container;
+      
 
    }
 
@@ -84,7 +85,8 @@ public class TabManager implements ActionListener {
 
 
       } catch (ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
-         Logger.getLogger(TabManager.class.getName()).log(Level.SEVERE, null, ex);
+         Thread.currentThread().interrupt();
+         
       }
 
 

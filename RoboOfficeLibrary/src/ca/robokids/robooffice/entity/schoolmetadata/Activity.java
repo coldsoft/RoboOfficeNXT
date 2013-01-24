@@ -36,6 +36,9 @@ public class Activity {
       return timeslots;
    }
 
+
+   
+   
    public void setTimeslots(List<Timeslot> timeslots) {
       this.timeslots = timeslots;
    }

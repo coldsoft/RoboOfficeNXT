@@ -183,7 +183,12 @@ public class CheckFields {
       if (Operation.UNKNOWN == log.getOperation())
          throw new BadFieldException("Log operation unknown.");
    }
-   
+
+
+   public static String sanitizeFilename(String name) {
+    return name.replaceAll("[:\\\\/*?|<>]", "_");
+  }
+
  
 
 

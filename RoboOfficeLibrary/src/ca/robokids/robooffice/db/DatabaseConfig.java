@@ -73,5 +73,22 @@ public class DatabaseConfig {
    {
       return getConfig().getProperty("password");     
    }
-   
+   public static int getRefreshInterval() throws IOException
+   {
+      return Integer.valueOf(getConfig().getProperty("refreshInterval"));
+   }
+   public static void setRefreshInterval(int interval, String comment) throws IOException
+   {
+      getConfig().setProperty("refreshInterval", String.valueOf(interval));
+      saveConfig(comment);
+   }
+
+   public static String getBackupLocation() throws IOException {
+      return getConfig().getProperty("defaultBackupLocation"); 
+   }
+   public static void setBackupLocation(String location,String comment) throws IOException
+   {
+      getConfig().setProperty("defaultBackupLocation", String.valueOf(location));
+      saveConfig(comment);
+   }
 }

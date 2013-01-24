@@ -21,79 +21,77 @@ import java.util.logging.Logger;
  * @author Coldsoft
  */
 public class SystemManager {
-   
+
    private static final String DEFAULT_BACKUP_LOCATION = "C:";
    private static final String DEFAULT_BACKUP_FILENAME = "RoboOffice_backup.sql";
-   
-  
-   
-   public static void startup()
-   {
+
+   public static void startup() {
       testDatabaseConnectivity();
-      
+
       startPeriodicalReloadingThread();
-   } 
-   
-   private static void testDatabaseConnectivity()
-   {
-      
-   }
-   public static String backupDatabase(String backupFilePath) throws DatabaseException
-   {
-      if (backupFilePath == null)
-      {
-         backupFilePath = getDefaultBackupLocation();
-      }
-      
-      String filename = getBackupFilename();
-      
-      DatabaseManager.databaseBackup("\""+ backupFilePath + "\\"+ filename + "\"");
-      return backupFilePath + "\\"+ filename;
    }
 
-   private static String getBackupFilename()
-   {
+   private static void testDatabaseConnectivity() {
+   }
+
+   public static String backupDatabase(String backupFilePath) throws DatabaseException {
+
+         if (backupFilePath == null) {
+            backupFilePath = getDefaultBackupLocation();
+         } 
+   
+      String filename = getBackupFilename();
+      DatabaseManager.databaseBackup("\"" + backupFilePath + "\\" + filename + "\"");
+      try {
+         DatabaseConfig.setBackupLocation(backupFilePath, "BackupLocation updated");
+      } catch (IOException ex) {
+         Logger.getLogger(SystemManager.class.getName()).log(Level.SEVERE, null, ex);
+      }
+      return backupFilePath + "\\" + filename;
+   }
+
+   private static String getBackupFilename() {
       long time = System.currentTimeMillis();
       Date date = new Date(time);
       SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MMM-dd-hh-mm-ss");
-      
-      return  sdf.format(date) + "-"+DEFAULT_BACKUP_FILENAME;
-   }
-   public static String getDefaultBackupLocation()
-   {
-      Properties dbProperties = new Properties();
-      try {
-         dbProperties = DatabaseConfig.getConfig();
-         return  dbProperties.getProperty("defaultBackupLocation");
-      } catch (IOException ex) {
-         ex.printStackTrace();
-      }
-      return DEFAULT_BACKUP_LOCATION;
+
+      return sdf.format(date) + "-" + DEFAULT_BACKUP_FILENAME;
    }
 
+   public static String getDefaultBackupLocation() {
+      try {
+         return DatabaseConfig.getBackupLocation();
+      } catch (IOException ex) {
+         Logger.getLogger(SystemManager.class.getName()).log(Level.SEVERE, null, ex);
+         return DEFAULT_BACKUP_LOCATION;
+      }
+   }
+   
    private static void startPeriodicalReloadingThread() {
-      Thread t = new Thread () {
+      Thread t = new Thread() {
+
          @Override
-         public void run()
-         {
-            while(true){
+         public void run() {
+            while (true) {
                try {
-                  Thread.sleep(5000);
+
                   UserManager.reloadAllUsers();
                   UserManager.reloadAllUsergroup();
                   UserManager.reloadAllActions();
                   SchoolManager.reloadAllCourses();
                   SchoolManager.reloadAllMemberships();
                   SchoolManager.reloadAllProgressReportType();
-               } catch (InterruptedException | DatabaseException ex) {
+                  Thread.sleep(DatabaseConfig.getRefreshInterval() * 1000);
+               } catch (InterruptedException | DatabaseException | IOException ex) {
                   Logger.getLogger(SystemManager.class.getName()).log(Level.SEVERE, null, ex);
                }
-            
+
             }
          }
       };
-      
+
       t.start();
    }
+
    
 }

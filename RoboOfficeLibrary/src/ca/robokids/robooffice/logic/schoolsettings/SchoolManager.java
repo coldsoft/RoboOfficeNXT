@@ -177,13 +177,21 @@ public class SchoolManager {
       //create a new mapping using the timeslot
       SchoolDBM.createMembershipSection(membership.getId(), newTime.getTimeslot_id());
 
+      //remove local copy timeslot
+      for (Membership c : memberships)
+      {
+         if (c.getId() == membership.getId()) {
+            c.getTimeslots().add(newTime);
+         }
+      }
+      
       //Event Logging
       String details = "added " + newTime.toString() + " to " + membership.toString();
       SystemLog.createEventLog(Operation.MEMBERSHIP_SETTING, details);
 
    }
 
-   ;
+   
    public static void addCourseSection(Course course, DayOfWeek day, Time start) throws DuplicateNameException, DatabaseException {
       Timeslot newTime = new Timeslot();
       newTime.setDayOfWeek(day);
@@ -200,6 +208,13 @@ public class SchoolManager {
       //create a new mapping using the timeslot
       SchoolDBM.createCourseSection(course.getId(), newTime.getTimeslot_id());
 
+      //add timeslot to current local copy of courses
+      for (Course c : courses)
+      {
+         if (course.getId() == c.getId()) {
+            c.getTimeslots().add(newTime);
+         }
+      }
       //Event Logging
       String details = "added " + newTime.toString() + " to " + course.toString();
       SystemLog.createEventLog(Operation.COURSE_SETTING, details);
@@ -209,6 +224,13 @@ public class SchoolManager {
    public static void deleteMembershipSection(Membership membership, Timeslot timeslot) throws DatabaseException {
       SchoolDBM.deleteMembershipSection(membership.getId(), timeslot.getTimeslot_id());
 
+      //remove local copy timeslot
+      for (Membership c : memberships)
+      {
+         if (c.getId() == membership.getId()) {
+            c.getTimeslots().remove(timeslot);
+         }
+      }
       //Event Logging
       String details = "deleted" + timeslot.toString() + " from " + membership.toString();
       SystemLog.createEventLog(Operation.MEMBERSHIP_SETTING, details);
@@ -218,6 +240,12 @@ public class SchoolManager {
    public static void deleteCourseSection(Course course, Timeslot timeslot) throws DatabaseException {
       SchoolDBM.deleteCourseSection(course.getId(), timeslot.getTimeslot_id());
 
+      //remove local copy timeslot
+      for (Course c : courses)
+      {
+         if (c.getId() == course.getId())
+            c.getTimeslots().remove(timeslot);
+      }
       //Event Logging
       String details = "deleted " + timeslot.toString() + " from " + course.toString();
       SystemLog.createEventLog(Operation.COURSE_SETTING, details);

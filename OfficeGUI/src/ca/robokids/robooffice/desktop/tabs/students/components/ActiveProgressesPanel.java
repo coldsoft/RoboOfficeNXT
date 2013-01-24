@@ -13,15 +13,15 @@ import ca.robokids.robooffice.entity.student.Student;
  *
  * @author Coldsoft
  */
-public class CurrentProgressPanel extends javax.swing.JPanel {
+public class ActiveProgressesPanel extends javax.swing.JPanel {
 
    /**
-    * Creates new form CurrentProgressPanel
+    * Creates new form ActiveProgressesPanel
     */
    StudentInfoPanel studentInfo;
    Student student;
    StudentTab parent;
-   public CurrentProgressPanel(StudentTab parent) {
+   public ActiveProgressesPanel(StudentTab parent) {
       initComponents();
       this.parent = parent;
       studentInfo = new StudentInfoPanel(this);
@@ -37,6 +37,7 @@ public class CurrentProgressPanel extends javax.swing.JPanel {
    public void setStudent(Student student) {
       this.student = student;
       studentInfo.setStudent(student);
+      loadProgressTabs();
    }
 
    
@@ -66,33 +67,33 @@ public class CurrentProgressPanel extends javax.swing.JPanel {
         pnlStudent = new javax.swing.JPanel();
         studentRecordPanel = new javax.swing.JPanel();
         progressTabbedPane = new javax.swing.JTabbedPane();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        btnMakePayment = new javax.swing.JButton();
+        btnAbsent = new javax.swing.JButton();
 
         pnlStudent.setLayout(new javax.swing.BoxLayout(pnlStudent, javax.swing.BoxLayout.LINE_AXIS));
 
-        jButton1.setFont(FontsLoader.getButtonFont());
-        jButton1.setText("Make Payment");
+        btnMakePayment.setFont(FontsLoader.getButtonFont());
+        btnMakePayment.setText("Make Payment");
 
-        jButton2.setFont(FontsLoader.getButtonFont());
-        jButton2.setText("Call-in Absent");
+        btnAbsent.setFont(FontsLoader.getButtonFont());
+        btnAbsent.setText("Call-in Absent");
 
         javax.swing.GroupLayout studentRecordPanelLayout = new javax.swing.GroupLayout(studentRecordPanel);
         studentRecordPanel.setLayout(studentRecordPanelLayout);
         studentRecordPanelLayout.setHorizontalGroup(
             studentRecordPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(studentRecordPanelLayout.createSequentialGroup()
-                .addComponent(jButton1)
+                .addComponent(btnMakePayment)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 367, Short.MAX_VALUE)
-                .addComponent(jButton2))
+                .addComponent(btnAbsent))
             .addComponent(progressTabbedPane)
         );
         studentRecordPanelLayout.setVerticalGroup(
             studentRecordPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, studentRecordPanelLayout.createSequentialGroup()
                 .addGroup(studentRecordPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2))
+                    .addComponent(btnMakePayment)
+                    .addComponent(btnAbsent))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(progressTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 450, Short.MAX_VALUE))
         );
@@ -120,10 +121,14 @@ public class CurrentProgressPanel extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JButton btnAbsent;
+    private javax.swing.JButton btnMakePayment;
     private javax.swing.JPanel pnlStudent;
     private javax.swing.JTabbedPane progressTabbedPane;
     private javax.swing.JPanel studentRecordPanel;
     // End of variables declaration//GEN-END:variables
+
+   private void loadProgressTabs() {
+         
+   }
 }

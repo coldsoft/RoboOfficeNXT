@@ -23,6 +23,7 @@ public class Student {
    private String firstName;
    private String lastName;
    private boolean deleted;
+   private int modifiedBy;
    private Date modifiedDate;
    private boolean active = true;
    private boolean prospective;
@@ -101,6 +102,15 @@ public class Student {
       this.modifiedDate = createDate;
    }
 
+   public int getModifiedBy() {
+      return modifiedBy;
+   }
+
+   public void setModifiedBy(int modifiedBy) {
+      this.modifiedBy = modifiedBy;
+   }
+
+   
    public User getCreated_by() {
       return created_by;
    }

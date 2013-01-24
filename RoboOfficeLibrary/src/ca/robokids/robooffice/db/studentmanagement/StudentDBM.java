@@ -10,9 +10,12 @@ import ca.robokids.robooffice.db.usermanagement.UserDBM;
 import ca.robokids.robooffice.entity.student.Sex;
 import ca.robokids.robooffice.entity.student.Student;
 import ca.robokids.robooffice.entity.user.PasswordQuestion;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.sql.rowset.CachedRowSet;
 
 /**
@@ -21,6 +24,26 @@ import javax.sql.rowset.CachedRowSet;
  */
 public class StudentDBM {
 
+   public static List<Student> getAllStudentByStatus(boolean prospective, boolean active) throws DatabaseException
+   {
+      try {
+         List<Student> list = new ArrayList();
+         PreparedStatement stmt;
+         String select = "select student_id FROM student WHERE prospective = ? AND active = ? AND deleted = 0";
+         stmt = DatabaseManager.getPreparedStatement(select);
+         
+         CachedRowSet crs = DatabaseManager.executeQuery(stmt);
+         while(crs.next())
+         {
+            list.add(getStudentByID(crs.getInt("student_id")));
+         }
+         return list;
+      } catch (SQLException ex) {
+         throw new DatabaseException(ex.getMessage());
+      }
+      
+      
+   }
    public static Student getStudentByID(int studentID) throws DatabaseException {
       try {
          Student s = null;
@@ -60,6 +83,7 @@ public class StudentDBM {
             p.setPassword_qestion_id(crs.getInt("password_question_id"));
             s.setPasswordQuestion(p);
             s.setPasswordAnswer(crs.getString("passwordAnswer"));
+            s.setModifiedDate(crs.getDate("modified_by"));
          }
          
          return s;
@@ -95,7 +119,7 @@ public class StudentDBM {
    private static PreparedStatement insertStudent(Student student) throws DatabaseException {
       try {
          String query = "INSERT INTO student(created_by,sex,first_name,last_name,modified_date,active,prospective,birthday,"
-            + "school,address,zipcode,city,email,mother,mother_phone,father,father_phone,home_phone,emergency,join_date,hear_from,password,userName,password_question_id,passwordAnswer,notes) "
+            + "school,address,zipcode,city,email,mother,mother_phone,father,father_phone,home_phone,emergency,join_date,hear_from,password,userName,password_question_id,passwordAnswer,notes,modified_by) "
             + "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
          PreparedStatement stmt = DatabaseManager.getPreparedStatement(query);
@@ -125,6 +149,7 @@ public class StudentDBM {
          stmt.setInt(24, student.getPasswordQuestion().getPassword_qestion_id());
          stmt.setString(25, student.getPasswordAnswer());
          stmt.setString(26,student.getNotes());
+         stmt.setInt(27,student.getModifiedBy());
          return stmt;
       } catch (SQLException ex) {
          throw new DatabaseException(ex.getMessage());
@@ -135,7 +160,7 @@ public class StudentDBM {
       try {
          String update = "UPDATE student SET created_by = ?,  sex = ?,  first_name = ?,  last_name = ?,  modified_date = ?,  active = ?,  prospective = ?,  birthday = ?,"
             + "  school = ?,  address = ?,  zipcode = ?,  city = ?,  email = ?,  mother = ?,  mother_phone = ?,  father = ?,  father_phone = ?,"
-            + "  home_phone = ?,  emergency = ?,  join_date = ?,  hear_from = ?,  password = ?,  userName = ?,  password_question_id = ?,  passwordAnswer = ? , notes = ? WHERE student_id = ?";
+            + "  home_phone = ?,  emergency = ?,  join_date = ?,  hear_from = ?,  password = ?,  userName = ?,  password_question_id = ?,  passwordAnswer = ? , notes = ? , modified_by = ? WHERE student_id = ?";
 
          PreparedStatement stmt = DatabaseManager.getPreparedStatement(update);
          stmt.setInt(1, student.getCreated_by().getUser_id());
@@ -164,7 +189,8 @@ public class StudentDBM {
          stmt.setInt(24, student.getPasswordQuestion().getPassword_qestion_id());
          stmt.setString(25, student.getPasswordAnswer());
          stmt.setString(26, student.getNotes());
-         stmt.setInt(27, student.getStudent_id());
+         stmt.setInt(27,student.getModifiedBy());
+         stmt.setInt(28, student.getStudent_id());
          return stmt;
       } catch (SQLException ex) {
          throw new DatabaseException(ex.getMessage());

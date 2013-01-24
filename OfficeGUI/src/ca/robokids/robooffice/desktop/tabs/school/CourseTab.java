@@ -162,27 +162,7 @@ public class CourseTab extends javax.swing.JPanel implements Tab{
      lstCourses.clearSelection();
      btnAdd.setEnabled(false);
       coursePane.add();
-//      try {
-//         String name = PopupMessage.createInput("Enter the course name:", "Add Course");
-//         if (name == null)
-//            return;
-//         Course newCourse = getSampleCourse();
-//         newCourse.setName(name);
-//         SchoolManager.addCourse(newCourse);
-//         refresh();
-//         PopupMessage.createInfo("New course "+ name + " is added! \nPlease edit the course info right now.", "Congratulations!");
-//         for (int i = 0 ; i < courseModel.getSize(); i++)
-//         {
-//            if (courseModel.get(i).getName().equals(name)){
-//               lstCourses.setSelectedIndex(i);
-//               break;
-//            }
-//            
-//         }
-//         coursePane.setEditable(true);
-//      } catch (DatabaseException ex) {
-//         PopupMessage.createErrorPopUp(ex.getMessage(),null);
-//      }
+
    }//GEN-LAST:event_btnAddActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

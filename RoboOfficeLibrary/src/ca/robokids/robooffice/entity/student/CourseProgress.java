@@ -9,18 +9,28 @@ public class CourseProgress extends Progress {
     private CourseSection section;
     private int progress;
     private int totalClass;
-    private int availableCredit;
+    private float availableCredit;
+    private int sectionChanged;
     private int bonusClass;
-    private CourseProgress nextProgress;
+    private int nextProgressID;
 
-   public int getAvailableCredit() {
+   public float getAvailableCredit() {
       return availableCredit;
    }
 
-   public void setAvailableCredit(int availableCredit) {
+   public void setAvailableCredit(float availableCredit) {
       this.availableCredit = availableCredit;
    }
 
+   public int getSectionChanged() {
+      return sectionChanged;
+   }
+
+   public void setSectionChanged(int sectionChanged) {
+      this.sectionChanged = sectionChanged;
+   }
+
+   
    public int getBonusClass() {
       return bonusClass;
    }
@@ -29,15 +39,17 @@ public class CourseProgress extends Progress {
       this.bonusClass = bonusClass;
    }
 
-
-
-   public CourseProgress getNextProgress() {
-      return nextProgress;
+   public int getNextProgressID() {
+      return nextProgressID;
    }
 
-   public void setNextProgress(CourseProgress nextProgress) {
-      this.nextProgress = nextProgress;
+   public void setNextProgressID(int nextProgressID) {
+      this.nextProgressID = nextProgressID;
    }
+
+
+
+
 
    public int getProgress() {
       return progress;

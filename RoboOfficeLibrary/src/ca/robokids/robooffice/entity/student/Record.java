@@ -11,7 +11,7 @@ public class Record {
     private int record_id;
     private int progressID;
     private Date attendDate;
-    private User modifiedBy;
+    private int modifiedBy;
     private Date modified_Date;
 
    public Date getAttendDate() {
@@ -22,11 +22,11 @@ public class Record {
       this.attendDate = attendDate;
    }
 
-   public User getModifiedBy() {
+   public int getModifiedBy() {
       return modifiedBy;
    }
 
-   public void setModifiedBy(User modifiedBy) {
+   public void setModifiedBy(int modifiedBy) {
       this.modifiedBy = modifiedBy;
    }
 

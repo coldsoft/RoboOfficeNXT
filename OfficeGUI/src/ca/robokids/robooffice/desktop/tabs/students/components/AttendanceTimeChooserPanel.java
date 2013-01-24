@@ -9,8 +9,8 @@ import ca.robokids.robooffice.desktop.loaders.FontsLoader;
 import ca.robokids.robooffice.desktop.util.PopupMessage;
 import ca.robokids.robooffice.entity.schoolmetadata.Classroom;
 import ca.robokids.robooffice.entity.schoolmetadata.Timeslot;
-import ca.robokids.robooffice.logic.schoolsettings.SchoolManager;
 import ca.robokids.robooffice.logic.student.AttendanceManager;
+import de.javasoft.swing.JYCheckBoxList.CheckBoxSelectionModel;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -25,11 +25,12 @@ public class AttendanceTimeChooserPanel extends javax.swing.JPanel {
 
    DefaultListModel<Timeslot> timeslotsModel = new DefaultListModel();
    DefaultListModel<Classroom> classroomsModel = new DefaultListModel();
-   
+   CheckBoxSelectionModel selection;
    List<Timeslot> timeslots;
    boolean loading;
    public AttendanceTimeChooserPanel() {
       initComponents();
+      selection = lstClassroom.getCheckBoxSelectionModel();
       loadTimeslot();
    }
 
@@ -53,26 +54,28 @@ public class AttendanceTimeChooserPanel extends javax.swing.JPanel {
         setMaximumSize(new java.awt.Dimension(460, 350));
 
         calDate.setBackground(new java.awt.Color(204, 204, 255));
+        calDate.setFont(new java.awt.Font("Segoe UI Semibold", 0, 14)); // NOI18N
         calDate.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
             public void propertyChange(java.beans.PropertyChangeEvent evt) {
                 calDatePropertyChange(evt);
             }
         });
 
-        lblDate.setFont(FontsLoader.getStaticLabelFont());
+        lblDate.setFont(new java.awt.Font("Segoe UI Semibold", 0, 18)); // NOI18N
+        lblDate.setForeground(new java.awt.Color(0, 0, 255));
         lblDate.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblDate.setText("lblDate:");
 
         lstClassroom.setBackground(new java.awt.Color(255, 255, 204));
         lstClassroom.setModel(classroomsModel);
         lstClassroom.setCheckBoxSelectableByItemClick(true);
-        lstClassroom.setFont(FontsLoader.getDynamicLabelFont());
+        lstClassroom.setFont(new java.awt.Font("Segoe UI Light", 1, 18)); // NOI18N
         jScrollPane1.setViewportView(lstClassroom);
 
         jLabel2.setFont(FontsLoader.getStaticLabelFont());
         jLabel2.setText("Classrooms");
 
-        lstTimeslot.setFont(FontsLoader.getBigListFont());
+        lstTimeslot.setFont(new java.awt.Font("Monospaced", 0, 18)); // NOI18N
         lstTimeslot.setModel(timeslotsModel);
         lstTimeslot.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
             public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
@@ -91,23 +94,23 @@ public class AttendanceTimeChooserPanel extends javax.swing.JPanel {
                         .addComponent(jLabel2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                    .addComponent(calDate, javax.swing.GroupLayout.DEFAULT_SIZE, 293, Short.MAX_VALUE))
+                    .addComponent(calDate, javax.swing.GroupLayout.PREFERRED_SIZE, 459, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addComponent(lblDate, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
         layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(calDate, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(calDate, javax.swing.GroupLayout.PREFERRED_SIZE, 248, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel2)
-                        .addGap(113, 119, Short.MAX_VALUE))
+                        .addGap(113, 145, Short.MAX_VALUE))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                 .addGap(5, 5, 5)
                 .addComponent(lblDate)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -150,6 +153,28 @@ public class AttendanceTimeChooserPanel extends javax.swing.JPanel {
        return new ArrayList();
     }
 
+    public Timeslot getSelectedTimeslot()
+    {
+       int index = lstTimeslot.getSelectedIndex();
+         if (index > -1)
+         {
+            return timeslotsModel.get(index);
+         }
+         return null;
+    }
+    public List<Classroom> getClassroom()
+    {
+       List<Classroom> selected = new ArrayList();
+       
+       for ( int i = 0; i < classroomsModel.size(); i++)
+       {
+          if (selection.isSelected(i))
+             selected.add(classroomsModel.get(i));
+          
+          
+       }
+       return selected;
+    }
    private void loadTimeslot() {
       loading = true;
       Calendar c =  Calendar.getInstance();
@@ -164,8 +189,9 @@ public class AttendanceTimeChooserPanel extends javax.swing.JPanel {
          timeslots = slots;
          //tell the lstTimeslot listener, can fire propertyChange
          loading = false;
-         if (timeslotsModel.size() > 0)
+         if (timeslotsModel.size() > 0) {
             lstTimeslot.setSelectedIndex(0);
+         }
       } catch (DatabaseException ex) {
          PopupMessage.createErrorPopUp(ex.getMessage(), null);
       }
@@ -178,16 +204,18 @@ public class AttendanceTimeChooserPanel extends javax.swing.JPanel {
          System.out.println("loadClassroom " + t);
          List<Classroom> classrooms = AttendanceManager.getClassroomByTimeslot(t);
          classroomsModel.clear();
-         for (Classroom c : classrooms)
+         for (Classroom c : classrooms) {
             classroomsModel.addElement(c);
+         }
          
          //set all checkbox selected
+         
          int[] indices = new int[classroomsModel.size()];
-         for (int i=0; i < indices.length; i++)
+         for (int i=0; i < indices.length; i++) {
             indices[i] = i;
-         
-         lstClassroom.setSelectedCheckBoxIndices(indices);
-         
+         }         
+         selection.setSelectedCheckBoxIndices(indices);
+         lstClassroom.revalidate();
       } catch (DatabaseException ex) {
          PopupMessage.createErrorPopUp(ex.getMessage(), null);
       }

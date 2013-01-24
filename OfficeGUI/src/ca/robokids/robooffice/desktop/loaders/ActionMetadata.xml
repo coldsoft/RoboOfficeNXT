@@ -63,13 +63,13 @@ This xml keeps mapping between four things:
     
     <action id = "quickPrintAttendance" menuItem = "Quick Print Today">
         <tabName>Quick-Print Attendance</tabName>
-        <tabClass>student.QuickPrintAttendanceTab</tabClass>       
+        <tabClass>students.QuickPrintAttendanceTab</tabClass>       
     </action>
     
     <action id = "printAttendance" menuItem = "Print...">
        <image>printAttendance.png</image>
         <tabName>Print Attendance</tabName>
-        <tabClass>ReportLostItemTab</tabClass>       
+        <tabClass>students.PrintAttendanceTab</tabClass>       
     </action>
     
     <action id = "recordAttendance" menuItem = "Record...">

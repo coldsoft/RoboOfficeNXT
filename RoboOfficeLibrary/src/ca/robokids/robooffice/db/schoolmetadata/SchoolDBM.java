@@ -8,6 +8,7 @@ import ca.robokids.exception.DatabaseException;
 import ca.robokids.robooffice.db.DatabaseManager;
 import ca.robokids.robooffice.entity.schoolmetadata.*;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Time;
 import java.util.ArrayList;
@@ -222,7 +223,7 @@ public class SchoolDBM {
    public static void createMembershipSection(int membership_id, int timeslot_id) throws DatabaseException {
       try {
          String query;
-         if (hasMembershipSection(membership_id, timeslot_id))
+         if (hasMembershipSection(membership_id, timeslot_id) >= 0)
             query = "UPDATE membership_section SET deleted = 0 WHERE slot_id = ? AND membership_id = ?";
          else
             query = "INSERT INTO membership_section (slot_id, membership_id) VALUES (?,?)";
@@ -247,7 +248,30 @@ public class SchoolDBM {
          throw new DatabaseException("SQL Error." + ex.getMessage());
       }
    }
-   public static boolean hasMembershipSection(int membership_id, int timeslot_id) throws DatabaseException {
+   public static MembershipSection getMembershipSectionByID(int id) throws DatabaseException
+   {
+      try {
+         MembershipSection ms = null;
+         String select = "SELECT * FROM membership_section WHERE section_id = ?";
+         PreparedStatement stmt = DatabaseManager.getPreparedStatement(select);
+         stmt.setInt(1,id);
+         
+         ResultSet rs = DatabaseManager.executeQuery(stmt);
+         while(rs.next())
+         {
+            ms = new MembershipSection();
+            ms.setDeleted(rs.getBoolean("deleted"));
+            ms.setSection_id(id);
+            ms.setMembership(getMembershipByID(rs.getInt("membership_id")));
+            ms.setTimeslot(getTimeslotByID(rs.getInt("slot_id")));
+            
+         }
+         return ms;
+      } catch (SQLException ex) {
+         throw new DatabaseException(ex.getMessage());
+      }
+   }
+   public static int hasMembershipSection(int membership_id, int timeslot_id) throws DatabaseException {
        try {
          String query = "SELECT * FROM membership_section WHERE membership_id = ? AND slot_id = ?";
          PreparedStatement stmt = DatabaseManager.getPreparedStatement(query);
@@ -256,9 +280,9 @@ public class SchoolDBM {
          
          CachedRowSet crs = DatabaseManager.executeQuery(stmt);
          if (crs.next()){
-            return true;
+            return crs.getInt("section_id");
          }
-         return false;
+         return -1;
       } catch (SQLException ex) {
          throw new DatabaseException(ex.getMessage());
       }
@@ -558,7 +582,7 @@ public class SchoolDBM {
          throw new DatabaseException("SQL Error." + ex.getMessage());
       }
    }
-   public static boolean  hasCourseSection(int course_id, int timeslot_id) throws DatabaseException
+   public static int  hasCourseSection(int course_id, int timeslot_id) throws DatabaseException
    {
       try {
          String query = "SELECT * FROM course_section WHERE course_id = ? AND slot_id = ?";
@@ -568,9 +592,9 @@ public class SchoolDBM {
          
          CachedRowSet crs = DatabaseManager.executeQuery(stmt);
          if (crs.next()){
-            return true;
+            return crs.getInt("section_id");
          }
-         return false;
+         return -1;
       } catch (SQLException ex) {
          throw new DatabaseException(ex.getMessage());
       }
@@ -579,7 +603,7 @@ public class SchoolDBM {
    public static void createCourseSection(int course_id, int timeslot_id) throws DatabaseException {
       try {
          String query;
-         if (hasCourseSection(course_id, timeslot_id))
+         if (hasCourseSection(course_id, timeslot_id) >= 0)
             query = "UPDATE course_section SET deleted = 0 WHERE slot_id = ? AND course_id = ?";
          else
             query = "INSERT INTO course_section (slot_id, course_id) VALUES (?,?)";
@@ -602,6 +626,29 @@ public class SchoolDBM {
          DatabaseManager.executeUpdate(stmt);
       } catch (SQLException ex) {
          throw new DatabaseException("SQL Error." + ex.getMessage());
+      }
+   }
+   public static CourseSection getCourseSectionByID(int id) throws DatabaseException
+   {
+      try {
+         CourseSection cs = null;
+         String select = "SELECT * FROM course_section WHERE section_id = ?";
+         PreparedStatement stmt = DatabaseManager.getPreparedStatement(select);
+         stmt.setInt(1,id);
+         
+         ResultSet rs = DatabaseManager.executeQuery(stmt);
+         while(rs.next())
+         {
+            cs = new CourseSection();
+            cs.setDelete(rs.getBoolean("deleted"));
+            cs.setSection_id(id);
+            cs.setCourse(getCourseByID(rs.getInt("course_id")));
+            cs.setTimeslot(getTimeslotByID(rs.getInt("slot_id")));
+            
+         }
+         return cs;
+      } catch (SQLException ex) {
+         throw new DatabaseException(ex.getMessage());
       }
    }
    /**
@@ -715,6 +762,26 @@ public class SchoolDBM {
       }
    }
 
+   public static Timeslot getTimeslotByID(int id) throws DatabaseException
+   {
+      try {
+         Timeslot t = null;
+         String select = "SELECT * FROM timeslot WHERE slot_id = ?";
+         PreparedStatement stmt = DatabaseManager.getPreparedStatement(select);
+         stmt.setInt(1, id);
+         
+         ResultSet rs = DatabaseManager.executeQuery(stmt);
+         while(rs.next())
+         {
+            t = new Timeslot();
+            t.setDayOfWeek(DayOfWeek.valueOf(rs.getString("day_of_week")));
+            t.setStart(rs.getTime("start"));
+         }
+         return t;
+      } catch (SQLException ex) {
+         throw new DatabaseException(ex.getMessage());
+      }
+   }
    /**
     * create a new timeslot in database. If there already exists one, return that timeslot.
     * @param timeslot

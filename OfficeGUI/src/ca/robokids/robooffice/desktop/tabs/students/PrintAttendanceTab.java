@@ -4,7 +4,16 @@
  */
 package ca.robokids.robooffice.desktop.tabs.students;
 
+import ca.robokids.robooffice.desktop.loaders.FontsLoader;
 import ca.robokids.robooffice.desktop.tabs.Tab;
+import ca.robokids.robooffice.desktop.tabs.students.components.AttendancePanel;
+import ca.robokids.robooffice.desktop.tabs.students.components.AttendanceTimeChooserPanel;
+import ca.robokids.robooffice.entity.schoolmetadata.Classroom;
+import ca.robokids.robooffice.entity.schoolmetadata.Timeslot;
+import ca.robokids.robooffice.entity.student.Progress;
+import ca.robokids.robooffice.logic.student.StudentProgressManager;
+import java.awt.CardLayout;
+import java.util.List;
 
 /**
  *
@@ -12,11 +21,16 @@ import ca.robokids.robooffice.desktop.tabs.Tab;
  */
 public class PrintAttendanceTab extends javax.swing.JPanel implements Tab{
 
+   private AttendanceTimeChooserPanel timeChooser;
+   private AttendancePanel attendance;
    /**
     * Creates new form PrintAttendanceTab
     */
+   Timeslot timeslot;
+   List<Classroom> classrooms;
    public PrintAttendanceTab() {
       initComponents();
+      initialize();
    }
 
    /**
@@ -27,40 +41,189 @@ public class PrintAttendanceTab extends javax.swing.JPanel implements Tab{
    @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+        java.awt.GridBagConstraints gridBagConstraints;
 
+        choose = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
+        chooseTime = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        btnSelectStudent = new javax.swing.JButton();
+        lblMsg = new javax.swing.JLabel();
+        chooseStudent = new javax.swing.JPanel();
+        jPanel2 = new javax.swing.JPanel();
+        btnPrint = new javax.swing.JButton();
+        btnBack = new javax.swing.JButton();
 
         setLayout(new java.awt.CardLayout());
+
+        choose.setLayout(new java.awt.GridBagLayout());
+
+        chooseTime.setLayout(new java.awt.GridLayout());
+
+        jLabel1.setFont(FontsLoader.getStaticLabelFont());
+        jLabel1.setText("Choose a date and time of the schedule:");
+
+        btnSelectStudent.setFont(FontsLoader.getButtonFont());
+        btnSelectStudent.setText("View Students");
+        btnSelectStudent.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSelectStudentActionPerformed(evt);
+            }
+        });
+
+        lblMsg.setFont(FontsLoader.getErrorLabelFont());
+        lblMsg.setForeground(new java.awt.Color(255, 0, 51));
+        lblMsg.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(49, 49, 49)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(lblMsg, javax.swing.GroupLayout.PREFERRED_SIZE, 444, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jLabel1)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(btnSelectStudent)
+                            .addComponent(chooseTime, javax.swing.GroupLayout.PREFERRED_SIZE, 643, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(chooseTime, javax.swing.GroupLayout.PREFERRED_SIZE, 388, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblMsg, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(3, 3, 3)
+                .addComponent(btnSelectStudent)
+                .addContainerGap())
         );
 
-        add(jPanel1, "card2");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        choose.add(jPanel1, gridBagConstraints);
+
+        add(choose, "chooseTime");
+
+        jPanel2.setLayout(new javax.swing.BoxLayout(jPanel2, javax.swing.BoxLayout.LINE_AXIS));
+
+        btnPrint.setFont(FontsLoader.getButtonFont());
+        btnPrint.setText("Print Attendance");
+        btnPrint.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPrintActionPerformed(evt);
+            }
+        });
+
+        btnBack.setFont(FontsLoader.getButtonFont());
+        btnBack.setText("Back");
+        btnBack.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBackActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout chooseStudentLayout = new javax.swing.GroupLayout(chooseStudent);
+        chooseStudent.setLayout(chooseStudentLayout);
+        chooseStudentLayout.setHorizontalGroup(
+            chooseStudentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(chooseStudentLayout.createSequentialGroup()
+                .addComponent(btnBack)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 637, Short.MAX_VALUE)
+                .addComponent(btnPrint))
+        );
+        chooseStudentLayout.setVerticalGroup(
+            chooseStudentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(chooseStudentLayout.createSequentialGroup()
+                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 451, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(chooseStudentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnPrint)
+                    .addComponent(btnBack)))
+        );
+
+        add(chooseStudent, "card3");
     }// </editor-fold>//GEN-END:initComponents
+
+   private void btnSelectStudentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSelectStudentActionPerformed
+      timeslot = timeChooser.getSelectedTimeslot();
+      classrooms = timeChooser.getClassroom();
+      
+      if (classrooms.isEmpty())
+      {
+         lblMsg.setText("No classroom is selected.");
+         return;
+         
+      }
+      
+      switchCard("chooseStudents");
+      setAttendancePanel();
+      
+   }//GEN-LAST:event_btnSelectStudentActionPerformed
+
+   private void btnPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrintActionPerformed
+      printAttendance();
+   }//GEN-LAST:event_btnPrintActionPerformed
+
+   private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
+      switchCard("chooseTime");
+   }//GEN-LAST:event_btnBackActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnBack;
+    private javax.swing.JButton btnPrint;
+    private javax.swing.JButton btnSelectStudent;
+    private javax.swing.JPanel choose;
+    private javax.swing.JPanel chooseStudent;
+    private javax.swing.JPanel chooseTime;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JLabel lblMsg;
     // End of variables declaration//GEN-END:variables
 
    @Override
    public void initialize() {
-      throw new UnsupportedOperationException("Not supported yet.");
+      timeChooser = new AttendanceTimeChooserPanel();
+      attendance = new AttendancePanel();
+      chooseTime.add(timeChooser);
+      chooseStudent.add(attendance);
+      
    }
 
    @Override
    public void refresh() {
-      throw new UnsupportedOperationException("Not supported yet.");
+      
    }
 
    @Override
    public void setFocus() {
-      throw new UnsupportedOperationException("Not supported yet.");
+      this.btnSelectStudent.requestFocus();
+   }
+   
+   private void switchCard(String card)
+   {
+      CardLayout c = (CardLayout)this.getLayout();
+      c.show(this, card);
+   }
+
+   private void setAttendancePanel() {
+      attendance.reset();
+      for (Classroom cr : classrooms)
+      {
+         List<Progress> progresses = StudentProgressManager.getProgressByClassroomAndTimeslot(cr, timeslot);
+         attendance.addClassroom(cr, progresses, true);
+      }
+   }
+
+   private void printAttendance() {
+      
    }
 }

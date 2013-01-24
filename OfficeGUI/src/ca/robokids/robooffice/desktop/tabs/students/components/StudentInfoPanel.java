@@ -32,8 +32,8 @@ public class StudentInfoPanel extends javax.swing.JPanel {
     * Creates new form StudentInfoPanel
     */
    private Student student;
-   private CurrentProgressPanel parent;
-   public StudentInfoPanel(CurrentProgressPanel parent) {
+   private ActiveProgressesPanel parent;
+   public StudentInfoPanel(ActiveProgressesPanel parent) {
       initComponents();
       this.parent = parent;
       initTextfieldAutoHightlight();

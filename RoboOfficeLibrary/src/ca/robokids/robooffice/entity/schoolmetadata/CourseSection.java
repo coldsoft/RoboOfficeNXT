@@ -11,6 +11,17 @@ public class CourseSection {
 
     private Timeslot timeslot;
 
+    private boolean delete;
+
+   public boolean isDelete() {
+      return delete;
+   }
+
+   public void setDelete(boolean delete) {
+      this.delete = delete;
+   }
+    
+    
    public Course getCourse() {
       return course;
    }
