@@ -1,0 +1,10 @@
+<mockup version="1.0" skin="sketch" fontFace="Balsamiq Sans" measuredW="944" measuredH="775" mockupW="900" mockupH="500">
+  <controls>
+    <control controlID="0" controlTypeID="com.balsamiq.mockups::TabBar" x="44" y="275" w="900" h="500" measuredW="174" measuredH="100" zOrder="0" locked="false" isInGroup="-1">
+      <controlProperties>
+        <selectedIndex>0</selectedIndex>
+        <text>New%20Payment</text>
+      </controlProperties>
+    </control>
+  </controls>
+</mockup>

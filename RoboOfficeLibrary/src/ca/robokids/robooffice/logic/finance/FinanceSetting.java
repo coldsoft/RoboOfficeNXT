@@ -14,8 +14,6 @@ import ca.robokids.robooffice.logic.system.SystemLog;
 import ca.robokids.robooffice.logic.usermanagement.UserActivity;
 import java.sql.Date;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -59,21 +57,7 @@ public class FinanceSetting {
    {
       return FinanceDBM.getAllFees();
    }
-   public static float getTax() throws DatabaseException
-   {
-      return FinanceDBM.getTax();
-   }
-   public static void setTax(float tax) throws DatabaseException
-   {
-      if (tax > 100)
-         return;
-      if (tax < 0)
-         return;
-      FinanceDBM.setTax(tax);
-      
-      //Event Logging
-      String details = " changed tax to " + tax;
-      SystemLog.createEventLog(Operation.FINANCE_SETTING, details);
-   }
+  
+
    
 }

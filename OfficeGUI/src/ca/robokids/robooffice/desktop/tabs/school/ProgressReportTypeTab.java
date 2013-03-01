@@ -363,7 +363,7 @@ public class ProgressReportTypeTab extends javax.swing.JPanel implements Tab{
          for (int i = 0; i < reportTypeModel.size();i++)
          {
             if (reportTypeModel.get(i).getName().equals(name)){
-               i = i;
+               pos = i;
                break;
             }
          }

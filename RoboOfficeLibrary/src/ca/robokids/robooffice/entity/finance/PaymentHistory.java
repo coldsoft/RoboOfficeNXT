@@ -16,7 +16,7 @@ public class PaymentHistory {
     private float totalAmount;
     private String notes;
     private String invoice;
-    User receivedBy;
+    private int receivedBy;
     private List<PaymentRecord> paymentRecords;
 
    public Date getDatePaid() {
@@ -67,11 +67,11 @@ public class PaymentHistory {
       this.payment_history_id = payment_history_id;
    }
 
-   public User getReceivedBy() {
+   public int getReceivedBy() {
       return receivedBy;
    }
 
-   public void setReceivedBy(User receivedBy) {
+   public void setReceivedBy(int receivedBy) {
       this.receivedBy = receivedBy;
    }
 

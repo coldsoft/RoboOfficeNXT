@@ -22,7 +22,7 @@ import org.xml.sax.SAXException;
  */
 public class ActionMappingLoader
 {
-
+   private static Document document;
     /**
      *
      * @param actionID
@@ -94,18 +94,20 @@ public class ActionMappingLoader
 
     private static Document getDocument()
     {
+       if (document == null){
         try
         {
             String filepath = "ActionMetadata.xml";
             InputStream in = ActionMappingLoader.class.getResourceAsStream(filepath);
             DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
-            return docBuilder.parse(in);
+            document =  docBuilder.parse(in);
         } catch (ParserConfigurationException | IOException | SAXException pce)
         {
             pce.printStackTrace();
         }
-        return null;
+       }
+        return document;
     }
 
     private static Element getElementByMenuItemText(String menuItemText)

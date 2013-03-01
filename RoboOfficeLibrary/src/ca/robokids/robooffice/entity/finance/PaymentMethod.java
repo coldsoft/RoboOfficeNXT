@@ -23,5 +23,9 @@ public class PaymentMethod {
       this.payment_method_id = payment_method_id;
    }
     
-    
+   @Override
+    public String toString()
+    {
+       return this.getMethodName();
+    }
  }

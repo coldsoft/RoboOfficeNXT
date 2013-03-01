@@ -25,21 +25,31 @@ public class SystemManager {
    private static final String DEFAULT_BACKUP_LOCATION = "C:";
    private static final String DEFAULT_BACKUP_FILENAME = "RoboOffice_backup.sql";
 
-   public static void startup() {
+   public static void startup() throws DatabaseException {
       testDatabaseConnectivity();
-
+      ReloadingDatabase();
       startPeriodicalReloadingThread();
    }
 
-   private static void testDatabaseConnectivity() {
+   private static void testDatabaseConnectivity() throws DatabaseException {
+      DatabaseManager.testConnectivity();
+   }
+
+   public static void ReloadingDatabase() throws DatabaseException {
+      UserManager.reloadAllUsers();
+      UserManager.reloadAllUsergroup();
+      UserManager.reloadAllActions();
+      SchoolManager.reloadAllCourses();
+      SchoolManager.reloadAllMemberships();
+      SchoolManager.reloadAllProgressReportType();
    }
 
    public static String backupDatabase(String backupFilePath) throws DatabaseException {
 
-         if (backupFilePath == null) {
-            backupFilePath = getDefaultBackupLocation();
-         } 
-   
+      if (backupFilePath == null) {
+         backupFilePath = getDefaultBackupLocation();
+      }
+
       String filename = getBackupFilename();
       DatabaseManager.databaseBackup("\"" + backupFilePath + "\\" + filename + "\"");
       try {
@@ -66,7 +76,7 @@ public class SystemManager {
          return DEFAULT_BACKUP_LOCATION;
       }
    }
-   
+
    private static void startPeriodicalReloadingThread() {
       Thread t = new Thread() {
 
@@ -74,14 +84,9 @@ public class SystemManager {
          public void run() {
             while (true) {
                try {
-
-                  UserManager.reloadAllUsers();
-                  UserManager.reloadAllUsergroup();
-                  UserManager.reloadAllActions();
-                  SchoolManager.reloadAllCourses();
-                  SchoolManager.reloadAllMemberships();
-                  SchoolManager.reloadAllProgressReportType();
                   Thread.sleep(DatabaseConfig.getRefreshInterval() * 1000);
+                  SystemManager.ReloadingDatabase();
+                  
                } catch (InterruptedException | DatabaseException | IOException ex) {
                   Logger.getLogger(SystemManager.class.getName()).log(Level.SEVERE, null, ex);
                }
@@ -92,6 +97,4 @@ public class SystemManager {
 
       t.start();
    }
-
-   
 }

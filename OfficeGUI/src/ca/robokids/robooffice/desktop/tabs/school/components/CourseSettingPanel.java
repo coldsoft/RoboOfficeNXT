@@ -550,13 +550,7 @@ public class CourseSettingPanel extends javax.swing.JPanel {
       if (course == null) {
          try {
             course = SchoolManager.addCourse(newCourse);
-            for (Timeslot t : newCourse.getTimeslots()) {
-               try {
-                  SchoolManager.addCourseSection(course, t.getDayOfWeek(), t.getStart());
-               } catch (DuplicateNameException ex) {
-                  Logger.getLogger(CourseSettingPanel.class.getName()).log(Level.SEVERE, null, ex);
-               }
-            }
+            
 
             for (int i = 0; i < projectsModel.getSize(); i++) {
                Project p = projectsModel.get(i);

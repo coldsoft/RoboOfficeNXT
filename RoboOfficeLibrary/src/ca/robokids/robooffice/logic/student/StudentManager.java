@@ -81,7 +81,7 @@ public class StudentManager {
    public static void setStudentStatus(Student student, boolean newStatus) throws DatabaseException {
          if (student.isActive() == newStatus)
             return;
-         StudentDBM.modifyStudentStatus(student.getStudent_id(),newStatus);
+         StudentDBM.modifyStudentStatus(student.getStudent_id(),newStatus,false);
          
          //Event Logging
       String details = student.toString() + " active flag is set to " + newStatus;
@@ -113,6 +113,10 @@ public class StudentManager {
       Random random = new Random();
       String names[] = {"Smith", "Li", "Zhang", "Qian", "Cheng", "Wang", "Lee", "Zhao", "Sun", "Zhou", "Wu", "Hua"};
       return names[random.nextInt(names.length)];
+   }
+
+   public static List<Student> searchStudentName(String name) throws DatabaseException {
+      return StudentDBM.searchStudentByName(name);
    }
 
    

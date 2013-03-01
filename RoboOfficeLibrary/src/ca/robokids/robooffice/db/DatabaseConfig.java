@@ -91,4 +91,8 @@ public class DatabaseConfig {
       getConfig().setProperty("defaultBackupLocation", String.valueOf(location));
       saveConfig(comment);
    }
+
+   public static int getTimeout() throws IOException {
+      return Integer.valueOf(getConfig().getProperty("timeout"));
+   }
 }

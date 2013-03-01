@@ -4,10 +4,15 @@
  */
 package ca.robokids.robooffice.logic.student;
 
+import ca.robokids.exception.DatabaseException;
+import ca.robokids.robooffice.db.studentmanagement.ProgressDBM;
+import ca.robokids.robooffice.db.studentmanagement.StudentDBM;
 import ca.robokids.robooffice.entity.schoolmetadata.Classroom;
 import ca.robokids.robooffice.entity.schoolmetadata.Timeslot;
 import ca.robokids.robooffice.entity.student.ClassRecord;
+import ca.robokids.robooffice.entity.student.CourseProgress;
 import ca.robokids.robooffice.entity.student.Progress;
+import ca.robokids.robooffice.entity.student.Student;
 import java.awt.Color;
 import java.util.List;
 
@@ -37,4 +42,24 @@ public class StudentProgressManager {
    public static List<Progress> getProgressByClassroomAndTimeslot(Classroom cr, Timeslot timeslot) {
       return null;
    }
+   
+   public static int addNewCourseProgress(CourseProgress cp) throws DatabaseException
+   {
+      int newID = ProgressDBM.createCourseProgress(cp);
+      cp.setProgressID(newID);
+      Student s= cp.getStudent();
+      if (s.isProspective() || !s.isActive() )
+      {
+         //Change student prospective to false, active to true
+         StudentDBM.modifyStudentStatus(s.getStudent_id(), true, false);
+      }
+      return newID;
+   }
+   
+ 
+
+   public static List<CourseProgress> getActiveCourseProgresses(Student s) throws DatabaseException {
+      return ProgressDBM.getAllCourseProgressByStudentID(s.getStudent_id(), true);
+   }
+  
 }

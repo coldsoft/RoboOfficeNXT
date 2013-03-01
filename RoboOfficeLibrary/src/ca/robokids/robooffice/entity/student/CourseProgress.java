@@ -2,6 +2,7 @@
 package ca.robokids.robooffice.entity.student;
 
 import ca.robokids.robooffice.entity.schoolmetadata.CourseSection;
+import java.text.NumberFormat;
 
 
 public class CourseProgress extends Progress {
@@ -14,8 +15,12 @@ public class CourseProgress extends Progress {
     private int bonusClass;
     private int nextProgressID;
 
-   public float getAvailableCredit() {
+   public float  getAvailableCredit(){
       return availableCredit;
+   }
+   public String getAvailableCreditString(){
+      NumberFormat format = NumberFormat.getCurrencyInstance();
+      return format.format(getAvailableCredit());
    }
 
    public void setAvailableCredit(float availableCredit) {

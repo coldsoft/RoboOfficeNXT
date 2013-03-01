@@ -28,14 +28,14 @@ public class PopupMessage {
    {
       return (JOptionPane.YES_OPTION == JOptionPane.showConfirmDialog(MainRoboOfficeJFrame.getInstance(),
                     "Do you want to delete the following..\n\n" + deleting + "\n\nNote: Deletion is permanent!", "Permanent Delete",JOptionPane.YES_NO_OPTION,
-                     JOptionPane.QUESTION_MESSAGE,FramePropertyLoader.getImageIcon("systemIcon")));
+                     JOptionPane.QUESTION_MESSAGE,FramePropertyLoader.getImageIcon("systemDelete")));
    }
    
    
    public static String createInput(String message,String title)
    {
       return (String)JOptionPane.showInputDialog(MainRoboOfficeJFrame.getInstance(), message, title, 
-         JOptionPane.QUESTION_MESSAGE, FramePropertyLoader.getImageIcon("systemIcon"), null, null);
+         JOptionPane.QUESTION_MESSAGE, FramePropertyLoader.getImageIcon("systemInput"), null, null);
    }
    
    
@@ -44,7 +44,7 @@ public class PopupMessage {
         return (JOptionPane.YES_OPTION==JOptionPane.showConfirmDialog(MainRoboOfficeJFrame.getInstance(),
                     msg, title,JOptionPane.YES_NO_OPTION,
                      JOptionPane.QUESTION_MESSAGE,
-                    FramePropertyLoader.getImageIcon("systemIcon")));
+                    FramePropertyLoader.getImageIcon("systemConfirm")));
     }
    /**
     * Create an information message box to the user
@@ -58,7 +58,7 @@ public class PopupMessage {
       }
         JOptionPane.showMessageDialog(MainRoboOfficeJFrame.getInstance(),
                     msg, title,
-                    JOptionPane.INFORMATION_MESSAGE,FramePropertyLoader.getImageIcon("systemIcon"));
+                    JOptionPane.INFORMATION_MESSAGE,FramePropertyLoader.getImageIcon("systemInfo"));
    }
    /**
     * Create an Error Message box for the user
@@ -72,7 +72,7 @@ public class PopupMessage {
       }
         JOptionPane.showMessageDialog(MainRoboOfficeJFrame.getInstance(),
                     msg, title,
-                     JOptionPane.ERROR_MESSAGE,FramePropertyLoader.getImageIcon("systemIcon"));
+                     JOptionPane.ERROR_MESSAGE,FramePropertyLoader.getImageIcon("systemError"));
     }
    
    public static void startLoading()
@@ -93,4 +93,5 @@ public class PopupMessage {
    {
       modalDialog.setVisible(false);
    }
+   
 }

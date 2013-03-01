@@ -8,12 +8,12 @@ import ca.robokids.exception.DatabaseException;
 import ca.robokids.robooffice.db.DatabaseManager;
 import ca.robokids.robooffice.db.usermanagement.UserDBM;
 import ca.robokids.robooffice.entity.finance.Fee;
+import ca.robokids.robooffice.entity.finance.Tax;
+import ca.robokids.robooffice.entity.finance.Tax.TaxKind;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.sql.rowset.CachedRowSet;
 
 /**
@@ -98,33 +98,7 @@ public class FinanceDBM {
       }
       
    }
-   public static float getTax() throws DatabaseException
-   {
-      try {
-         String query = "SELECT * FROM tax";
-         PreparedStatement stmt = DatabaseManager.getPreparedStatement(query);
-         CachedRowSet rs = DatabaseManager.executeQuery(stmt);
-         
-         if (rs.next())
-            return rs.getFloat("tax_percentage");
-         else
-            return 12.0f;
-      } catch (SQLException ex) {
-         throw new DatabaseException(ex.getMessage());
-      }
-   }
-   public static void setTax(float tax) throws DatabaseException
-   {
-      try {
-         String insert = "UPDATE tax SET tax_percentage = ? WHERE tax_id = 1";
-         PreparedStatement stmt = DatabaseManager.getPreparedStatement(insert);
-         stmt.setFloat(1, tax);
-         
-         DatabaseManager.executeUpdate(stmt);
-      } catch (SQLException ex) {
-         throw new DatabaseException(ex.getMessage());
-      }
-   }
+   
    private static PreparedStatement insertFee(Fee fee) throws DatabaseException {
       try {
          String insert = "INSERT INTO misc_fee (name,description,date_created,rate,isTax,created_by)"
@@ -161,10 +135,46 @@ public class FinanceDBM {
       }
    }
    
-   public static void main(String args[]) throws DatabaseException
+
+   public static List<Tax> getAllTax() throws DatabaseException {
+      try {
+         List<Tax> all = new ArrayList();
+         String select = "SELECT * FROM tax WHERE tax_id > -1";
+         PreparedStatement stmt = DatabaseManager.getPreparedStatement(select);
+         
+         CachedRowSet crs = DatabaseManager.executeQuery(stmt);
+         
+         while(crs.next())
+         {
+            Tax tax = new Tax();
+            tax.setTax_id(crs.getInt("tax_id"));
+            tax.setCurrent(crs.getBoolean("current"));
+            tax.setTaxPercentage(crs.getFloat("tax_percentage"));
+            tax.setKind(TaxKind.valueOf(crs.getString("tax_name")));
+            
+            all.add(tax);
+         }
+         return all;
+      } catch (SQLException ex) {
+         throw new DatabaseException(ex.getMessage());
+      }
+   }
+   
+   public static void setTax(Tax t) throws DatabaseException
    {
-      System.out.println(getTax());
-      setTax(7.5f);
-      System.out.println(getTax());
+      try {
+         String update = "UPDATE tax SET tax_percentage = ?, tax_name = ?, current = ? WHERE tax_id = ? ";
+         PreparedStatement stmt = DatabaseManager.getPreparedStatement(update);
+         stmt.setFloat(1,t.getTaxPercentage());
+         stmt.setString(2, t.getKind().toString());
+         stmt.setBoolean(3,t.isCurrent());
+         stmt.setInt(4,t.getTax_id());
+         
+         DatabaseManager.executeUpdate(stmt);
+      } catch (SQLException ex) {
+         throw new DatabaseException(ex.getMessage());
+      }
+      
+      
    }
 }

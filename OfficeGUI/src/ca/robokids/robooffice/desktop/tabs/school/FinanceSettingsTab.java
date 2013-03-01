@@ -10,7 +10,10 @@ import ca.robokids.robooffice.desktop.loaders.FontsLoader;
 import ca.robokids.robooffice.desktop.tabs.Tab;
 import ca.robokids.robooffice.desktop.util.PopupMessage;
 import ca.robokids.robooffice.entity.finance.Fee;
+import ca.robokids.robooffice.entity.finance.Tax;
+import ca.robokids.robooffice.entity.finance.Tax.TaxKind;
 import ca.robokids.robooffice.logic.finance.FinanceSetting;
+import ca.robokids.robooffice.logic.finance.TaxManager;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.util.List;
@@ -29,6 +32,9 @@ public class FinanceSettingsTab extends javax.swing.JPanel implements Tab{
     */
    
    Fee fee;
+   Tax HST;
+   Tax GST;
+   Tax PST;
    DefaultListModel<Fee> feeModel = new DefaultListModel();
    public FinanceSettingsTab() {
       initComponents();
@@ -46,11 +52,18 @@ public class FinanceSettingsTab extends javax.swing.JPanel implements Tab{
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
+        buttonGroup1 = new javax.swing.ButtonGroup();
         center = new javax.swing.JPanel();
         pnlFinanceSetting = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        txtTax = new ca.robokids.robooffice.desktop.tabs.components.CurrencyJTextField();
+        txtHST = new ca.robokids.robooffice.desktop.tabs.components.CurrencyJTextField();
         btnSaveTax = new javax.swing.JButton();
+        txtGST = new ca.robokids.robooffice.desktop.tabs.components.CurrencyJTextField();
+        jLabel16 = new javax.swing.JLabel();
+        txtPST = new ca.robokids.robooffice.desktop.tabs.components.CurrencyJTextField();
+        jLabel17 = new javax.swing.JLabel();
+        jSeparator1 = new javax.swing.JSeparator();
+        rdoGSTPST = new javax.swing.JRadioButton();
+        rdoHST = new javax.swing.JRadioButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         lstFees = new javax.swing.JList();
         jLabel2 = new javax.swing.JLabel();
@@ -101,10 +114,7 @@ public class FinanceSettingsTab extends javax.swing.JPanel implements Tab{
 
         pnlFinanceSetting.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Finance Setting", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, FontsLoader.getTitleBorderFont()));
 
-        jLabel1.setFont(FontsLoader.getStaticLabelFont());
-        jLabel1.setText("Tax(%)");
-
-        txtTax.setFont(FontsLoader.getTextFieldFont());
+        txtHST.setFont(FontsLoader.getTextFieldFont());
 
         btnSaveTax.setFont(FontsLoader.getButtonFont());
         btnSaveTax.setText("Save");
@@ -114,20 +124,59 @@ public class FinanceSettingsTab extends javax.swing.JPanel implements Tab{
             }
         });
 
+        txtGST.setFont(FontsLoader.getTextFieldFont());
+
+        jLabel16.setFont(FontsLoader.getStaticLabelFont());
+        jLabel16.setText("GST(%)");
+
+        txtPST.setFont(FontsLoader.getTextFieldFont());
+
+        jLabel17.setFont(FontsLoader.getStaticLabelFont());
+        jLabel17.setText("PST(%)");
+
+        buttonGroup1.add(rdoGSTPST);
+        rdoGSTPST.setText("GST+PST");
+        rdoGSTPST.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rdoGSTPSTActionPerformed(evt);
+            }
+        });
+
+        buttonGroup1.add(rdoHST);
+        rdoHST.setSelected(true);
+        rdoHST.setText("HST (%)");
+        rdoHST.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rdoHSTActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout pnlFinanceSettingLayout = new javax.swing.GroupLayout(pnlFinanceSetting);
         pnlFinanceSetting.setLayout(pnlFinanceSettingLayout);
         pnlFinanceSettingLayout.setHorizontalGroup(
             pnlFinanceSettingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.TRAILING)
             .addGroup(pnlFinanceSettingLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pnlFinanceSettingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(pnlFinanceSettingLayout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtTax, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlFinanceSettingLayout.createSequentialGroup()
-                        .addGap(0, 39, Short.MAX_VALUE)
-                        .addComponent(btnSaveTax)))
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(btnSaveTax))
+                    .addGroup(pnlFinanceSettingLayout.createSequentialGroup()
+                        .addComponent(jLabel16)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtGST, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlFinanceSettingLayout.createSequentialGroup()
+                        .addComponent(jLabel17)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtPST, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(pnlFinanceSettingLayout.createSequentialGroup()
+                        .addComponent(rdoGSTPST)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(pnlFinanceSettingLayout.createSequentialGroup()
+                        .addComponent(rdoHST)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtHST, javax.swing.GroupLayout.DEFAULT_SIZE, 39, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         pnlFinanceSettingLayout.setVerticalGroup(
@@ -135,9 +184,21 @@ public class FinanceSettingsTab extends javax.swing.JPanel implements Tab{
             .addGroup(pnlFinanceSettingLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pnlFinanceSettingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(txtTax, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(txtHST, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(rdoHST))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jSeparator1, javax.swing.GroupLayout.DEFAULT_SIZE, 5, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(rdoGSTPST)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(pnlFinanceSettingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel17)
+                    .addComponent(txtPST, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnlFinanceSettingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel16)
+                    .addComponent(txtGST, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnSaveTax)
                 .addContainerGap())
         );
@@ -236,7 +297,7 @@ public class FinanceSettingsTab extends javax.swing.JPanel implements Tab{
                     .addGroup(editLayout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(editLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 345, Short.MAX_VALUE)
+                            .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 438, Short.MAX_VALUE)
                             .addGroup(editLayout.createSequentialGroup()
                                 .addComponent(btnSave)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -350,7 +411,7 @@ public class FinanceSettingsTab extends javax.swing.JPanel implements Tab{
                     .addGroup(addLayout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(addLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 345, Short.MAX_VALUE)
+                            .addComponent(jScrollPane4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 438, Short.MAX_VALUE)
                             .addGroup(addLayout.createSequentialGroup()
                                 .addComponent(btnSaveAdd)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -450,33 +511,35 @@ public class FinanceSettingsTab extends javax.swing.JPanel implements Tab{
             .addGroup(displayLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(displayLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane2)
                     .addGroup(displayLayout.createSequentialGroup()
                         .addGroup(displayLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel7)
-                            .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(displayLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblName, javax.swing.GroupLayout.PREFERRED_SIZE, 285, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(displayLayout.createSequentialGroup()
-                                .addComponent(lblRate, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(displayLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel7)
+                                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(displayLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(lblName, javax.swing.GroupLayout.PREFERRED_SIZE, 285, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(displayLayout.createSequentialGroup()
+                                        .addComponent(lblRate, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(chkHasTax))))
+                            .addComponent(jLabel5)
+                            .addGroup(displayLayout.createSequentialGroup()
+                                .addComponent(jLabel6)
                                 .addGap(18, 18, 18)
-                                .addComponent(chkHasTax))))
-                    .addGroup(displayLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addGroup(displayLayout.createSequentialGroup()
-                            .addComponent(btnEdit)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btnDelete))
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 345, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jLabel5)
+                                .addComponent(lblDateCreated, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel11)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(lblCreatedBy, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 85, Short.MAX_VALUE))
                     .addGroup(displayLayout.createSequentialGroup()
-                        .addComponent(jLabel6)
-                        .addGap(18, 18, 18)
-                        .addComponent(lblDateCreated, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel11)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lblCreatedBy, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(btnEdit)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnDelete)))
+                .addContainerGap())
         );
         displayLayout.setVerticalGroup(
             displayLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -524,21 +587,22 @@ public class FinanceSettingsTab extends javax.swing.JPanel implements Tab{
         centerLayout.setHorizontalGroup(
             centerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(centerLayout.createSequentialGroup()
-                .addGap(18, 18, 18)
                 .addGroup(centerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(centerLayout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(lblMsg, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(centerLayout.createSequentialGroup()
+                        .addGap(7, 7, 7)
+                        .addComponent(pnlFinanceSetting, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(21, 21, 21)
                         .addGroup(centerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                             .addGroup(centerLayout.createSequentialGroup()
                                 .addComponent(jLabel2)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(btnAddNew))
-                            .addGroup(centerLayout.createSequentialGroup()
-                                .addComponent(pnlFinanceSetting, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 103, Short.MAX_VALUE)))
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 253, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(panelFeeInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 365, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(lblMsg, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(panelFeeInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 458, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(26, 26, 26))
         );
         centerLayout.setVerticalGroup(
@@ -546,19 +610,19 @@ public class FinanceSettingsTab extends javax.swing.JPanel implements Tab{
             .addGroup(centerLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(centerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(panelFeeInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 418, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(centerLayout.createSequentialGroup()
-                        .addGroup(centerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addGap(1, 1, 1)
+                        .addGroup(centerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(centerLayout.createSequentialGroup()
-                                .addGap(92, 92, 92)
-                                .addComponent(btnAddNew))
+                                .addComponent(pnlFinanceSetting, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE))
                             .addGroup(centerLayout.createSequentialGroup()
-                                .addGap(1, 1, 1)
-                                .addComponent(pnlFinanceSetting, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jLabel2)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane1))
-                    .addComponent(panelFeeInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 418, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(centerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jLabel2)
+                                    .addComponent(btnAddNew))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jScrollPane1)))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lblMsg, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -567,9 +631,8 @@ public class FinanceSettingsTab extends javax.swing.JPanel implements Tab{
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.ipadx = 103;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(11, 42, 21, 36);
+        gridBagConstraints.insets = new java.awt.Insets(11, 0, 23, 0);
         add(center, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
@@ -602,17 +665,23 @@ public class FinanceSettingsTab extends javax.swing.JPanel implements Tab{
    }//GEN-LAST:event_lstFeesValueChanged
 
    private void btnSaveTaxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveTaxActionPerformed
-      float tax;
+      float taxHST;
+      float taxGST;
+      float taxPST;
       try
       {
-         tax = Float.valueOf(txtTax.getText());
+         HST.setTaxPercentage(Float.valueOf(txtHST.getText()));
+         GST.setTaxPercentage(taxGST = Float.valueOf(txtGST.getText()));
+         PST.setTaxPercentage(Float.valueOf(txtPST.getText()));
       }catch(Exception e)
       {
          errorMsg("tax format is wrong.");
          return;
       }
       try {
-         FinanceSetting.setTax(tax);
+         TaxManager.setTax(HST);
+         TaxManager.setTax(GST);
+         TaxManager.setTax(PST);
          Msg("tax updated");
       } catch (DatabaseException ex) {
          PopupMessage.createErrorPopUp(ex.getMessage(), null);
@@ -675,6 +744,14 @@ public class FinanceSettingsTab extends javax.swing.JPanel implements Tab{
       }
    }//GEN-LAST:event_btnSaveAddActionPerformed
 
+   private void rdoHSTActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdoHSTActionPerformed
+      setHSTEnabled(true);
+   }//GEN-LAST:event_rdoHSTActionPerformed
+
+   private void rdoGSTPSTActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdoGSTPSTActionPerformed
+      setHSTEnabled(false);
+   }//GEN-LAST:event_rdoGSTPSTActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel add;
     private javax.swing.JButton btnAddNew;
@@ -685,19 +762,21 @@ public class FinanceSettingsTab extends javax.swing.JPanel implements Tab{
     private javax.swing.JButton btnSave;
     private javax.swing.JButton btnSaveAdd;
     private javax.swing.JButton btnSaveTax;
+    private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JPanel center;
     private javax.swing.JCheckBox chkHasTax;
     private javax.swing.JCheckBox chkTax;
     private javax.swing.JCheckBox chkTaxAdd;
     private javax.swing.JPanel display;
     private javax.swing.JPanel edit;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -710,6 +789,7 @@ public class FinanceSettingsTab extends javax.swing.JPanel implements Tab{
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JSeparator jSeparator1;
     private javax.swing.JLabel lblCreatedBy;
     private javax.swing.JLabel lblDateCreated;
     private javax.swing.JTextArea lblDescription;
@@ -719,13 +799,17 @@ public class FinanceSettingsTab extends javax.swing.JPanel implements Tab{
     private javax.swing.JList lstFees;
     private javax.swing.JPanel panelFeeInfo;
     private javax.swing.JPanel pnlFinanceSetting;
+    private javax.swing.JRadioButton rdoGSTPST;
+    private javax.swing.JRadioButton rdoHST;
     private javax.swing.JTextArea txtDescription;
     private javax.swing.JTextArea txtDescriptionAdd;
+    private ca.robokids.robooffice.desktop.tabs.components.CurrencyJTextField txtGST;
+    private ca.robokids.robooffice.desktop.tabs.components.CurrencyJTextField txtHST;
     private javax.swing.JTextField txtName;
     private javax.swing.JTextField txtNameAdd;
+    private ca.robokids.robooffice.desktop.tabs.components.CurrencyJTextField txtPST;
     private ca.robokids.robooffice.desktop.tabs.components.CurrencyJTextField txtRate;
     private ca.robokids.robooffice.desktop.tabs.components.CurrencyJTextField txtRateAdd;
-    private ca.robokids.robooffice.desktop.tabs.components.CurrencyJTextField txtTax;
     // End of variables declaration//GEN-END:variables
 
    @Override
@@ -751,7 +835,17 @@ public class FinanceSettingsTab extends javax.swing.JPanel implements Tab{
       }
       ;
       try {
-         txtTax.setText(String.valueOf(FinanceSetting.getTax()));
+         HST = TaxManager.getHST();
+         GST = TaxManager.getGST();
+         PST = TaxManager.getPST();
+         
+         txtHST.setText(String.valueOf(HST.getTaxPercentage()));
+         txtGST.setText(String.valueOf(GST.getTaxPercentage()));
+         txtPST.setText(String.valueOf(PST.getTaxPercentage()));
+         if (HST.isCurrent())
+         {
+            setHSTEnabled(true);
+         }
       } catch (DatabaseException ex) {
          PopupMessage.createErrorPopUp(ex.getMessage(), null);
       }
@@ -763,14 +857,12 @@ public class FinanceSettingsTab extends javax.swing.JPanel implements Tab{
       {
          btnEdit.setEnabled(false);
          btnDelete.setEnabled(false);
-      }
-      
-      
+      }     
    }
 
    @Override
    public void setFocus() {
-      this.txtTax.requestFocus();
+      this.txtHST.requestFocus();
    }
    
    private void switchCard(String card) {
@@ -830,5 +922,16 @@ public class FinanceSettingsTab extends javax.swing.JPanel implements Tab{
       fee.setRate(Float.valueOf(txtRateAdd.getText()));
       fee.setTax(chkTaxAdd.isSelected());
       return fee;
+   }
+
+   private void setHSTEnabled(boolean b) {
+      txtHST.setEnabled(b);
+      txtPST.setEnabled(!b);
+      txtGST.setEnabled(!b);
+      try {
+         TaxManager.setCurrentHST(b);
+      } catch (DatabaseException ex) {
+         PopupMessage.createErrorPopUp(ex.getMessage(), null);
+      }
    }
 }

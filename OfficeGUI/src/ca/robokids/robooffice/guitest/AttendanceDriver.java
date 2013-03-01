@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package ca.robokids.robooffice.gui.test;
+package ca.robokids.robooffice.guitest;
 
 import ca.robokids.robooffice.desktop.tabs.students.components.AttendancePanel;
 import ca.robokids.robooffice.desktop.tabs.students.components.ClassroomPanel;

@@ -219,7 +219,7 @@ public class SchoolDBM {
          throw new DatabaseException("SQL Error." + ex.getMessage());
       }
    }
-   
+
    public static void createMembershipSection(int membership_id, int timeslot_id) throws DatabaseException {
       try {
          String query;

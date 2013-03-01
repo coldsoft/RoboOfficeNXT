@@ -15,7 +15,7 @@ public class PaymentRecord {
     private int multiplier;
     private float availableCredit;
     private int discountClass;
-    private int discountAmount;
+    private float discountAmount;
     private String discountReason;
     private float tax;
     private float total;
@@ -30,11 +30,11 @@ public class PaymentRecord {
       this.availableCredit = availableCredit;
    }
 
-   public int getDiscountAmount() {
+   public float getDiscountAmount() {
       return discountAmount;
    }
 
-   public void setDiscountAmount(int discountAmount) {
+   public void setDiscountAmount(float discountAmount) {
       this.discountAmount = discountAmount;
    }
 

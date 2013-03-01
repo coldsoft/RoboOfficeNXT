@@ -1,0 +1,237 @@
+<mockup version="1.0" skin="sketch" fontFace="Balsamiq Sans" measuredW="956" measuredH="654" mockupW="900" mockupH="500">
+  <controls>
+    <control controlID="0" controlTypeID="com.balsamiq.mockups::TabBar" x="56" y="154" w="900" h="500" measuredW="208" measuredH="100" zOrder="0" locked="false" isInGroup="-1">
+      <controlProperties>
+        <color>16777215</color>
+        <selectedIndex>0</selectedIndex>
+        <text>Record%20Attendance</text>
+        <verticalScrollbar>false</verticalScrollbar>
+      </controlProperties>
+    </control>
+    <control controlID="160" controlTypeID="com.balsamiq.mockups::Button" x="817" y="610" w="124" h="29" measuredW="124" measuredH="27" zOrder="1" locked="false" isInGroup="-1">
+      <controlProperties>
+        <state>disabled</state>
+        <text>Save%20Attendance</text>
+      </controlProperties>
+    </control>
+    <control controlID="181" controlTypeID="com.balsamiq.mockups::Label" x="685" y="614" w="124" h="-1" measuredW="94" measuredH="21" zOrder="5" locked="false" isInGroup="-1">
+      <controlProperties>
+        <state>disabled</state>
+        <text>Total%20Here%3A%208/10</text>
+      </controlProperties>
+    </control>
+    <control controlID="188" controlTypeID="com.balsamiq.mockups::ComboBox" x="71" y="388" w="190" h="-1" measuredW="151" measuredH="24" zOrder="3" locked="false" isInGroup="-1">
+      <controlProperties>
+        <state>disabled</state>
+        <text>Robokids%20Classroom</text>
+      </controlProperties>
+    </control>
+    <control controlID="190" controlTypeID="com.balsamiq.mockups::Label" x="155" y="418" w="57" h="-1" measuredW="46" measuredH="21" zOrder="4" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Monday</text>
+      </controlProperties>
+    </control>
+    <control controlID="191" controlTypeID="com.balsamiq.mockups::Calendar" x="71" y="192" w="190" h="191" measuredW="96" measuredH="96" zOrder="2" locked="false" isInGroup="-1"/>
+    <control controlID="192" controlTypeID="com.balsamiq.mockups::Label" x="71" y="418" w="90" h="-1" measuredW="76" measuredH="21" zOrder="6" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Feb/12/2013</text>
+      </controlProperties>
+    </control>
+    <control controlID="209" controlTypeID="com.balsamiq.mockups::CheckBoxGroup" x="155" y="439" w="106" h="161" measuredW="82" measuredH="105" zOrder="7" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>%5Bx%5D%2010%3A00%20%285%29%0A%5Bx%5D%2012%3A00%20%283%29%0A%5Bx%5D%2014%3A00%20%282%29%0A%5B%20%5D%2016%3A00%20%288%29%0A%20</text>
+      </controlProperties>
+    </control>
+    <control controlID="221" controlTypeID="__group__" x="269" y="192" w="254" h="393" measuredW="254" measuredH="393" zOrder="8" locked="false" isInGroup="-1">
+      <groupChildrenDescriptors>
+        <control controlID="0" controlTypeID="com.balsamiq.mockups::FieldSet" x="0" y="0" w="254" h="393" measuredW="200" measuredH="170" zOrder="0" locked="false" isInGroup="221">
+          <controlProperties>
+            <color>13421772</color>
+            <text>Saturday%2010%3A00</text>
+          </controlProperties>
+        </control>
+        <control controlID="1" controlTypeID="com.balsamiq.mockups::Switch" x="7" y="15" w="-1" h="-1" measuredW="68" measuredH="28" zOrder="1" locked="false" isInGroup="221">
+          <controlProperties>
+            <onOffState>on</onOffState>
+          </controlProperties>
+        </control>
+        <control controlID="2" controlTypeID="com.balsamiq.mockups::Label" x="83" y="18" w="163" h="-1" measuredW="155" measuredH="22" zOrder="2" locked="false" isInGroup="221">
+          <controlProperties>
+            <size>14</size>
+            <state>disabled</state>
+            <text>RB01%20%2811/12%29%20Andy%20Liang</text>
+          </controlProperties>
+        </control>
+        <control controlID="3" controlTypeID="com.balsamiq.mockups::Switch" x="7" y="43" w="-1" h="-1" measuredW="68" measuredH="28" zOrder="3" locked="false" isInGroup="221">
+          <controlProperties>
+            <onOffState>on</onOffState>
+          </controlProperties>
+        </control>
+        <control controlID="4" controlTypeID="com.balsamiq.mockups::Label" x="83" y="46" w="163" h="-1" measuredW="155" measuredH="22" zOrder="4" locked="false" isInGroup="221">
+          <controlProperties>
+            <size>14</size>
+            <state>disabled</state>
+            <text>RB01%20%2811/12%29%20Andy%20Liang</text>
+          </controlProperties>
+        </control>
+        <control controlID="5" controlTypeID="com.balsamiq.mockups::Switch" x="7" y="71" w="-1" h="-1" measuredW="68" measuredH="28" zOrder="5" locked="false" isInGroup="221">
+          <controlProperties>
+            <onOffState>off</onOffState>
+          </controlProperties>
+        </control>
+        <control controlID="6" controlTypeID="com.balsamiq.mockups::Label" x="83" y="74" w="163" h="-1" measuredW="155" measuredH="22" zOrder="6" locked="false" isInGroup="221">
+          <controlProperties>
+            <size>14</size>
+            <state>disabled</state>
+            <text>RB01%20%2811/12%29%20Andy%20Liang</text>
+          </controlProperties>
+        </control>
+        <control controlID="7" controlTypeID="com.balsamiq.mockups::Switch" x="7" y="99" w="-1" h="-1" measuredW="68" measuredH="28" zOrder="7" locked="false" isInGroup="221">
+          <controlProperties>
+            <onOffState>on</onOffState>
+          </controlProperties>
+        </control>
+        <control controlID="8" controlTypeID="com.balsamiq.mockups::Label" x="83" y="102" w="163" h="-1" measuredW="155" measuredH="22" zOrder="8" locked="false" isInGroup="221">
+          <controlProperties>
+            <size>14</size>
+            <state>disabled</state>
+            <text>RB01%20%2811/12%29%20Andy%20Liang</text>
+          </controlProperties>
+        </control>
+        <control controlID="9" controlTypeID="com.balsamiq.mockups::Switch" x="7" y="132" w="-1" h="-1" measuredW="68" measuredH="28" zOrder="9" locked="false" isInGroup="221">
+          <controlProperties>
+            <onOffState>on</onOffState>
+          </controlProperties>
+        </control>
+        <control controlID="10" controlTypeID="com.balsamiq.mockups::Label" x="83" y="135" w="163" h="-1" measuredW="155" measuredH="22" zOrder="10" locked="false" isInGroup="221">
+          <controlProperties>
+            <size>14</size>
+            <state>disabled</state>
+            <text>RB01%20%2811/12%29%20Andy%20Liang</text>
+          </controlProperties>
+        </control>
+      </groupChildrenDescriptors>
+    </control>
+    <control controlID="236" controlTypeID="com.balsamiq.mockups::HorizontalScrollBar" x="269" y="587" w="672" h="-1" measuredW="100" measuredH="16" zOrder="16" locked="false" isInGroup="-1"/>
+    <control controlID="237" controlTypeID="com.balsamiq.mockups::FieldSet" x="530" y="192" w="254" h="393" measuredW="200" measuredH="170" zOrder="9" locked="false" isInGroup="-1">
+      <controlProperties>
+        <color>13421772</color>
+        <text>Saturday%2012%3A00</text>
+      </controlProperties>
+    </control>
+    <control controlID="238" controlTypeID="com.balsamiq.mockups::Switch" x="537" y="207" w="-1" h="-1" measuredW="68" measuredH="28" zOrder="10" locked="false" isInGroup="-1">
+      <controlProperties>
+        <onOffState>on</onOffState>
+      </controlProperties>
+    </control>
+    <control controlID="239" controlTypeID="com.balsamiq.mockups::Label" x="613" y="210" w="163" h="-1" measuredW="155" measuredH="22" zOrder="11" locked="false" isInGroup="-1">
+      <controlProperties>
+        <size>14</size>
+        <state>disabled</state>
+        <text>RB01%20%2811/12%29%20Andy%20Liang</text>
+      </controlProperties>
+    </control>
+    <control controlID="240" controlTypeID="com.balsamiq.mockups::Switch" x="537" y="235" w="-1" h="-1" measuredW="68" measuredH="28" zOrder="12" locked="false" isInGroup="-1">
+      <controlProperties>
+        <onOffState>on</onOffState>
+      </controlProperties>
+    </control>
+    <control controlID="241" controlTypeID="com.balsamiq.mockups::Label" x="613" y="238" w="163" h="-1" measuredW="155" measuredH="22" zOrder="13" locked="false" isInGroup="-1">
+      <controlProperties>
+        <size>14</size>
+        <state>disabled</state>
+        <text>RB01%20%2811/12%29%20Andy%20Liang</text>
+      </controlProperties>
+    </control>
+    <control controlID="242" controlTypeID="com.balsamiq.mockups::Switch" x="537" y="263" w="-1" h="-1" measuredW="68" measuredH="28" zOrder="14" locked="false" isInGroup="-1">
+      <controlProperties>
+        <onOffState>off</onOffState>
+      </controlProperties>
+    </control>
+    <control controlID="243" controlTypeID="com.balsamiq.mockups::Label" x="613" y="266" w="163" h="-1" measuredW="155" measuredH="22" zOrder="15" locked="false" isInGroup="-1">
+      <controlProperties>
+        <size>14</size>
+        <state>disabled</state>
+        <text>RB01%20%2811/12%29%20Andy%20Liang</text>
+      </controlProperties>
+    </control>
+    <control controlID="248" controlTypeID="com.balsamiq.mockups::Button" x="269" y="557" w="254" h="27" measuredW="169" measuredH="27" zOrder="17" locked="false" isInGroup="-1">
+      <controlProperties>
+        <state>disabled</state>
+        <text>Add%20student%20to%20Sat%2010%3A00</text>
+      </controlProperties>
+    </control>
+    <control controlID="249" controlTypeID="com.balsamiq.mockups::Button" x="530" y="557" w="254" h="27" measuredW="169" measuredH="27" zOrder="18" locked="false" isInGroup="-1">
+      <controlProperties>
+        <state>disabled</state>
+        <text>Add%20student%20to%20Sat%2012%3A00</text>
+      </controlProperties>
+    </control>
+    <control controlID="251" controlTypeID="__group__" x="71" y="609" w="606" h="31" measuredW="606" measuredH="31" zOrder="20" locked="false" isInGroup="-1">
+      <groupChildrenDescriptors>
+        <control controlID="0" controlTypeID="com.balsamiq.mockups::ProgressBar" x="0" y="0" w="606" h="31" measuredW="100" measuredH="20" zOrder="0" locked="false" isInGroup="251">
+          <controlProperties>
+            <indeterminate>false</indeterminate>
+            <scrollBarValue>7</scrollBarValue>
+          </controlProperties>
+        </control>
+        <control controlID="1" controlTypeID="com.balsamiq.mockups::Label" x="194" y="6" w="216" h="-1" measuredW="144" measuredH="21" zOrder="1" locked="false" isInGroup="251">
+          <controlProperties>
+            <text>Saving%20Andy%20Liang%20%281/9%29</text>
+          </controlProperties>
+        </control>
+      </groupChildrenDescriptors>
+    </control>
+    <control controlID="253" controlTypeID="__group__" x="791" y="192" w="151" h="393" measuredW="151" measuredH="393" zOrder="19" locked="false" isInGroup="-1">
+      <controlProperties>
+        <crop>0%2C0%2C559%2C1000</crop>
+      </controlProperties>
+      <groupChildrenDescriptors>
+        <control controlID="0" controlTypeID="__group__" x="0" y="0" w="270" h="393" measuredW="270" measuredH="393" zOrder="0" locked="false" isInGroup="253">
+          <groupChildrenDescriptors>
+            <control controlID="0" controlTypeID="__group__" x="0" y="0" w="270" h="393" measuredW="270" measuredH="393" zOrder="0" locked="false" isInGroup="0">
+              <groupChildrenDescriptors>
+                <control controlID="0" controlTypeID="com.balsamiq.mockups::FieldSet" x="0" y="0" w="270" h="393" measuredW="200" measuredH="170" zOrder="0" locked="false" isInGroup="0">
+                  <controlProperties>
+                    <color>13421772</color>
+                    <text>Saturday%2014%3A00</text>
+                  </controlProperties>
+                </control>
+                <control controlID="1" controlTypeID="com.balsamiq.mockups::Switch" x="4" y="15" w="-1" h="-1" measuredW="68" measuredH="28" zOrder="1" locked="false" isInGroup="0">
+                  <controlProperties>
+                    <onOffState>on</onOffState>
+                  </controlProperties>
+                </control>
+                <control controlID="2" controlTypeID="com.balsamiq.mockups::Label" x="87" y="18" w="183" h="-1" measuredW="155" measuredH="22" zOrder="2" locked="false" isInGroup="0">
+                  <controlProperties>
+                    <size>14</size>
+                    <state>disabled</state>
+                    <text>RB01%20%2811/12%29%20Andy%20Liang</text>
+                  </controlProperties>
+                </control>
+                <control controlID="3" controlTypeID="com.balsamiq.mockups::Switch" x="4" y="43" w="-1" h="-1" measuredW="68" measuredH="28" zOrder="3" locked="false" isInGroup="0">
+                  <controlProperties>
+                    <onOffState>on</onOffState>
+                  </controlProperties>
+                </control>
+                <control controlID="4" controlTypeID="com.balsamiq.mockups::Label" x="87" y="46" w="183" h="-1" measuredW="155" measuredH="22" zOrder="4" locked="false" isInGroup="0">
+                  <controlProperties>
+                    <size>14</size>
+                    <state>disabled</state>
+                    <text>RB01%20%2811/12%29%20Andy%20Liang</text>
+                  </controlProperties>
+                </control>
+              </groupChildrenDescriptors>
+            </control>
+          </groupChildrenDescriptors>
+        </control>
+        <control controlID="1" controlTypeID="com.balsamiq.mockups::Button" x="0" y="365" w="270" h="27" measuredW="169" measuredH="27" zOrder="1" locked="false" isInGroup="253">
+          <controlProperties>
+            <state>disabled</state>
+            <text>Add%20student%20to%20Sat%2012%3A00</text>
+          </controlProperties>
+        </control>
+      </groupChildrenDescriptors>
+    </control>
+  </controls>
+</mockup>

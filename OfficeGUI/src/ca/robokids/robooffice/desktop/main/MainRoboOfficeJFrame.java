@@ -431,13 +431,13 @@ public class MainRoboOfficeJFrame extends javax.swing.JFrame {
     */
    public static void main(String args[]) {
       
-      SystemManager.startup();
       try {
          UIManager.put("Synthetica.rootPane.titlePane.title.center", Boolean.TRUE);
          UIManager.put("Synthetica.tabbedPane.tab.selected.bold", Boolean.TRUE);
          UIManager.put("Synthetica.rootPane.titlePane.dropShadow", Boolean.TRUE);
-         UIManager.put("DropDownButton.arrowIconGap", 0);
          UIManager.put("Synthetica.rootPane.titlePane.gap", 5);
+         
+
          javax.swing.UIManager.setLookAndFeel(FramePropertyLoader.getLookAndFeel());
       } catch (ClassNotFoundException ex) {
          java.util.logging.Logger.getLogger(MainRoboOfficeJFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
@@ -449,6 +449,11 @@ public class MainRoboOfficeJFrame extends javax.swing.JFrame {
          java.util.logging.Logger.getLogger(MainRoboOfficeJFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
       }
 
+      try {
+         SystemManager.startup();
+      } catch (DatabaseException ex) {
+         PopupMessage.createErrorPopUp(ex.getMessage(), null);
+      }
       /*
        * Create and display the form
        */
@@ -656,6 +661,7 @@ public class MainRoboOfficeJFrame extends javax.swing.JFrame {
       if (busy) {
          self.glassPane.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
          self.glassPane.addMouseListener(mouseAdapter);
+         
          self.glassPane.setVisible(true);
 
       } else {

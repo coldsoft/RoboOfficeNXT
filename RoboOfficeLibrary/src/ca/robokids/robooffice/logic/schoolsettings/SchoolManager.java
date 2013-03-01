@@ -13,8 +13,10 @@ import ca.robokids.robooffice.entity.schoolmetadata.*;
 import ca.robokids.robooffice.entity.system.Operation;
 import ca.robokids.robooffice.logic.system.SystemLog;
 import ca.robokids.robooffice.logic.usermanagement.UserActivity;
+import java.sql.Date;
 import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -114,13 +116,16 @@ public class SchoolManager {
 
       SchoolDBM.deleteProgressReportType(t.getReport_type_id());
 
+      ProgressReportType deleted = null;
       for (ProgressReportType old : reportTypes)
       {
          if (old.getReport_type_id()==t.getReport_type_id())
          {
-            reportTypes.remove(old);
+            deleted = old;
          }
       }
+      
+      reportTypes.remove(deleted);
       //Event Logging
       String details = " deleted progress report type:  " + t.getName();
       SystemLog.createEventLog(Operation.COURSE_SETTING, details);
@@ -146,8 +151,9 @@ public class SchoolManager {
 
    public static void createProgressReportType(ProgressReportType t) throws BadFieldException, DatabaseException {
       CheckFields.checkProgressReportType(t);
-      SchoolDBM.createProgressReportType(t);
-
+      t.setReport_type_id(SchoolDBM.createProgressReportType(t));
+      
+      reportTypes.add(t);
       //Event Logging
       String details = " created progress report type:  " + t.getName();
       SystemLog.createEventLog(Operation.COURSE_SETTING, details);
@@ -266,13 +272,15 @@ public class SchoolManager {
    public static boolean deleteCourse(Course course) throws DatabaseException {
       if (SchoolDBM.deleteCourse(course.getId())) {
          
+         Course deleted = null;
          for (Course old : courses)
       {
          if (old.getId()==course.getId())
          {
-            courses.remove(old);
+            deleted = old;
          }
       }
+         courses.remove(deleted);
          //Event Logging
          String details = "deleted " + course.toString();
          SystemLog.createEventLog(Operation.COURSE_SETTING, details);
@@ -352,13 +360,15 @@ public class SchoolManager {
 
       if (SchoolDBM.deleteMembership(membership.getId())) {
          
+         Membership deleted = null;
          for (Membership old : memberships)
       {
          if (old.getId()==membership.getId())
          {
-            memberships.remove(old);
+            deleted = old;
          }
       }
+         memberships.remove(deleted);
          //Event Logging
          String details = "deleted " + membership.toString();
          SystemLog.createEventLog(Operation.MEMBERSHIP_SETTING, details);
@@ -429,5 +439,13 @@ public class SchoolManager {
 
    public static Course getCourseByID(int id) throws DatabaseException {
       return SchoolDBM.getCourseByID(id);
+   }
+
+   public static Date calculateCourseExpireDate(Date startDate, int weeks) {
+      Calendar c = Calendar.getInstance();
+      c.setTime(startDate);
+      c.add(Calendar.WEEK_OF_YEAR, weeks);
+      java.util.Date newDate = c.getTime();
+      return new Date(newDate.getTime());
    }
 }

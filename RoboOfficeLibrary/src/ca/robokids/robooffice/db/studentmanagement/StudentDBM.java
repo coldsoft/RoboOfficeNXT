@@ -14,8 +14,6 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.sql.rowset.CachedRowSet;
 
 /**
@@ -24,6 +22,25 @@ import javax.sql.rowset.CachedRowSet;
  */
 public class StudentDBM {
 
+   public static List<Student> searchStudentByName(String name) throws DatabaseException {
+      try {
+         List<Student> list = new ArrayList();
+         String select = "SELECT student_id FROM student WHERE first_name LIKE ? OR last_name LIKE ?";
+         PreparedStatement stmt = DatabaseManager.getPreparedStatement(select);
+         stmt.setString(1,name);
+         stmt.setString(2,name);
+         
+         CachedRowSet crs = DatabaseManager.executeQuery(stmt);
+         while(crs.next())
+         {
+            list.add(getStudentByID(crs.getInt("student_id")));
+         }
+         return list;
+      } catch (SQLException ex) {
+         throw new DatabaseException(ex.getMessage());
+      }
+      
+   }
    public static List<Student> getAllStudentByStatus(boolean prospective, boolean active) throws DatabaseException
    {
       try {
@@ -204,18 +221,22 @@ public class StudentDBM {
       System.out.println(s.getAge());
    }
 
-   public static void modifyStudentStatus(int studentID, boolean newStatus) throws DatabaseException {
+
+   public static void modifyStudentStatus(int studentID, boolean newStatus, boolean newProspective) throws DatabaseException {
       try {
-         String update = "UPDATE student SET active = ? WHERE student_id = ?";
+         String update = "UPDATE student SET active = ? , prospective = ?WHERE student_id = ?";
          PreparedStatement stmt = DatabaseManager.getPreparedStatement(update);
          stmt.setBoolean(1, newStatus);
-         stmt.setInt(2, studentID);
+         stmt.setBoolean(2, newProspective);
+         stmt.setInt(3, studentID);
 
          DatabaseManager.executeUpdate(stmt);
       } catch (SQLException ex) {
          throw new DatabaseException(ex.getMessage());
       }
    }
+
+   
 
    
 }

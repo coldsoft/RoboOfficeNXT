@@ -4,17 +4,64 @@
  */
 package ca.robokids.robooffice.desktop.tabs.finance;
 
+import ca.robokids.exception.DatabaseException;
+import ca.robokids.robooffice.desktop.loaders.FontsLoader;
+import ca.robokids.robooffice.desktop.main.TabManager;
+import ca.robokids.robooffice.desktop.tabs.Tab;
+import ca.robokids.robooffice.desktop.tabs.finance.components.PaymentChooserPanel;
+import ca.robokids.robooffice.desktop.util.ButtonColumn;
+import ca.robokids.robooffice.desktop.util.PopupMessage;
+import ca.robokids.robooffice.entity.finance.NewPayment;
+import ca.robokids.robooffice.entity.finance.PaymentMethod;
+import ca.robokids.robooffice.entity.student.Student;
+import ca.robokids.robooffice.logic.finance.PaymentManager;
+import ca.robokids.robooffice.logic.student.StudentManager;
+import ca.robokids.robooffice.logic.usermanagement.UserActivity;
+import java.awt.CardLayout;
+import java.awt.event.ActionEvent;
+import java.util.List;
+import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author Coldsoft
  */
-public class NewPaymentTab extends javax.swing.JPanel {
+public class NewPaymentTab extends javax.swing.JPanel implements Tab {
 
-   /**
-    * Creates new form NewPaymentTab
-    */
+   PaymentChooserPanel paymentChooser;
+   Student student;
+   NewPayment payment;
+   
+   private static final String ENTRY_COL = "Payment Entries";
+   private static final String AMOUNT_COL = "Amount/Subtotal";
+   
+
    public NewPaymentTab() {
       initComponents();
+
+      
+      initialize();
+      setChooserPanelVisible(false);
+      findStudent();
+
+   }
+
+   public NewPaymentTab(Student student) {
+      initComponents();
+      initialize();
+      setChooserPanelVisible(false);
+      setStudent(student);
+   }
+
+   public Student getStudent() {
+      return student;
+   }
+
+   public void setStudent(Student student) {
+      this.student = student;
+      TabManager.changeTabName(this.getName(), student.toString());
    }
 
    /**
@@ -25,18 +72,519 @@ public class NewPaymentTab extends javax.swing.JPanel {
    @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+        java.awt.GridBagConstraints gridBagConstraints;
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+        center = new javax.swing.JPanel();
+        paymentPanel = new javax.swing.JPanel();
+        summaryPanel = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        cboPaymentMethods = new javax.swing.JComboBox();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        txtNotes = new javax.swing.JTextArea();
+        lblReceivedBy = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        tblSummary = new javax.swing.JTable();
+        jLabel5 = new javax.swing.JLabel();
+        jSeparator1 = new javax.swing.JSeparator();
+        lblTotal = new javax.swing.JLabel();
+        pnlPaymentChooser = new javax.swing.JPanel();
+        jPanel1 = new javax.swing.JPanel();
+        chooser = new javax.swing.JPanel();
+        btnCourse = new javax.swing.JButton();
+        btnMembership = new javax.swing.JButton();
+        btnOtherfee = new javax.swing.JButton();
+        btnCustom = new javax.swing.JButton();
+        entrySetting = new javax.swing.JPanel();
+        btnFinish = new javax.swing.JButton();
+        btnAddPayment = new javax.swing.JButton();
+        previewPanel = new javax.swing.JPanel();
+
+        setLayout(new java.awt.GridBagLayout());
+
+        center.setLayout(new java.awt.CardLayout());
+
+        summaryPanel.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+
+        jLabel1.setFont(new java.awt.Font("Segoe UI Light", 0, 24)); // NOI18N
+        jLabel1.setText("Payment Summary");
+
+        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel2.setText("Paying by");
+
+        cboPaymentMethods.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+        jLabel3.setText("Received by");
+
+        jLabel4.setText("Remark (for office use)");
+
+        txtNotes.setColumns(20);
+        txtNotes.setLineWrap(true);
+        txtNotes.setRows(3);
+        jScrollPane1.setViewportView(txtNotes);
+
+        lblReceivedBy.setText("N/a");
+
+        tblSummary.setFont(FontsLoader.getDynamicLabelFont());
+        tblSummary.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null}
+            },
+            new String [] {
+                "Entry Name", "Subtotal", "   "
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.Object.class, java.lang.Object.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, true
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tblSummary.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_LAST_COLUMN);
+        tblSummary.setEditingColumn(2);
+        tblSummary.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        tblSummary.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                tblSummaryPropertyChange(evt);
+            }
+        });
+        jScrollPane2.setViewportView(tblSummary);
+
+        jLabel5.setFont(new java.awt.Font("Segoe UI Light", 0, 24)); // NOI18N
+        jLabel5.setText("Total Payable");
+
+        lblTotal.setFont(new java.awt.Font("Segoe UI Light", 0, 24)); // NOI18N
+        lblTotal.setText("jLabel6");
+
+        javax.swing.GroupLayout summaryPanelLayout = new javax.swing.GroupLayout(summaryPanel);
+        summaryPanel.setLayout(summaryPanelLayout);
+        summaryPanelLayout.setHorizontalGroup(
+            summaryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(summaryPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(summaryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addGroup(summaryPanelLayout.createSequentialGroup()
+                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 39, Short.MAX_VALUE)
+                        .addComponent(lblTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane1)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(summaryPanelLayout.createSequentialGroup()
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cboPaymentMethods, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lblReceivedBy, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jSeparator1)
+                    .addGroup(summaryPanelLayout.createSequentialGroup()
+                        .addComponent(jLabel4)
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+        summaryPanelLayout.setVerticalGroup(
+            summaryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(summaryPanelLayout.createSequentialGroup()
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(summaryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(cboPaymentMethods, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblReceivedBy))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel4)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(8, 8, 8)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 5, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(summaryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblTotal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
+
+        pnlPaymentChooser.setLayout(new java.awt.CardLayout());
+
+        jPanel1.setLayout(new java.awt.GridBagLayout());
+
+        btnCourse.setFont(new java.awt.Font("Segoe UI Light", 0, 24)); // NOI18N
+        btnCourse.setForeground(new java.awt.Color(255, 148, 39));
+        btnCourse.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ca/robokids/robooffice/desktop/images/CoursePayment.png"))); // NOI18N
+        btnCourse.setText("Course Payment");
+        btnCourse.setHorizontalAlignment(javax.swing.SwingConstants.LEADING);
+        btnCourse.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCourseActionPerformed(evt);
+            }
+        });
+
+        btnMembership.setFont(new java.awt.Font("Segoe UI Light", 0, 24)); // NOI18N
+        btnMembership.setForeground(new java.awt.Color(51, 109, 213));
+        btnMembership.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ca/robokids/robooffice/desktop/images/MembershipPayment.png"))); // NOI18N
+        btnMembership.setText("Membership/Club");
+        btnMembership.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        btnMembership.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnMembershipActionPerformed(evt);
+            }
+        });
+
+        btnOtherfee.setFont(new java.awt.Font("Segoe UI Light", 0, 16)); // NOI18N
+        btnOtherfee.setForeground(new java.awt.Color(255, 0, 51));
+        btnOtherfee.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ca/robokids/robooffice/desktop/images/MiscFee.png"))); // NOI18N
+        btnOtherfee.setText("Other Fees");
+        btnOtherfee.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        btnOtherfee.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnOtherfeeActionPerformed(evt);
+            }
+        });
+
+        btnCustom.setFont(new java.awt.Font("Segoe UI Light", 0, 16)); // NOI18N
+        btnCustom.setForeground(new java.awt.Color(51, 51, 51));
+        btnCustom.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ca/robokids/robooffice/desktop/images/CustomPayment.png"))); // NOI18N
+        btnCustom.setText("Custom");
+        btnCustom.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCustomActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout chooserLayout = new javax.swing.GroupLayout(chooser);
+        chooser.setLayout(chooserLayout);
+        chooserLayout.setHorizontalGroup(
+            chooserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(btnCourse, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(btnMembership, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(chooserLayout.createSequentialGroup()
+                .addComponent(btnOtherfee)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnCustom, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+        chooserLayout.setVerticalGroup(
+            chooserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(chooserLayout.createSequentialGroup()
+                .addComponent(btnCourse)
+                .addGap(18, 18, 18)
+                .addComponent(btnMembership)
+                .addGap(18, 18, 18)
+                .addGroup(chooserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnOtherfee)
+                    .addComponent(btnCustom, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)))
+        );
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        jPanel1.add(chooser, gridBagConstraints);
+
+        pnlPaymentChooser.add(jPanel1, "chooseEntry");
+
+        entrySetting.setLayout(new javax.swing.BoxLayout(entrySetting, javax.swing.BoxLayout.LINE_AXIS));
+        pnlPaymentChooser.add(entrySetting, "card3");
+
+        btnFinish.setFont(FontsLoader.getButtonFont());
+        btnFinish.setText("Pay!");
+
+        btnAddPayment.setFont(FontsLoader.getButtonFont());
+        btnAddPayment.setText("Add another payment");
+        btnAddPayment.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddPaymentActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout paymentPanelLayout = new javax.swing.GroupLayout(paymentPanel);
+        paymentPanel.setLayout(paymentPanelLayout);
+        paymentPanelLayout.setHorizontalGroup(
+            paymentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(paymentPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(paymentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(summaryPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(paymentPanelLayout.createSequentialGroup()
+                        .addComponent(btnAddPayment)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnFinish, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(14, 14, 14)
+                .addComponent(pnlPaymentChooser, javax.swing.GroupLayout.PREFERRED_SIZE, 449, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        paymentPanelLayout.setVerticalGroup(
+            paymentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(paymentPanelLayout.createSequentialGroup()
+                .addGap(12, 12, 12)
+                .addGroup(paymentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(paymentPanelLayout.createSequentialGroup()
+                        .addGap(1, 1, 1)
+                        .addComponent(pnlPaymentChooser, javax.swing.GroupLayout.PREFERRED_SIZE, 483, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(paymentPanelLayout.createSequentialGroup()
+                        .addComponent(summaryPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(paymentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btnFinish)
+                            .addComponent(btnAddPayment))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 6, Short.MAX_VALUE)))
+                .addContainerGap())
+        );
+
+        center.add(paymentPanel, "payment");
+
+        javax.swing.GroupLayout previewPanelLayout = new javax.swing.GroupLayout(previewPanel);
+        previewPanel.setLayout(previewPanelLayout);
+        previewPanelLayout.setHorizontalGroup(
+            previewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 913, Short.MAX_VALUE)
+        );
+        previewPanelLayout.setVerticalGroup(
+            previewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 528, Short.MAX_VALUE)
+        );
+
+        center.add(previewPanel, "preview");
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.ipady = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        add(center, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
+
+   private void btnAddPaymentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddPaymentActionPerformed
+      setChooserPanelVisible(true);
+      paymentChooser.reset();
+   }//GEN-LAST:event_btnAddPaymentActionPerformed
+
+   private void btnCourseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCourseActionPerformed
+   }//GEN-LAST:event_btnCourseActionPerformed
+
+   private void btnMembershipActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMembershipActionPerformed
+   }//GEN-LAST:event_btnMembershipActionPerformed
+
+   private void btnOtherfeeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOtherfeeActionPerformed
+   }//GEN-LAST:event_btnOtherfeeActionPerformed
+
+   private void btnCustomActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCustomActionPerformed
+   }//GEN-LAST:event_btnCustomActionPerformed
+
+   private void tblSummaryPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_tblSummaryPropertyChange
+      // TODO add your handling code here:
+   }//GEN-LAST:event_tblSummaryPropertyChange
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAddPayment;
+    private javax.swing.JButton btnCourse;
+    private javax.swing.JButton btnCustom;
+    private javax.swing.JButton btnFinish;
+    private javax.swing.JButton btnMembership;
+    private javax.swing.JButton btnOtherfee;
+    private javax.swing.JComboBox cboPaymentMethods;
+    private javax.swing.JPanel center;
+    private javax.swing.JPanel chooser;
+    private javax.swing.JPanel entrySetting;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JLabel lblReceivedBy;
+    private javax.swing.JLabel lblTotal;
+    private javax.swing.JPanel paymentPanel;
+    private javax.swing.JPanel pnlPaymentChooser;
+    private javax.swing.JPanel previewPanel;
+    private javax.swing.JPanel summaryPanel;
+    private javax.swing.JTable tblSummary;
+    private javax.swing.JTextArea txtNotes;
     // End of variables declaration//GEN-END:variables
+
+   @Override
+   public void initialize() {
+      initTable();
+      initSummary();
+      switchToEntrySetting("chooseEntry");
+   }
+
+   @Override
+   public void refresh() {
+   }
+
+   @Override
+   public void setFocus() {
+   }
+
+   private void setChooserPanelVisible(boolean b) {
+      paymentChooser.setEnabled(b);
+      btnAddPayment.setEnabled(!b);
+      btnFinish.setEnabled(!b);
+   }
+
+   private void findStudent() {
+      boolean again = true;
+      List<Student> list = null;
+      while (again) {
+
+         String name = PopupMessage.createInput("Please enter a student's name:", "Payment for?");
+         if (name == null) { // User pressed Cancel
+            TabManager.closeTab(this.getName());
+            return;
+         }
+
+
+         try {
+            //Search for matching students
+            list = StudentManager.searchStudentName(name);
+         } catch (DatabaseException ex) {
+            //If exception, close tab
+            PopupMessage.createErrorPopUp(ex.getMessage(), null);
+            TabManager.closeTab(this.getName());
+            return;
+         }
+         //
+         if (list.isEmpty() && PopupMessage.createConfirmPopUp("No student's name matches \"" + name + "\"\nWould you like to try again?", "Sorry")) {
+            again = true;
+            continue;
+         } else {
+            student = selectStudentFromList(list);
+            if (student == null) {
+               again = true;
+            } else {
+               again = false;
+            }
+         }
+      }
+   }
+
+   private Student selectStudentFromList(List<Student> s) {
+
+      if (s.size() == 1) {
+         return s.get(0);
+      }
+
+      String[] nameList = new String[s.size()];
+      for (int i = 0; i < nameList.length; i++) {
+         nameList[i] = s.get(i).toString() + " (age " + s.get(i).getAge() + ")";
+      }
+      //get Selected student+id
+      String selectedStudent = (String) JOptionPane.showInputDialog(
+         null,
+         "Choose one student",
+         "Duplicate Found",
+         JOptionPane.WARNING_MESSAGE,
+         null,
+         nameList,
+         nameList[0]);
+      if (selectedStudent == null) {
+         return null;
+      }
+
+      //return Student object according to string selected
+      for (int i = 0; i < nameList.length; i++) {
+         if (nameList[i].equals(selectedStudent)) {
+            return s.get(i);
+         }
+      }
+
+      return null;
+   }
+
+   private void switchToCard(String card) {
+      CardLayout c = (CardLayout) center.getLayout();
+      c.show(this, card);
+   }
+
+   private void switchToEntrySetting(String card) {
+      
+      
+      CardLayout c = (CardLayout) pnlPaymentChooser.getLayout();
+      c.show(this, card);
+      if (card == "chooseEntry")
+      {
+         setChooserPanelVisible(false);
+      }
+   }
+
+   private void initSummary() {
+      //Load Payment Methods from database
+      try {
+         DefaultComboBoxModel<PaymentMethod> model = new DefaultComboBoxModel();
+         List<PaymentMethod> list = PaymentManager.getAllPaymentMethod();
+         for (PaymentMethod p : list) {
+            model.addElement(p);
+         }
+         cboPaymentMethods.setModel(model);
+      } catch (DatabaseException ex) {
+         PopupMessage.createErrorPopUp(ex.getMessage(), null);
+      }
+      lblReceivedBy.setText(UserActivity.loginUser.toString());
+      txtNotes.setText("");
+      resetTableContent();
+      lblTotal.setText("$0.00");
+
+   }
+
+   private void resetTableContent() {
+      DefaultTableModel dm = (DefaultTableModel) tblSummary.getModel();      
+      for (int i = dm.getRowCount() - 1; i >= 0; i--) {
+         dm.removeRow(i);
+      }
+   }
+
+   private void initTable() {
+      //Set each column's name + width
+      tblSummary.getTableHeader().getColumnModel().getColumn(0).setHeaderValue(ENTRY_COL);
+      tblSummary.getColumnModel().getColumn(0).setMinWidth(200);      
+      tblSummary.getTableHeader().getColumnModel().getColumn(1).setHeaderValue(AMOUNT_COL);
+      tblSummary.getColumnModel().getColumn(1).setMinWidth(30);      
+      tblSummary.getColumnModel().getColumn(2).setMinWidth(30);
+      //Set "Amount" Column to right_justification
+      DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
+      rightRenderer.setHorizontalAlignment(JLabel.RIGHT);
+      tblSummary.getColumnModel().getColumn(1).setCellRenderer(rightRenderer);
+      
+      Action delete = new AbstractAction() {
+
+         @Override
+         public void actionPerformed(ActionEvent e) {
+            tblSummary = (JTable) e.getSource();
+            int modelRow = Integer.valueOf(e.getActionCommand());
+            ((DefaultTableModel) tblSummary.getModel()).removeRow(modelRow);
+         }
+      };
+      ButtonColumn bc = new ButtonColumn(tblSummary, delete, 2,true);
+      
+      
+      
+   }
 }

@@ -4,6 +4,7 @@
  */
 package ca.robokids.robooffice.entity.student;
 
+import ca.robokids.robooffice.entity.Utilities;
 import ca.robokids.robooffice.entity.finance.PaymentRecord;
 import java.sql.Date;
 
@@ -41,7 +42,11 @@ public abstract class Progress {
    public Date getModifiedDate() {
       return modifiedDate;
    }
-
+ 
+   public String getModifiedDateString() {
+      return Utilities.formatDate(getModifiedDate());
+   }
+   
    public void setModifiedDate(Date modifiedDate) {
       this.modifiedDate = modifiedDate;
    }
@@ -49,6 +54,10 @@ public abstract class Progress {
    
    public Date getEndDate() {
       return endDate;
+   }
+   
+   public String getEndDateString() {
+      return Utilities.formatDate(getEndDate());
    }
 
    public void setEndDate(Date endDate) {
@@ -78,6 +87,10 @@ public abstract class Progress {
       return startDate;
    }
 
+   public String getStartDateString() {
+      return Utilities.formatDate(getStartDate());
+   }
+   
    public void setStartDate(Date startDate) {
       this.startDate = startDate;
    }

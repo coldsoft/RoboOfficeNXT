@@ -70,6 +70,7 @@ public class ViewAllStudentsTab extends javax.swing.JPanel implements Tab, Actio
         });
 
         btnRefresh.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ca/robokids/robooffice/desktop/images/refreshIcon.png"))); // NOI18N
+        btnRefresh.setToolTipText("refresh all students information");
         btnRefresh.setMaximumSize(new java.awt.Dimension(35, 35));
         btnRefresh.setMinimumSize(new java.awt.Dimension(35, 35));
         btnRefresh.setPreferredSize(new java.awt.Dimension(35, 35));
@@ -167,6 +168,7 @@ public class ViewAllStudentsTab extends javax.swing.JPanel implements Tab, Actio
             txtSearch.setSelectionEnd(txtSearch.getText().length());
          }
       });
+      btnRefresh.setBorderPainted(false);
       refresh();
    }
 

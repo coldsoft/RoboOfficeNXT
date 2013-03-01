@@ -63,14 +63,16 @@ public class UserManager {
          throw new DoesNotExistException("Error: User not found in database; user ID " + user.getUser_id()+ " no match.");
       
       UserDBM.deleteUser(user.getUser_id());
+      User deleted = null;
       //Delete the copy in application
       for (User old : users)
       {
          if (old.getUser_id() == user.getUser_id())
          {
-            users.remove(old);
+            deleted = old;
          }
       }
+      users.remove(deleted);
       //Event Logging
       String details = "Deleted user " + user.toString();
       SystemLog.createUserLog(Operation.USER_SETTING, details, user.getUser_id());
@@ -97,11 +99,14 @@ public class UserManager {
       
       UserDBM.deleteGroup(group.getGroup_id());
       
+      UserGroup deleted = null;
       for(UserGroup old : usergroups)
       {
          if (old.getGroup_id() == group.getGroup_id())
-            usergroups.remove(old);
+            deleted = old;
       }
+      usergroups.remove(deleted);
+     
       //Event Logging
       String details = "Deleted usergroup " + group.getGroupName() + "";
       SystemLog.createUserLog(Operation.USER_GROUP_SETTING, details, group.getGroup_id());

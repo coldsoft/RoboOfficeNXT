@@ -49,6 +49,7 @@ public class DatabaseManager {
       String password = dbProperties.getProperty("password");
       try {
          Class.forName("com.mysql.jdbc.Driver").newInstance();
+         DriverManager.setLoginTimeout(DatabaseConfig.getTimeout());
          conn = DriverManager.getConnection(url, userName, password);
       } catch (Exception e) {
          e.printStackTrace();
@@ -252,6 +253,12 @@ public class DatabaseManager {
       }
        
       
+   }
+
+   public static void testConnectivity() throws DatabaseException {
+      getConnection();
+      if (conn == null)
+         throw new DatabaseException("Database connection failed.\n check database.properties for database settings");
    }
    
    
